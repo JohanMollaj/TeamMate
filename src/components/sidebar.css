@@ -1,0 +1,67 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80px; /* Sidebar width */
+    height: 100vh; /* Full height */
+    background-color: #1C1D20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* Space between top and bottom sections */
+    padding: 20px 0;
+    box-sizing: border-box; /* Include padding in dimensions */
+  }
+  
+  .logo{
+    width: 37px;
+  }
+   
+  .project-icon {
+    transition: background-color 0.2s ease-in-out;
+    display: flex;
+    margin-top: 30px;/*to be changed when icon is added. basically in line with the dashboard text*/
+    font-size: 14px;
+    color: white;
+    text-align: center;
+    margin-bottom: 20px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .project-icon:hover{
+    background-color: #7a92af;
+  }
+  
+  .sidebar-icons {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px; /* Add spacing between icons */
+  }
+  
+  .sidebar-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Add spacing between bottom icons */
+  }
+
+  .icon-button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  transition: color 0.3s ease-in-out;
+}
+
+.icon-button:hover {
+  color: #7a92af; /* Change color on hover */
+}
+
+.icon {
+  font-size: 30px; /* Icon size */
+}

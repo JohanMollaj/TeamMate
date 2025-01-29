@@ -1,0 +1,58 @@
+.settings-sidebar {
+    width: 200px;
+    min-width: 200px;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-right: 1px solid #4a4e55;
+    overflow-y: auto;
+    /* Allow the sidebar to scroll */
+    max-height: calc(100vh - 40px);
+    /* Adjust height to fit within the available space */
+    padding-right: 10px;
+    box-sizing: border-box;
+    scrollbar-width: thin; /* Makes the scrollbar thinner */
+    scrollbar-color: #4a4e55 #2A2C32; /* thumb color and track color */
+}
+
+.settings-section {
+    margin-bottom: 20px;
+}
+
+.settings-section h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #bbb;
+}
+
+.sidebar-button {
+    width: 100%;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    text-align: left;
+    background-color: #4a4e55;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.sidebar-button:hover {
+    background-color: #586074;
+    /* Hover effect */
+}
+
+.sidebar-button.active {
+    background-color: #7a92af;
+    /* Clicked effect */
+}
+
+h1 {
+    font-size: 42px;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin: 10px;
+}

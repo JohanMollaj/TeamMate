@@ -1,0 +1,126 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+
+html, body {
+  background-color: #1C1D20;
+  margin: 0;
+  font-family: "Lexend", sans-serif;
+  height: 100vh;
+  width: 100%;
+}
+
+.container-friends {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.friends-menu {
+  margin: 20px 20px 20px 80px;
+  height: calc(100vh - 40px); /* Subtract the margin space to avoid overflow */
+  width: calc(100% - 100px); /* Adjusted dynamically for the sidebar */
+  padding: 30px 40px 40px 40px;
+  color: white;
+  background-color: #2A2C32;
+  border-radius: 45px; /* Rounded corners */
+  overflow-y: auto; /* Vertical scrolling inside the dashboard */
+  box-sizing: border-box; /* Include padding in dimensions */
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Space between elements */
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: row;
+}
+
+.filterOption {
+  display: flex;
+  padding: 8px 12px;
+  margin-right: 10px;
+  border-radius: 15px;
+  background-color: #ffffff00;
+  color: white;
+  border: none;
+  cursor: pointer;
+  align-items: center;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.filterOption.active {
+  background-color: #ffffff5d;
+}
+
+.filterOption:hover {
+  background-color: #ffffff1a;
+}
+
+.textarea{
+  color: white;
+  resize: none;
+  border: none;
+  border-bottom: solid white 1px;
+  border-radius: 5px;
+  line-height: 25px;
+  background-color: #2A2C32;
+  margin-top: 10px ;
+  margin-bottom: 15px;
+  padding: 10px;
+  padding-left: 15px;
+  font-family: inherit;
+  font-size: 18px;
+  height: 25px;
+  width: 167px;
+  transition: width 0.2s ease-in-out;
+}
+
+.textarea:focus{
+  border: none;
+  border-bottom: solid white 2px;
+  outline: none;
+}
+
+h1 {
+  font-size: 42px;
+  margin-top: 0;   
+  margin-bottom: 0;
+}
+
+.section {
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.section span{
+  font-size: 20px;
+}
+
+.friends{
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.friend{
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.friend-icon{
+  font-size: 40px;
+  margin-bottom: 5px;
+}
+
+.friend-status {
+  font-size: 10px;
+  font-weight: normal; 
+  color: rgb(144, 144, 145);
+}
