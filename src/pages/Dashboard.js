@@ -13,7 +13,7 @@ function Dashboard(){
                     <h1>Dashboard</h1>
                     
                     <div className="section">
-                        <button onClick={() => navigate('/friends')} className="dashboard-button">
+                        <button onClick={() => navigate('/social')} className="dashboard-button">
                             <h2>Friends &gt;</h2>
                         </button>
 
@@ -34,7 +34,7 @@ function Dashboard(){
                     </div>
 
                     <div className="section">
-                    <button onClick={() => navigate('/groups')} className="dashboard-button">
+                    <button onClick={() => navigate("/social", { state: { tab: "Groups" } })} className="dashboard-button">
                             <h2>Groups &gt;</h2>
                         </button>
                         <div className="groups">

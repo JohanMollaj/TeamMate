@@ -1,7 +1,8 @@
 import './social.css';
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { FaUserGroup } from "react-icons/fa6";
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { User } from 'lucide-react';
 
 const friends = [
@@ -11,6 +12,12 @@ const friends = [
     { id: "4", name: "user4", isOnline: false },
     { id: "5", name: "user5", isOnline: true },
 ];
+
+const groups = [
+    { id: "1", name: "group1"},
+    { id: "2", name: "group2"}
+]
+
 function Friends() {
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState("all");
@@ -70,20 +77,55 @@ function Friends() {
 }
 
 function Groups() {
+    const [search, setSearch] = useState("");
+
+    const filteredGroups = groups.filter((group) => {
+        const matchesSearch = group.name.toLowerCase().includes(search.toLowerCase());
+        return matchesSearch;
+    });
+    
     return (
         <div>
-            <h2>Groups List</h2>
-            {/* Your groups list content here */}
+            <div className='search-box'>
+                    <input
+                        placeholder="Search groups..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="textarea"
+                    />
+            </div>
+            <div className='section'>
+                    <div className="friends">
+                        {filteredGroups.map((group) => (
+                            <div
+                                key={group.id}
+                                className="flex items-center gap-3 rounded-lg bg-zinc-700 p-3">
+                                <div className="friend flex items-center gap-2">
+                                    <FaUserGroup className='icon' />
+                                    <span className="friend-username">{group.name}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
         </div>
     );
 }
 const Social = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+
+    useEffect(() => {
+        if (location.state?.tab) {
+            setActiveTab(location.state.tab);
+        }
+    }, [location.state]);
 
     const [activeTab, setActiveTab] = useState("Friends");
     const toggleTab = () => {
         setActiveTab((prevTab) => (prevTab === "Friends" ? "Groups" : "Friends"));
       };
+
     return (
         <div className="container-friends">
             {/* Dashboard */}
