@@ -124,3 +124,8 @@ h1 {
   font-weight: normal; 
   color: rgb(144, 144, 145);
 }
+
+.switchOption{
+  color: white;
+  font-size: 22px;
+}

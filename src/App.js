@@ -3,7 +3,7 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Dashboard from './pages/Dashboard.js'
-import Friends from './pages/Friends.js';
+import Social from './pages/Social.js';
 import Groups from './pages/Groups.js';
 import Profile from './pages/Profile.js';
 import Settings from './pages/Settings.js';
@@ -21,7 +21,7 @@ function App() {
             <Routes>
               <Route index  element = {<Settings/>} />
               <Route path="/dashboard" element = {<Dashboard />} />
-              <Route path="/friends" element = {<Friends />} />
+              <Route path="/social" element = {<Social />} />
               <Route path="/groups" element = {<Groups />} />
               <Route path="/profile" element = {<Profile />} />
               <Route path="/settings" element = {<Settings />} />

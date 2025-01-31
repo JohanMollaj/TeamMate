@@ -1,5 +1,5 @@
 import './sidebar.css';
-import { FaHome, FaSearch, FaClipboardList, FaUserCircle, FaCog} from 'react-icons/fa';
+import { FaHome, FaClipboardList, FaUserCircle, FaCog} from 'react-icons/fa';
 import { FaUserGroup } from "react-icons/fa6";
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +20,7 @@ function Sidebar() {
                             <FaHome className="icon" />
                         </button>
 
-                        <button onClick={() => navigate('/friends')} className="icon-button">
+                        <button onClick={() => navigate('/social')} className="icon-button">
                             <FaUserGroup className="icon" />
                         </button>
 

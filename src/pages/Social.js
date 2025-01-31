@@ -1,5 +1,5 @@
-import './friends.css';
-import { FaUserCircle } from 'react-icons/fa';
+import './social.css';
+import { FaArrowRightArrowLeft } from "react-icons/fa6";
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User } from 'lucide-react';
@@ -11,10 +11,7 @@ const friends = [
     { id: "4", name: "user4", isOnline: false },
     { id: "5", name: "user5", isOnline: true },
 ];
-
-const Friends = () => {
-    const navigate = useNavigate();
-
+function Friends() {
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState("all");
 
@@ -28,13 +25,8 @@ const Friends = () => {
     });
 
     return (
-        <div className="container-friends">
-            {/* Dashboard */}
-            <div className="friends-menu">
-                <div className="filter-container">
-                    <h1>Friends</h1>
-                </div>
-                <h3 id="filter-status">Showing: </h3>
+        <div>
+            <h3 id="filter-status">Showing: </h3>
                 <div className="filter-group">
                     <button className={`filterOption ${filter === "all" ? "active" : ""}`}
                         onClick={() => setFilter("all")}>All</button>
@@ -73,9 +65,40 @@ const Friends = () => {
                         ))}
                     </div>
                 </div>
+        </div>
+    );
+}
+
+function Groups() {
+    return (
+        <div>
+            <h2>Groups List</h2>
+            {/* Your groups list content here */}
+        </div>
+    );
+}
+const Social = () => {
+    const navigate = useNavigate();
+
+    const [activeTab, setActiveTab] = useState("Friends");
+    const toggleTab = () => {
+        setActiveTab((prevTab) => (prevTab === "Friends" ? "Groups" : "Friends"));
+      };
+    return (
+        <div className="container-friends">
+            {/* Dashboard */}
+
+            <div className="friends-menu">
+                <div className="filter-container">
+                    <button className='switchOption'
+                            onClick={toggleTab}>
+                            <FaArrowRightArrowLeft /></button>
+                    <h1>{activeTab}</h1>
+                </div>
+                {activeTab === "Friends" ? <Friends /> : <Groups />}
             </div>
         </div>
     )
 }
 
-export default Friends;
+export default Social;
