@@ -124,6 +124,9 @@ h1 {
   font-weight: normal; 
   color: rgb(144, 144, 145);
 }
+.online{
+  color: rgb(0, 196, 0);
+}
 
 .switchOption{
   color: white;

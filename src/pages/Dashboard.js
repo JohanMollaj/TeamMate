@@ -2,9 +2,24 @@ import './Dashboard.css';
 import { FaUserCircle, FaUsers } from 'react-icons/fa';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 function Dashboard(){
     const navigate  = useNavigate();
+
+    const [friends, setFriends] = useState([]);
+    const [groups, setGroups] = useState([]);
+
+    useEffect(() => {
+        fetch("/friends.json") // Adjust the path as needed
+            .then(response => response.json())
+            .then(data => setFriends(data));
+    }, []);
+    useEffect(() => {
+        fetch("/groups.json") // Adjust the path as needed
+            .then(response => response.json())
+            .then(data => setGroups(data));
+    }, []);
 
     return(
             <div className="container-dashboard">
@@ -18,18 +33,12 @@ function Dashboard(){
                         </button>
 
                         <div className="dashboard-friends">
-                            <div className="dashboard-friend">
-                                <FaUserCircle className="friend-icon" />
-                                <span>user1</span>
-                            </div>
-                            <div className="dashboard-friend">
-                                <FaUserCircle className="friend-icon" />
-                                <span>user2</span>
-                            </div>
-                            <div className="dashboard-friend">
-                                <FaUserCircle className="friend-icon" />
-                                <span>user3</span>
-                            </div>
+                            {friends.filter(friend => friend.isOnline).map(friend => (
+                                <div key={friend.id} className="dashboard-friend">
+                                    <FaUserCircle className="friend-icon" />
+                                    <span>{friend.name}</span>
+                                </div>
+                            ))}
                         </div>
                     </div>
 
@@ -38,14 +47,12 @@ function Dashboard(){
                             <h2>Groups &gt;</h2>
                         </button>
                         <div className="groups">
-                            <div className="group">
+                        {groups.map(group => (
+                            <div key={group.id} className="group">
                                 <FaUsers className="group-icon" />
-                                <span>group1</span>
+                                <span>{group.name}</span>
                             </div>
-                            <div className="group">
-                                <FaUsers className="group-icon" />
-                                <span>group2</span>
-                            </div>
+                        ))}
                         </div>
                     </div>
 

@@ -5,22 +5,10 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { User } from 'lucide-react';
 
-const friends = [
-    { id: "1", name: "user1", isOnline: true },
-    { id: "2", name: "user2", isOnline: false },
-    { id: "3", name: "user3", isOnline: true },
-    { id: "4", name: "user4", isOnline: false },
-    { id: "5", name: "user5", isOnline: true },
-];
-
-const groups = [
-    { id: "1", name: "group1"},
-    { id: "2", name: "group2"}
-]
-
 function Friends() {
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState("all");
+    const [friends, setFriends] = useState([]);
 
     const filteredFriends = friends.filter((friend) => {
         const matchesSearch = friend.name.toLowerCase().includes(search.toLowerCase());
@@ -30,6 +18,12 @@ function Friends() {
             (filter === "offline" && !friend.isOnline);
         return matchesSearch && matchesFilter;
     });
+
+        useEffect(() => {
+            fetch("/friends.json") // Adjust the path as needed
+                .then(response => response.json())
+                .then(data => setFriends(data));
+        }, []);
 
     return (
         <div>
@@ -78,6 +72,13 @@ function Friends() {
 
 function Groups() {
     const [search, setSearch] = useState("");
+    const [groups, setGroups] = useState([]);
+
+    useEffect(() => {
+        fetch("/groups.json") // Adjust the path as needed
+            .then(response => response.json())
+            .then(data => setGroups(data));
+    }, []);
 
     const filteredGroups = groups.filter((group) => {
         const matchesSearch = group.name.toLowerCase().includes(search.toLowerCase());
