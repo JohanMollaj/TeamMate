@@ -37,7 +37,7 @@ function Sidebar({ setActiveSetting, currentSetting }) {
         </button>
       </div>
       <button
-        className="sidebar-button"
+        className="sidebar-button logout-button"
       >
         Logout
       </button>

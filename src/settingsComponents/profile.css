@@ -1,8 +1,8 @@
 .settingsContainer{
-    width: 100vw;
+    width:100vw;
     overflow-y: auto;
     /* Allow the sidebar to scroll */
-    max-height: calc(100vh - 40px);
+    max-height: calc(100vh - 120px);
     /* Adjust height to fit within the available space */
     padding-right: 10px;
     box-sizing: border-box;

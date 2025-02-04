@@ -50,6 +50,10 @@
     /* Clicked effect */
 }
 
+.logout-button:hover{
+    background-color: #a94848;
+}
+
 h1 {
     font-size: 42px;
     margin-top: 0;
