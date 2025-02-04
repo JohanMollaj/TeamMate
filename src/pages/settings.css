@@ -34,9 +34,8 @@ body {
 }
 
 .settings .settings-content {
-    flex-grow: 1;
     /* Take the remaining space */
     padding-left: 20px;
-    overflow-y: hidden;
+    overflow: hidden;
     /* Scrollable content */
 }

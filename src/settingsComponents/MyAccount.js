@@ -3,7 +3,7 @@ import './myAccount.css';
 
 function MyAccount() {
   return (
-    <div>
+    <div className='settingsContainer'>
       <h1>My Account</h1>
       <div className="settings-section">
         <h2>Display Name</h2>

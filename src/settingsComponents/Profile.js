@@ -4,6 +4,7 @@ import './profile.css';
 function Profile() {
   return (
     <div>
+      <div className='settingsContainer'>
       <h1>Profile</h1>
       <div className="settings-section">
         <h2>Display Name</h2>
@@ -22,6 +23,7 @@ function Profile() {
         <textarea type="text" placeholder="Write your qualifications" />
       </div>
       <button className="settings-button">Save</button>
+      </div>
     </div>
   );
 }
