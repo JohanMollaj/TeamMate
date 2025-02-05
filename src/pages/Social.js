@@ -1,4 +1,6 @@
 import './social.css';
+import FriendsChatbox from '../components/FriendsChatbox';
+
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
 import { FaUserGroup } from "react-icons/fa6";
 import React, { useState, useEffect } from 'react';
@@ -26,7 +28,7 @@ function Friends() {
         }, []);
 
     return (
-        <div>
+        <div className='w-[220px]'>
             <h3 id="filter-status">Showing: </h3>
                 <div className="filter-group">
                     <button className={`filterOption ${filter === "all" ? "active" : ""}`}
@@ -50,7 +52,7 @@ function Friends() {
                         {filteredFriends.map((friend) => (
                             <div
                                 key={friend.id}
-                                className="flex items-center gap-3 rounded-lg bg-zinc-700 p-3">
+                                className="flex items-center gap-3 rounded-lg bg-zinc-700 p-3 w-full min-w-[230px]">
                                 <div className="friend flex items-center gap-2">
                                     <User className="friend-icon" />
                                     <span className="friend-username">{friend.name}</span>
@@ -86,7 +88,7 @@ function Groups() {
     });
     
     return (
-        <div>
+        <div className='w-[230px]'>
             <div className='search-box'>
                     <input
                         placeholder="Search groups..."
@@ -100,7 +102,7 @@ function Groups() {
                         {filteredGroups.map((group) => (
                             <div
                                 key={group.id}
-                                className="flex items-center gap-3 rounded-lg bg-zinc-700 p-3">
+                                className="flex items-center gap-3 rounded-lg bg-zinc-700 p-3 w-full w-min-[230px]">
                                 <div className="friend flex items-center gap-2">
                                     <FaUserGroup className='icon' />
                                     <span className="friend-username">{group.name}</span>
@@ -131,7 +133,7 @@ const Social = () => {
         <div className="container-friends">
             {/* Dashboard */}
 
-            <div className="friends-menu">
+            <div className="friends-menu w-[220px]">
                 <div className="filter-container">
                     <button className='switchOption'
                             onClick={toggleTab}>
@@ -140,6 +142,8 @@ const Social = () => {
                 </div>
                 {activeTab === "Friends" ? <Friends /> : <Groups />}
             </div>
+
+            <FriendsChatbox />
         </div>
     )
 }

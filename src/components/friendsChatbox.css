@@ -1,0 +1,23 @@
+.chatboxContainer{
+    color: white;
+    background-color: #2A2C32;
+
+    width: 100%;
+    border-radius: 0 0 20px 20px;
+}
+.userHeader{
+    margin: 0;
+}
+.chatboxHeader{
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #2A2C32;
+}
+.chatboxMain{
+    width: 100%;
+    height: calc(100% - 85px); 
+    padding: 10px 20px;
+    border-radius: 15px 15px 15px 15px;
+    border-top: rgb(186, 186, 186) 2px solid;
+    background-color: #3f414a;
+}

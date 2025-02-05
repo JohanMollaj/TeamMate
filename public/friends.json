@@ -3,5 +3,10 @@
     { "id": "2", "name": "user2", "isOnline": false },
     { "id": "3", "name": "user3", "isOnline": true },
     { "id": "4", "name": "user4", "isOnline": false },
-    { "id": "5", "name": "user5", "isOnline": true }
+    { "id": "5", "name": "user5", "isOnline": true },
+    { "id": "6", "name": "user6", "isOnline": true },
+    { "id": "7", "name": "user7", "isOnline": false },
+    { "id": "8", "name": "user8", "isOnline": true },
+    { "id": "9", "name": "user9", "isOnline": false },
+    { "id": "10", "name": "user10", "isOnline": true }
 ]
