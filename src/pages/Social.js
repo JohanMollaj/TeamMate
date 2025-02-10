@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { User } from 'lucide-react';
 
-function Friends() {
+function Friends({ onSelectChat }) {
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState("all");
     const [friends, setFriends] = useState([]);
@@ -50,9 +50,10 @@ function Friends() {
                 <div className='section'>
                     <div className="friends">
                         {filteredFriends.map((friend) => (
-                            <div
+                            <button
                                 key={friend.id}
-                                className="flex items-center gap-3 rounded-lg bg-zinc-700 p-3 w-full min-w-[230px]">
+                                className="flex items-center gap-3 rounded-lg bg-zinc-700 p-3 w-full min-w-[230px]"
+                                onClick={() => onSelectChat(friend)}>
                                 <div className="friend flex items-center gap-2">
                                     <User className="friend-icon" />
                                     <span className="friend-username">{friend.name}</span>
@@ -64,7 +65,7 @@ function Friends() {
                                         )}
                                     </div>
                                 </div>
-                            </div>
+                            </button>
                         ))}
                     </div>
                 </div>
@@ -100,14 +101,14 @@ function Groups() {
             <div className='section'>
                     <div className="friends">
                         {filteredGroups.map((group) => (
-                            <div
+                            <button
                                 key={group.id}
                                 className="flex items-center gap-3 rounded-lg bg-zinc-700 p-3 w-full w-min-[230px]">
                                 <div className="friend flex items-center gap-2">
                                     <FaUserGroup className='icon' />
                                     <span className="friend-username">{group.name}</span>
                                 </div>
-                            </div>
+                            </button>
                         ))}
                     </div>
                 </div>
@@ -117,6 +118,20 @@ function Groups() {
 const Social = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const [activeChat, setActiveChat] = useState(null);
+    
+    useEffect(() => {
+        const savedChat = localStorage.getItem("lastActiveChat");
+        if (savedChat) {
+            setActiveChat(JSON.parse(savedChat));
+        }
+    }, []);
+
+    const handleChatSelect = (user) => {
+        setActiveChat(user);
+        localStorage.setItem("lastActiveChat", JSON.stringify(user)); // Save the chat
+    };
+
 
     useEffect(() => {
         if (location.state?.tab) {
@@ -140,10 +155,10 @@ const Social = () => {
                             <FaArrowRightArrowLeft /></button>
                     <h1>{activeTab}</h1>
                 </div>
-                {activeTab === "Friends" ? <Friends /> : <Groups />}
+                {activeTab === "Friends" ? <Friends onSelectChat={handleChatSelect} /> : <Groups />}
             </div>
 
-            <FriendsChatbox />
+            {activeChat && <FriendsChatbox activeChat={activeChat} />}
         </div>
     )
 }

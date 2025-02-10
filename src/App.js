@@ -19,7 +19,7 @@ function App() {
           <Sidebar/>
           <div className='Routes'>
             <Routes>
-              <Route index  element = {<Settings/>} />
+              <Route index  element = {<Social/>} />
               <Route path="/dashboard" element = {<Dashboard />} />
               <Route path="/social" element = {<Social />} />
               <Route path="/profile" element = {<Profile />} />

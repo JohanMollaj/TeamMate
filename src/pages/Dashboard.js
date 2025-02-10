@@ -34,24 +34,24 @@ function Dashboard(){
 
                         <div className="dashboard-friends">
                             {friends.filter(friend => friend.isOnline).map(friend => (
-                                <div key={friend.id} className="dashboard-friend">
+                                <button key={friend.id} className="dashboard-friend">
                                     <FaUserCircle className="friend-icon" />
                                     <span>{friend.name}</span>
-                                </div>
+                                </button>
                             ))}
                         </div>
                     </div>
 
                     <div className="section">
                     <button onClick={() => navigate("/social", { state: { tab: "Groups" } })} className="dashboard-button">
-                            <h2>Groups &gt;</h2>
-                        </button>
+                        <h2>Groups &gt;</h2>
+                    </button>
                         <div className="groups">
                         {groups.map(group => (
-                            <div key={group.id} className="group">
+                            <button key={group.id} className="group">
                                 <FaUsers className="group-icon" />
                                 <span>{group.name}</span>
-                            </div>
+                            </button>
                         ))}
                         </div>
                     </div>

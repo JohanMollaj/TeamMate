@@ -1,0 +1,26 @@
+[
+    {
+        "senderID": "1",
+        "receiverID": "2",
+        "time": "2024-02-04T12:30:00Z",
+        "message": "Hey, how are you?"
+    },
+    {
+        "senderID": "2",
+        "receiverID": "1",
+        "time": "2024-02-04T12:31:00Z",
+        "message": "I'm good! What about you?"
+    },
+    {
+        "senderID": "1",
+        "receiverID": "2",
+        "time": "2024-02-04T12:32:30Z",
+        "message": "Doing great, just working on a project."
+    },
+    {
+        "senderID": "3",
+        "receiverID": "1",
+        "time": "2024-02-04T13:00:00Z",
+        "message": "Hey! Are you free to hop on a call?"
+    }
+]
