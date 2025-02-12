@@ -119,19 +119,26 @@ const Social = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [activeChat, setActiveChat] = useState(null);
+    const [activeTab, setActiveTab] = useState("Friends");
     
     useEffect(() => {
-        const savedChat = localStorage.getItem("lastActiveChat");
-        if (savedChat) {
-            setActiveChat(JSON.parse(savedChat));
+        // Handle user passed from dashboard
+        if (location.state?.user) {
+            setActiveChat(location.state.user);
+            localStorage.setItem("lastActiveChat", JSON.stringify(location.state.user));
+        } else {
+            // If no user passed, check localStorage
+            const savedChat = localStorage.getItem("lastActiveChat");
+            if (savedChat) {
+                setActiveChat(JSON.parse(savedChat));
+            }
         }
-    }, []);
+    }, [location.state]);
 
     const handleChatSelect = (user) => {
         setActiveChat(user);
         localStorage.setItem("lastActiveChat", JSON.stringify(user)); // Save the chat
     };
-
 
     useEffect(() => {
         if (location.state?.tab) {
@@ -139,7 +146,6 @@ const Social = () => {
         }
     }, [location.state]);
 
-    const [activeTab, setActiveTab] = useState("Friends");
     const toggleTab = () => {
         setActiveTab((prevTab) => (prevTab === "Friends" ? "Groups" : "Friends"));
       };
