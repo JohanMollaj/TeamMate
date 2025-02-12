@@ -124,12 +124,13 @@ h1 {
 }
 
 .friend-status {
-  font-size: 10px;
+  font-size: 25px;
   font-weight: normal; 
   color: rgb(144, 144, 145);
 }
 .online{
   color: rgb(0, 196, 0);
+  font-size: 25px;
 }
 
 .switchOption{

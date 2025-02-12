@@ -10,11 +10,17 @@
 }
 .userHeader{
     margin: 0;
+    gap: 10px;
 }
+.userHeader .friend-status{
+  margin-left: 10px;
+}
+
 .chatboxHeader{
     width: 100%;
     padding: 10px 20px;
     background-color: #2A2C32;
+    display: flex;
 }
 .chatboxMain{
     width: 100%;

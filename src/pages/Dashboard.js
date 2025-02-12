@@ -21,6 +21,11 @@ function Dashboard(){
             .then(data => setGroups(data));
     }, []);
 
+    const handleChatRedirect = (user) => {
+        console.log(user);
+        localStorage.setItem("activeChat", JSON.stringify(user)); // Save the selected user
+        navigate("/social", { state: { user } }); // Redirect to the Friends page (change this if your route is different)
+    };
     return(
             <div className="container-dashboard">
                 {/* Dashboard */}
@@ -34,7 +39,7 @@ function Dashboard(){
 
                         <div className="dashboard-friends">
                             {friends.filter(friend => friend.isOnline).map(friend => (
-                                <button key={friend.id} className="dashboard-friend">
+                                <button key={friend.id} className="dashboard-friend" onClick={() => handleChatRedirect(friend)}>
                                     <FaUserCircle className="friend-icon" />
                                     <span>{friend.name}</span>
                                 </button>
