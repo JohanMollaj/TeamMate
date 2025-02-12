@@ -22,5 +22,53 @@
         "receiverID": "1",
         "time": "2024-02-04T13:00:00Z",
         "message": "Hey! Are you free to hop on a call?"
+    },
+    {
+        "senderID": "1",
+        "receiverID": "3",
+        "time": "2024-02-04T13:01:00Z",
+        "message": "Sure, give me 5 minutes to finish something up"
+    },
+    {
+        "senderID": "3",
+        "receiverID": "1",
+        "time": "2024-02-04T13:01:30Z",
+        "message": "Perfect, I'll set up the meeting"
+    },
+    {
+        "senderID": "4",
+        "receiverID": "1",
+        "time": "2024-02-04T14:15:00Z",
+        "message": "Did you see the latest project updates?"
+    },
+    {
+        "senderID": "1",
+        "receiverID": "4",
+        "time": "2024-02-04T14:16:00Z",
+        "message": "Yes, the new features look promising!"
+    },
+    {
+        "senderID": "4",
+        "receiverID": "1",
+        "time": "2024-02-04T14:17:00Z",
+        "message": "Great! Let's discuss them in tomorrow's meeting"
+    },
+    {
+        "senderID": "5",
+        "receiverID": "1",
+        "time": "2024-02-04T15:00:00Z",
+        "message": "Hey, are we still on for lunch?"
+    },
+    {
+        "senderID": "1",
+        "receiverID": "5",
+        "time": "2024-02-04T15:01:00Z",
+        "message": "Absolutely! Meet you at the usual spot at 12:30?"
+    },
+    {
+        "senderID": "5",
+        "receiverID": "1",
+        "time": "2024-02-04T15:02:00Z",
+        "message": "Perfect, see you there!"
     }
 ]

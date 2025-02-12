@@ -4,7 +4,7 @@ import FriendsChatbox from '../components/FriendsChatbox';
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
 import { FaUserGroup } from "react-icons/fa6";
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { User } from 'lucide-react';
 
 function Friends({ onSelectChat }) {
@@ -116,7 +116,6 @@ function Groups() {
     );
 }
 const Social = () => {
-    const navigate = useNavigate();
     const location = useLocation();
     const [activeChat, setActiveChat] = useState(null);
     const [activeTab, setActiveTab] = useState("Friends");
