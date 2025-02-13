@@ -49,6 +49,11 @@ function Friends({ onSelectChat }) {
 
                 <div className='section'>
                     <div className="friends">
+                        <button className="text-[18px] flex items-center rounded-lg bg-green-700 p-3 w-full min-w-[230px] items-center justify-center
+                        transition duration-200 ease-in-out hover:bg-green-800">
+                            Add Friend
+                        </button>
+
                         {filteredFriends.map((friend) => (
                             <button
                                 key={friend.id}

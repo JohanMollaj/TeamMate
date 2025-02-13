@@ -2,10 +2,36 @@ import './Dashboard.css';
 import { FaUserCircle, FaUsers } from 'react-icons/fa';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { Bell } from 'lucide-react';
+
+function useHasScrollbar(ref) {
+    const [hasScrollbar, setHasScrollbar] = useState(false);
+  
+    useEffect(() => {
+      if (!ref.current) return;
+  
+      const updateScrollbar = () => {
+        const element = ref.current;
+        setHasScrollbar(element.scrollHeight > element.clientHeight);
+      };
+  
+      updateScrollbar();
+  
+      const resizeObserver = new ResizeObserver(updateScrollbar);
+      resizeObserver.observe(ref.current);
+  
+      return () => resizeObserver.disconnect();
+    }, [ref]);
+  
+    return hasScrollbar;
+  }
 
 function Dashboard(){
     const navigate  = useNavigate();
+
+    const containerRef = useRef(null);
+    const hasScrollbar = useHasScrollbar(containerRef);
 
     const [friends, setFriends] = useState([]);
     const [groups, setGroups] = useState([]);
@@ -29,12 +55,19 @@ function Dashboard(){
     return(
             <div className="container-dashboard">
                 {/* Dashboard */}
-                <div className="dashboard">
-                    <h1>Dashboard</h1>
+                <div className="dashboard"
+                ref={containerRef}
+                style={{
+                    borderRadius: hasScrollbar ? '45px 0 0 45px' : '45px',
+                    transition: 'border-radius 0.2s'
+                  }}>
+                    <div  className='dashboardHeader'>
+                        <h1>Dashboard</h1>
+                    </div>
                     
                     <div className="section">
                         <button onClick={() => navigate('/social')} className="dashboard-button">
-                            <h2>Friends &gt;</h2>
+                            <h2>Friends</h2>
                         </button>
 
                         <div className="dashboard-friends">
@@ -49,7 +82,7 @@ function Dashboard(){
 
                     <div className="section">
                     <button onClick={() => navigate("/social", { state: { tab: "Groups" } })} className="dashboard-button">
-                        <h2>Groups &gt;</h2>
+                        <h2>Groups</h2>
                     </button>
                         <div className="groups">
                         {groups.map(group => (
@@ -63,7 +96,7 @@ function Dashboard(){
 
                     <div className="section">
                     <button onClick={() => navigate('/tasks')} className="dashboard-button">
-                        <h2>Tasks &gt;</h2>
+                        <h2>Tasks</h2>
                     </button>
                     <p>You have finished all your tasks!</p>
                     </div>

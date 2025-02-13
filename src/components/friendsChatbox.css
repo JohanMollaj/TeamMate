@@ -62,7 +62,7 @@
     padding: 2px 0;
     border-radius: 10px;
     color: #e5e7eb;
-    opacity: 0;
+    opacity: 1;
     transition: opacity 0.2s ease;
     white-space: nowrap;
 }
