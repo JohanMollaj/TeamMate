@@ -1,0 +1,171 @@
+.container-landingpage{
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    width:100%;
+    overflow: hidden;
+    padding-top: 70px;
+    background-color: #ffffff;
+  }
+  
+  .landingPageTop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 2rem;
+    background-color: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: 90px;
+    z-index: 1000;
+    box-sizing: border-box;
+  }
+
+.TopLeft {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.TopLeft h1 {
+    color: #000000;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+} 
+
+.TopCenter {
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+}
+
+.TopLinks {
+    color: #1c1d1f;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    position: relative;
+}
+
+.TopLinks:hover {
+    color: #424242;
+}
+
+/* Underline effect for links */
+.TopLinks::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #424242;
+    transition: width 0.2s ease;
+}
+
+.TopLinks:hover::after {
+    width: 100%;
+}
+
+.TopRight {
+    display: flex;
+    align-items: center;
+}
+
+.TopButton {
+    background-color: #2563eb;
+    color: #ffffff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.TopButton:hover {
+    background-color: #1d4ed8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .landingPageTop {
+        padding: 1rem;
+    }
+    
+    .TopCenter {
+        gap: 1.5rem;
+    }
+    
+    .TopLinks {
+        font-size: 0.9rem;
+    }
+    
+    .TopButton {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .TopLeft h1 {
+        display: none;
+    }
+    
+    .TopCenter {
+        gap: 1rem;
+    }
+}
+
+.LandingPageBody {
+    width: 70%;
+    max-height: calc(100vh - 90px); /* Adjust based on header height + desired padding */
+    margin: 40px auto 20px auto; /* Top margin to account for fixed header */
+    padding: 2rem;
+    overflow-x: hidden;
+    overflow-y: auto; /* Make it scrollable */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(17, 17, 17, 0.7); /* Semi-transparent background */
+    border-radius: 30px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #ffffff;
+    position: relative;
+    z-index: 100; /* Lower than header but above particles */
+    backdrop-filter: blur(10px); /* Add blur effect */
+    -webkit-backdrop-filter: blur(10px); /* For Safari compatibility */
+  }
+  
+  /* Styling for the scrollbar to match dark theme */
+  .LandingPageBody::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .LandingPageBody::-webkit-scrollbar-track {
+    background: #1a1a1a;
+    border-radius: 4px;
+  }
+  
+  .LandingPageBody::-webkit-scrollbar-thumb {
+    background: #e0e0e0;
+    border-radius: 4px;
+  }
+  
+  .LandingPageBody::-webkit-scrollbar-thumb:hover {
+    background: #a5a5a5;
+  }
+
+.LandingSection{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 100px;
+}

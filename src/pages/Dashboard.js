@@ -3,7 +3,6 @@ import { FaUserCircle, FaUsers } from 'react-icons/fa';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
-import { Bell } from 'lucide-react';
 
 function useHasScrollbar(ref) {
     const [hasScrollbar, setHasScrollbar] = useState(false);
@@ -59,7 +58,7 @@ function Dashboard(){
                 ref={containerRef}
                 style={{
                     borderRadius: hasScrollbar ? '45px 0 0 45px' : '45px',
-                    transition: 'border-radius 0.2s'
+                    transition: 'border-radius 0.2s ease-in-out'
                   }}>
                     <div  className='dashboardHeader'>
                         <h1>Dashboard</h1>
