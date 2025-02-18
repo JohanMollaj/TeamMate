@@ -7,15 +7,24 @@ function FriendsChatbox({ activeChat }){
     const messagesEndRef = useRef(null);
     const [messages, setMessages] = useState([]);
     const [filteredMessages, setFilteredMessages] = useState([]);
+    const [newMessage, setNewMessage] = useState('');
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]); // Scroll when messages update    
 
     useEffect(() => {
-        fetch("/messages.json") // Adjust the path based on where you saved it
-            .then(response => response.json())
-            .then(data => setMessages(data));
+        const storedMessages = localStorage.getItem('chatMessages');
+        if (storedMessages) {
+            setMessages(JSON.parse(storedMessages));
+        } else {
+            fetch("/messages.json")
+                .then(response => response.json())
+                .then(data => {
+                    setMessages(data);
+                    localStorage.setItem('chatMessages', JSON.stringify(data));
+                });
+        }
     }, []);
 
     useEffect(() => {
@@ -28,6 +37,37 @@ function FriendsChatbox({ activeChat }){
             setFilteredMessages(conversationMessages);
         }
     }, [messages, activeChat]);
+
+    const handleInputChange = (e) => {
+        setNewMessage(e.target.value);
+    };
+
+    const handleSendMessage = () => {
+        if (newMessage.trim() === '' || !activeChat) return;
+        
+        // Create a new message object
+        const newMessageObj = {
+            senderID: "1", // Current user's ID
+            receiverID: activeChat.id,
+            time: new Date().toISOString(),
+            message: newMessage.trim()
+        };
+
+        const updatedMessages = [...messages, newMessageObj];
+        setMessages(updatedMessages);
+        
+        // Save to localStorage
+        localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
+        
+        // Clear input field
+        setNewMessage('');
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            handleSendMessage();
+        }
+    };
 
     return (
         <>{ activeChat &&(
@@ -63,9 +103,17 @@ function FriendsChatbox({ activeChat }){
                             <FaCirclePlus />
                         </button>
                         <div className='chatboxMessage'>
-                            <input type='text' className='chatboxInput' placeholder='Type a message...'/>
+                            <input 
+                            type='text' 
+                            className='chatboxInput' 
+                            placeholder='Type a message...'
+                            value={newMessage}
+                            onChange={handleInputChange}
+                            onKeyDown={handleKeyDown}/>
                         </div>
-                        <button className='chatboxButton send'>
+                        <button 
+                        className='chatboxButton send'
+                        onClick={handleSendMessage}>
                             <FaPaperPlane />
                         </button>
                     </div>
