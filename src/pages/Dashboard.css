@@ -117,13 +117,13 @@ p {
 
 
 .notifications-panel {
-  width: 40%;
+  width: 45%;
   min-width: 300px;
   background-color: #2A2C32;
   border-radius: 25px;
   padding: 20px;
   height: calc(90vh - 40px);
-  overflow-y: auto;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -174,4 +174,47 @@ p {
   display: block;
   font-size: 0.8rem;
   color: #888;
+}
+
+.notification-tabs {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 0 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #4a4e55 #2A2C32;
+  scrollbar-gutter: stable;
+}
+
+.notification-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: white;
+  background-color: #3f414a;
+  font-family: inherit;
+}
+
+.notification-tab.active {
+  background-color: #3c4c60;
+}
+
+.notification-tab:hover:not(.active) {
+  background-color: #4d4f5b;
+}
+
+.notification-count {
+  background-color: #2A2C32;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  min-width: 24px;
+  text-align: center;
 }

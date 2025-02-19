@@ -3,6 +3,7 @@ import { FaUserCircle, FaUsers, FaBell } from 'react-icons/fa';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
+import { AtSign, UserPlus } from 'lucide-react';
 
 function useHasScrollbar(ref) {
     const [hasScrollbar, setHasScrollbar] = useState(false);
@@ -28,18 +29,42 @@ function useHasScrollbar(ref) {
 
 function Dashboard(){
     const navigate  = useNavigate();
+    const [activeTab, setActiveTab] = useState('unread');
 
     const containerRef = useRef(null);
-    const hasScrollbar = useHasScrollbar(containerRef);
 
     const [friends, setFriends] = useState([]);
     const [groups, setGroups] = useState([]);
-    const [notifications, setNotifications] = useState([
-        { id: 1, text: "John sent you a friend request", time: "10 minutes ago" },
-        { id: 2, text: "New message in 'Project Team'", time: "30 minutes ago" },
-        { id: 3, text: "Task deadline approaching: Project Report", time: "1 hour ago" },
-        { id: 4, text: "Meeting reminder: Team Standup at 10 AM", time: "3 hours ago" }
-      ]);
+    const notifications = {
+        unread: [
+            { id: 1, text: "New message in 'Project Team'", time: "30 minutes ago" },
+            { id: 2, text: "Task deadline approaching: Project Report", time: "1 hour ago" }
+        ],
+        mentions: [
+            { id: 1, text: "@you was mentioned in Group1", time: "2 hours ago" },
+            { id: 2, text: "@you was tagged in Group1", time: "5 hours ago" }
+        ],
+        friendRequests: [
+            { id: 1, text: "John sent you a friend request", time: "10 minutes ago" },
+            { id: 2, text: "Sarah accepted your friend request", time: "1 day ago" }
+        ]
+    };
+    const NotificationTab = ({ label, icon: Icon, type }) => (
+        <button 
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
+                activeTab === type 
+                    ? 'bg-gray-500 text-white' 
+                    : 'bg-gray-700/10 text-gray-300 hover:bg-gray-600'
+            }`}
+            onClick={() => setActiveTab(type)}
+        >
+            <Icon size={18} />
+            <span>{label}</span>
+            <span className="ml-2 bg-gray-700 px-2 py-1 rounded-full text-xs">
+                {notifications[type].length}
+            </span>
+        </button>
+    );
 
     useEffect(() => {
         fetch("/friends.json") // Adjust the path as needed
@@ -108,13 +133,32 @@ function Dashboard(){
                         <div className="notifications-header">
                         <h2><FaBell /> Notifications</h2>
                         </div>
+                        
+                        <div className="notification-tabs">
+                            <NotificationTab 
+                                label="Unread" 
+                                icon={FaBell} 
+                                type="unread" 
+                            />  
+                            <NotificationTab 
+                                label="Mentions" 
+                                icon={AtSign} 
+                                type="mentions" 
+                            />
+                            <NotificationTab 
+                                label="Friends" 
+                                icon={UserPlus} 
+                                type="friendRequests" 
+                            />
+                        </div>
+
                         <div className="notifications-list">
-                        {notifications.map(notification => (
-                            <div key={notification.id} className="notification-item">
-                            <p className="notification-text">{notification.text}</p>
-                            <span className="notification-time">{notification.time}</span>
-                            </div>
-                        ))}
+                            {notifications[activeTab].map(notification => (
+                                <div key={notification.id} className="notification-item">
+                                    <p className="notification-text">{notification.text}</p>
+                                    <span className="notification-time">{notification.time}</span>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </div>
