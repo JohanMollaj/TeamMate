@@ -1,9 +1,8 @@
 import './Dashboard.css';
-import { FaUserCircle, FaUsers } from 'react-icons/fa';
+import { FaUserCircle, FaUsers, FaBell } from 'react-icons/fa';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
-import { Bell } from 'lucide-react';
 
 function useHasScrollbar(ref) {
     const [hasScrollbar, setHasScrollbar] = useState(false);
@@ -35,6 +34,12 @@ function Dashboard(){
 
     const [friends, setFriends] = useState([]);
     const [groups, setGroups] = useState([]);
+    const [notifications, setNotifications] = useState([
+        { id: 1, text: "John sent you a friend request", time: "10 minutes ago" },
+        { id: 2, text: "New message in 'Project Team'", time: "30 minutes ago" },
+        { id: 3, text: "Task deadline approaching: Project Report", time: "1 hour ago" },
+        { id: 4, text: "Meeting reminder: Team Standup at 10 AM", time: "3 hours ago" }
+      ]);
 
     useEffect(() => {
         fetch("/friends.json") // Adjust the path as needed
@@ -57,48 +62,60 @@ function Dashboard(){
                 {/* Dashboard */}
                 <div className="dashboard"
                 ref={containerRef}
-                style={{
-                    borderRadius: hasScrollbar ? '45px 0 0 45px' : '45px',
-                    transition: 'border-radius 0.2s'
-                  }}>
-                    <div  className='dashboardHeader'>
-                        <h1>Dashboard</h1>
-                    </div>
-                    
-                    <div className="section">
-                        <button onClick={() => navigate('/social')} className="dashboard-button">
-                            <h2>Friends</h2>
-                        </button>
+                >
+                    <div className='sections'>
+                        <div  className='dashboardHeader'>
+                            <h1>Dashboard</h1>
+                        </div>
+                        <div className="section">
+                            <button onClick={() => navigate('/social')} className="dashboard-button">
+                                <h2>Friends</h2>
+                            </button>
 
-                        <div className="dashboard-friends">
-                            {friends.filter(friend => friend.isOnline).map(friend => (
-                                <button key={friend.id} className="dashboard-friend" onClick={() => handleChatRedirect(friend)}>
-                                    <FaUserCircle className="friend-icon" />
-                                    <span>{friend.name}</span>
+                            <div className="dashboard-friends">
+                                {friends.filter(friend => friend.isOnline).map(friend => (
+                                    <button key={friend.id} className="dashboard-friend" onClick={() => handleChatRedirect(friend)}>
+                                        <FaUserCircle className="friend-icon" />
+                                        <span>{friend.name}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="section">
+                        <button onClick={() => navigate("/social", { state: { tab: "Groups" } })} className="dashboard-button">
+                            <h2>Groups</h2>
+                        </button>
+                            <div className="groups">
+                            {groups.map(group => (
+                                <button key={group.id} className="group">
+                                    <FaUsers className="group-icon" />
+                                    <span>{group.name}</span>
                                 </button>
                             ))}
+                            </div>
+                        </div>
+
+                        <div className="section">
+                            <button onClick={() => navigate('/tasks')} className="dashboard-button">
+                                <h2>Tasks</h2>
+                            </button>
+                            <p>You have finished all your tasks!</p>
                         </div>
                     </div>
 
-                    <div className="section">
-                    <button onClick={() => navigate("/social", { state: { tab: "Groups" } })} className="dashboard-button">
-                        <h2>Groups</h2>
-                    </button>
-                        <div className="groups">
-                        {groups.map(group => (
-                            <button key={group.id} className="group">
-                                <FaUsers className="group-icon" />
-                                <span>{group.name}</span>
-                            </button>
+                    <div className="notifications-panel">
+                        <div className="notifications-header">
+                        <h2><FaBell /> Notifications</h2>
+                        </div>
+                        <div className="notifications-list">
+                        {notifications.map(notification => (
+                            <div key={notification.id} className="notification-item">
+                            <p className="notification-text">{notification.text}</p>
+                            <span className="notification-time">{notification.time}</span>
+                            </div>
                         ))}
                         </div>
-                    </div>
-
-                    <div className="section">
-                    <button onClick={() => navigate('/tasks')} className="dashboard-button">
-                        <h2>Tasks</h2>
-                    </button>
-                    <p>You have finished all your tasks!</p>
                     </div>
                 </div>
             </div>

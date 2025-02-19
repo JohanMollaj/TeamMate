@@ -1,11 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 
 html, body {
-  background-color: #ffffff;
+  background-color: #1C1D20;
   margin: 0;
   font-family: "Lexend", sans-serif;
   height: 100vh;
   width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: #4a4e55 #2A2C32;
+  scrollbar-gutter: stable;
 }
 
 .container-dashboard{
@@ -45,7 +48,9 @@ html, body {
   color: white;
   background-color: #2A2C32;
   border-radius: 45px; /* Rounded corners */
-  overflow-y: auto; /* Vertical scrolling inside the dashboard */
+  display: flex;
+  flex-direction: row;
+  overflow-y: none; /* Vertical scrolling inside the dashboard */
   box-sizing: border-box; /* Include padding in dimensions */
   scrollbar-width: thin;
   scrollbar-color: #4a4e55 #2A2C32;
@@ -57,22 +62,26 @@ html, body {
   }
 }
 
+.sections{
+  border-radius: 15px;
+  overflow-y: auto;
+    flex-grow: 1;
+    scrollbar-width: thin;
+    scrollbar-color: #4a4e55 #2A2C32;
+  width: 65%;
+  padding-right: 16px; /* Add padding for content */
+  margin-right: 0;
+}
 
 .dashboardHeader {
   font-size: 42px;
   margin-bottom: 10px;
   display: flex;
 }
-.notifications {
-  margin-left: auto;
-  font-size: 40px;
-  color: white;
-  cursor: pointer;
-  transition: color 0.3s;
-}
 
 .dashboard .section {
   margin-bottom: 30px;
+  width: 100%;
   padding: 25px 30px;
   background-color: #3f414a;
   border-radius: 15px;
@@ -104,4 +113,65 @@ html, body {
 
 p {
   margin: 5px 0;
+}
+
+
+.notifications-panel {
+  width: 40%;
+  min-width: 300px;
+  background-color: #2A2C32;
+  border-radius: 25px;
+  padding: 20px;
+  height: calc(90vh - 40px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.notifications-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.notifications-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.5rem;
+  color: var(--text-color);
+}
+
+.notifications-list {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #4a4e55 #2A2C32;
+  scrollbar-gutter: stable;
+}
+
+.notification-item {
+  padding: 15px;
+  border-radius: 15px;
+  background-color: #3f414a;
+  margin-bottom: 15px;
+  transition: background-color 0.2s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.notification-item:hover {
+  background-color: #4d4f5b;
+}
+
+.notification-text {
+  margin: 0 0 8px 0;
+  color: var(--text-color);
+}
+
+.notification-time {
+  display: block;
+  font-size: 0.8rem;
+  color: #888;
 }
