@@ -1,0 +1,43 @@
+.container-tasks{
+    flex-direction: row;
+    height: 100vh;
+    width:100%;
+    overflow: hidden;
+  }
+
+.container-tasks .sections{
+    border-radius: 15px;
+    display: flex;
+    flex-direction: row;
+    overflow-y: hidden;
+    flex-grow: 1;
+    scrollbar-width: thin;
+    scrollbar-color: #4a4e55 #2A2C32;
+    width: 100%;
+    gap: 20px;
+    padding-right: 16px; /* Add padding for content */
+    margin-right: 0;
+  }
+  .tasks .section {
+    margin-top: 80px;
+    margin-bottom: 30px;
+    width: 50%;
+    height: 87%;
+    padding: 25px 30px;
+    background-color: #3f414a;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: auto;
+  }
+  .section.overview{
+    width: 35%;
+  }
+  .section.assignments{
+    width: 65%;
+  }
+
+  .TasksHeader {
+    font-size: 42px;
+    margin-bottom: 10px;
+    position: absolute;
+  }
