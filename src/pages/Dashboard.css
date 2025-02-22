@@ -105,9 +105,21 @@ html, body {
   flex-direction: column;
   align-items: center;
 }
+.dashboard-task-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 15px;
+  border-radius: 15px;
+  /*border: 2px solid rgba(128, 128, 128, 0.3);*/
+}
 
 .friend-icon, .group-icon {
   font-size: 42px;
+  margin-bottom: 5px;
+}
+.task-icon {
+  font-size: 30px;
   margin-bottom: 5px;
 }
 
@@ -115,6 +127,13 @@ p {
   margin: 5px 0;
 }
 
+.dashboard-task-title{
+  font-size: 20px
+}
+.dashboard-task-duedate{
+  font-size: 15px;
+  color: #9CA3AF;
+}
 
 .notifications-panel {
   width: 530px;

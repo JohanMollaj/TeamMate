@@ -1,0 +1,60 @@
+{
+    "tasks": [
+      {
+        "id": 1,
+        "title": "Complete Project Proposal",
+        "description": "Write and submit the Q1 project proposal",
+        "dueDate": "2025-03-01T23:59:59",
+        "assignedBy": "Sarah Chen",
+        "completed": false
+      },
+      {
+        "id": 2,
+        "title": "Review Team Presentations",
+        "description": "Review and provide feedback on team presentations",
+        "dueDate": "2025-02-25T17:00:00",
+        "assignedBy": "Michael Rodriguez",
+        "completed": false
+      },
+      {
+        "id": 3,
+        "title": "Update Documentation",
+        "description": "Update the API documentation with new endpoints",
+        "dueDate": "2025-03-10T16:00:00",
+        "assignedBy": "Alex Kim",
+        "completed": false
+      },
+      {
+        "id": 4,
+        "title": "Client Meeting Preparation",
+        "description": "Prepare slides for the upcoming client meeting",
+        "dueDate": "2025-02-23T10:00:00",
+        "assignedBy": "Emma Wilson",
+        "completed": false
+      },
+      {
+        "id": 5,
+        "title": "Code Review",
+        "description": "Review pull requests for the new feature",
+        "dueDate": "2025-02-24T15:00:00",
+        "assignedBy": "David Park",
+        "completed": true
+      },
+      {
+        "id": 6,
+        "title": "Weekly Report",
+        "description": "Submit weekly progress report",
+        "dueDate": "2025-02-23T17:00:00",
+        "assignedBy": "Sarah Chen",
+        "completed": true
+      },
+      {
+        "id": 7,
+        "title": "Team Sync-up",
+        "description": "Attend daily team sync-up meeting",
+        "dueDate": "2025-02-22T09:30:00",
+        "assignedBy": "Michael Rodriguez",
+        "completed": true
+      }
+    ]
+  }

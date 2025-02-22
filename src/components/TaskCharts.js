@@ -45,7 +45,7 @@ const TaskCharts = () => {
         borderRadius: '15px',
         height: '300px'
       }}>
-        <h2 style={{ color: 'white', fontSize: '20px' }}>Task Completion Rate</h2>
+        <h2 style={{ color: 'white', fontSize: '24px' }}>Task Completion Rate</h2>
         <ResponsiveContainer width="100%" height="90%">
           <PieChart>
             <Pie

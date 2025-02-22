@@ -54,11 +54,23 @@
     scrollbar-gutter: stable;
   }
   .section.overview{
-    width: 35%;
+    width: 40%;
   }
   .section.assignments{
-    width: 65%;
+    width: 60%;
   }
+
+.assignments-container {
+  background-color: #2A2C32;
+  border-radius: 12px;
+  padding: 24px;
+  width: 100%;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  scrollbar-width: thin;
+  scrollbar-color: #4a4e55 #2A2C32;
+  scrollbar-gutter: stable;
+}
 
   .donutChartDiv{
     display: flex;
@@ -104,13 +116,14 @@
   border-radius: 12px;
   padding: 24px;
   width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   scrollbar-width: thin;
   scrollbar-color: #4a4e55 #2A2C32;
   scrollbar-gutter: stable;
 }
 
-.graded-assignments-title {
-  font-size: 20px;
+.section .graded-assignments-title {
+  font-size: 24px;
   color: white;
   margin-bottom: 24px;
 }
@@ -119,11 +132,9 @@
   overflow-x: auto;
   overflow-y: hidden;
   padding-bottom: 12px; /* Space for scrollbar */
-  
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  &::-webkit-scrollbar {
-    height: 8px;
-  }
+  scrollbar-width: thin;
+  scrollbar-color: #4a4e55 #2A2C32;
+  scrollbar-gutter: stable;
   
   /* Track */
   &::-webkit-scrollbar-track {

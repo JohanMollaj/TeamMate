@@ -4,28 +4,56 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { AtSign, UserPlus } from 'lucide-react';
+import { FaRegPenToSquare } from "react-icons/fa6";
 
-function useHasScrollbar(ref) {
-    const [hasScrollbar, setHasScrollbar] = useState(false);
-  
-    useEffect(() => {
-      if (!ref.current) return;
-  
-      const updateScrollbar = () => {
-        const element = ref.current;
-        setHasScrollbar(element.scrollHeight > element.clientHeight);
+const DashboardTasks = () => {
+    const [tasks, setTasks] = useState([]);
+    
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { 
+          month: 'short', 
+          day: 'numeric' 
+        }) + ' at ' + date.toLocaleTimeString('en-US', { 
+          hour: '2-digit', 
+          minute: '2-digit'
+        });
       };
+
+    useEffect(() => {
+      const fetchTasks = async () => {
+        try {
+          const response = await fetch('/tasks.json');
+          const data = await response.json();
+          setTasks(data.tasks);
+        } catch (error) {
+          console.error('Error fetching tasks:', error);
+        }
+      };
+      
+      fetchTasks();
+    }, []);
   
-      updateScrollbar();
+    const pendingTasks = tasks.filter(task => !task.completed);
   
-      const resizeObserver = new ResizeObserver(updateScrollbar);
-      resizeObserver.observe(ref.current);
+    return (
+      <div>
+        {pendingTasks.length === 0 ? (
+          <p style={{ color: '#e5e7eb' }}>You have finished all your tasks!</p>
+        ) : (
+          <div className="flex flex-row gap-6">
+            {pendingTasks.map(task => (
+                <button key={task.id} className="dashboard-task-container">
+                    <div className='dashboard-task-title'>{task.title}</div>
+                    <div className='dashboard-task-duedate'>{formatDate(task.dueDate)}</div>
+                </button>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
   
-      return () => resizeObserver.disconnect();
-    }, [ref]);
-  
-    return hasScrollbar;
-  }
 
 function Dashboard(){
     const navigate  = useNavigate();
@@ -65,6 +93,8 @@ function Dashboard(){
             </span>
         </button>
     );
+
+    
 
     useEffect(() => {
         fetch("/friends.json") // Adjust the path as needed
@@ -125,7 +155,7 @@ function Dashboard(){
                             <button onClick={() => navigate('/tasks')} className="dashboard-button">
                                 <h2>Tasks</h2>
                             </button>
-                            <p>You have finished all your tasks!</p>
+                            <DashboardTasks />
                         </div>
                     </div>
 
