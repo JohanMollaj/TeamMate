@@ -169,7 +169,7 @@ const CompletedTasks = ({ tasks }) => {
 
 // Shared TaskItem component used by all sections
 const TaskItem = ({ task }) => (
-  <div className="bg-gray-700/30 rounded-lg p-4 mb-2">
+  <div className="bg-[#3f414a] rounded-lg p-4 mb-2">
     <div className="flex justify-between items-start">
       <div>
         <h4 className="text-lg font-medium">{task.title}</h4>
