@@ -1,8 +1,9 @@
 import './social.css';
 import FriendsChatbox from '../components/FriendsChatbox';
+import CreateGroupDialog from '../components/createGroupDialog';
 
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
-import { FaUserGroup } from "react-icons/fa6";
+import { FaUserGroup, FaPlus } from "react-icons/fa6";
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { User } from 'lucide-react';
@@ -81,6 +82,12 @@ function Friends({ onSelectChat }) {
 function Groups() {
     const [search, setSearch] = useState("");
     const [groups, setGroups] = useState([]);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const handleCreateGroup = (groupData) => {
+        console.log('Creating group:', groupData);
+        // Add your group creation logic here
+    };
 
     useEffect(() => {
         fetch("/groups.json") // Adjust the path as needed
@@ -115,6 +122,17 @@ function Groups() {
                                 </div>
                             </button>
                         ))}
+                        <button 
+                        onClick={() => setIsDialogOpen(true)}
+                        className="text-[18px] flex gap-2 items-center rounded-lg bg-slate-500 p-3 w-full min-w-[230px] items-center justify-center
+                        transition duration-200 ease-in-out hover:bg-slate-600">
+                            <FaPlus /> Create Group
+                        </button>
+                        <CreateGroupDialog
+                            isOpen={isDialogOpen}
+                            onClose={() => setIsDialogOpen(false)}
+                            onCreateGroup={handleCreateGroup}
+                        />  
                     </div>
                 </div>
         </div>
