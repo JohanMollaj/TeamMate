@@ -1,6 +1,7 @@
 import './social.css';
 import FriendsChatbox from '../components/FriendsChatbox';
 import CreateGroupDialog from '../components/createGroupDialog';
+import AddFriendDialog from '../components/addFriendDialog';
 
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
 import { FaUserGroup, FaPlus } from "react-icons/fa6";
@@ -12,6 +13,16 @@ function Friends({ onSelectChat }) {
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState("all");
     const [friends, setFriends] = useState([]);
+    const [isAddFriendOpen, setIsAddFriendOpen] = useState(false);
+
+    const handleSendRequest = async (username) => {
+        console.log(`Friend request sent to: ${username}`, {
+          timestamp: new Date().toISOString(),
+          action: 'friend_request_sent',
+          target_user: username,
+          status: 'success'
+        });
+    };
 
     const filteredFriends = friends.filter((friend) => {
         const matchesSearch = friend.name.toLowerCase().includes(search.toLowerCase());
@@ -50,10 +61,18 @@ function Friends({ onSelectChat }) {
 
                 <div className='section'>
                     <div className="friends">
-                        <button className="text-[18px] flex items-center rounded-lg bg-green-700 p-3 w-full min-w-[230px] items-center justify-center
+                        <button 
+                        onClick={() => setIsAddFriendOpen(true)}
+                        className="text-[18px] flex items-center rounded-lg bg-green-700 p-3 w-full min-w-[230px] items-center justify-center
                         transition duration-200 ease-in-out hover:bg-green-800">
                             Add Friend
                         </button>
+
+                        <AddFriendDialog
+                            isOpen={isAddFriendOpen}
+                            onClose={() => setIsAddFriendOpen(false)}
+                            onSendRequest={handleSendRequest}
+                        />
 
                         {filteredFriends.map((friend) => (
                             <button
