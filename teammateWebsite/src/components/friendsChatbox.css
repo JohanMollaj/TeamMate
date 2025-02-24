@@ -1,0 +1,136 @@
+.chatboxContainer{
+    color: white;
+    background-color: #2A2C32;
+    display: flex;
+    flex-direction: column;
+    height: 100%;   
+    width: 100%;
+    border-radius: 0 0 20px 20px;
+    overflow: hidden;
+}
+.userHeader{
+    margin: 0;
+    gap: 10px;
+    flex-shrink: 0;
+}
+.userHeader .friend-status{
+  margin-left: 10px;
+}
+
+.chatboxHeader{
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #2A2C32;
+    display: flex;
+}
+.chatboxMain{
+    width: 100%;
+    height: calc(100% - 85px); 
+    min-height: 0;
+    border-radius: 15px 15px 15px 15px;
+    border-top: rgb(186, 186, 186) 2px solid;
+    padding: 10px 20px;
+    background-color: #3f414a;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+.chatboxMessages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px;
+    padding-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 5px;
+    min-height: 0;
+}
+
+.message {
+    color: white;
+    width: fit-content;
+    margin-top: 0.5rem;
+}
+.messageSender{
+    display: block;
+}
+.messageTime{
+        display: block;
+}
+.message .messageTime {
+    padding: 2px 0;
+    border-radius: 10px;
+    color: #e5e7eb;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+}
+.message:hover .messageTime {
+    opacity: 1;
+    cursor: default;
+}
+
+.messageSender,
+.messageTime{
+    font-size: 0.8rem;
+    color: #b9bbbe;
+}
+.message.received {
+    align-self: flex-start;
+    border-bottom-left-radius: 0.25rem;
+}
+.message.sent {
+    align-self: flex-end;
+    border-bottom-right-radius: 0.25rem;
+}
+.messageText {
+    color: #ffffff;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+
+.chatbox {
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #2c2f33;
+    border-radius: 20px;
+    padding: 10px 15px;
+    height: 50px;
+    width: 100%;
+    min-width: 500px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.chatboxMessage{
+    flex: 1;
+    display: flex;
+    width: 100%;
+}
+.chatboxInput {
+    margin: 0;
+    width: 100%;
+    border: none;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 20px;
+    outline: none;
+    background: none    ;
+    color: white;
+}
+
+.chatboxInput::placeholder {
+    color: #b9bbbe;
+}
+
+.chatboxButton{
+    font-size: 1.15rem;
+    color: white;
+    transition: color 0.2s ease-in-out;
+}
+.chatboxButton:hover{
+    cursor: pointer;
+    color: rgb(185, 205, 221);
+}

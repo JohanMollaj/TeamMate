@@ -1,0 +1,67 @@
+.settingsContainer{
+    width:64vw;
+    overflow-y: auto;
+    /* Allow the sidebar to scroll */
+    max-height: calc(100vh - 120px);
+    /* Adjust height to fit within the available space */
+    padding-right: 10px;
+    box-sizing: border-box;
+    scrollbar-width: thin; /* Makes the scrollbar thinner */
+    scrollbar-color: #4a4e55 #2A2C32; /* thumb color and track color */
+}
+
+input{
+    background-color: #18191d;
+    width: 300px;
+    border-radius: 10px;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin-bottom: 10px;
+    line-height: 1.2;
+    outline: none; 
+    border: none; 
+}
+input::placeholder{
+    text-align: left;
+        /* Align placeholder text horizontally */
+        display: block;
+        /* Treat the placeholder as block-level text */
+        line-height: 1.2;
+        /* Adjust line spacing */
+        color: #888;
+        /* Placeholder text color */
+        white-space: normal;
+        /* Allow wrapping */
+        overflow-wrap: break-word;
+        /* Enable word wrapping */
+}
+
+textarea{
+    background-color: #18191d;
+    width: 300px;
+    height: 100px;
+    border-radius: 10px;
+    color: white;
+    border: none;
+    padding: 10px;
+    margin-bottom: 10px;
+    line-height: 1.2;
+    resize: none;
+    outline: none; 
+    border: none; 
+}
+textarea::placeholder{
+    text-align: left;
+        /* Align placeholder text horizontally */
+        display: block;
+        /* Treat the placeholder as block-level text */
+        line-height: 1.2;
+        /* Adjust line spacing */
+        color: #888;
+        /* Placeholder text color */
+        white-space: normal;
+        /* Allow wrapping */
+        overflow-wrap: break-word;
+        /* Enable word wrapping */
+}

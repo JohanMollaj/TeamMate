@@ -1,0 +1,199 @@
+/* landing.css */
+.container-landingpage {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    width: 100%;
+    overflow-y: auto;
+    background-color: #ffffff;
+}
+
+.navigation-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 4rem;
+    height: 5rem;
+    background-color: rgb(241, 247, 247);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    box-sizing: border-box;
+    margin: 0 2rem;
+    border-radius: 36px;
+    color: black;
+    position: sticky;
+    top: 0;
+}
+
+.TopLeft h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    color: #00c9bd;
+}
+
+.TopCenter {
+    display: flex;
+    gap: 2.5rem;
+    align-items: center;
+}
+
+.TopLinks {
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #424242;
+    transition: color 0.2s ease;
+    position: relative;
+}
+
+.TopLinks:hover {
+    color: #099a91;
+}
+
+.TopLinks::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #099a91;
+    transition: width 0.2s ease;
+}
+
+.TopLinks:hover::after {
+    width: 100%;
+}
+
+.ButtonLogin {
+    background-color: #00c9bd;
+    color: #ffffff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.ButtonLogin:hover {
+    background-color: #099a91;
+}
+
+.LandingPageBody {
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 40px auto;
+    background-color: transparent;
+    z-index: 100;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    color: #00c9bd;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.about-content {
+    background: rgba(241, 247, 247, 0.9);
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.feature-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.feature-card h3 {
+    color: #099a91;
+    margin-bottom: 1rem;
+}
+
+.section-text {
+    font-size: 1.1rem;
+    color: #424242;
+    line-height: 1.6;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 2rem;
+}
+
+.LandingSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 100px;
+    padding: 2rem;
+    background: rgba(241, 247, 247, 0.9);
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+}
+
+.LandingSection h1 {
+    font-size: 2.5rem;
+    color: #00c9bd;
+    margin-bottom: 2rem;
+}
+
+.LandingSection p {
+    font-size: 1.1rem;
+    color: #424242;
+    line-height: 1.6;
+    max-width: 800px;
+}
+
+
+@media (max-width: 768px) {
+    .navigation-bar {
+        padding: 1rem 2rem;
+        margin: 0 1rem;
+    }
+    
+    .TopCenter {
+        gap: 1.5rem;
+    }
+    
+    .LandingPageBody {
+        padding: 2rem 1rem;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .LandingSection h1 {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .TopLeft h1 {
+        display: none;
+    }
+    
+    .TopCenter {
+        gap: 1rem;
+    }
+    
+    .navigation-bar {
+        padding: 1rem;
+        margin: 0 0.5rem;
+    }
+}
