@@ -1,0 +1,49 @@
+{
+    "gradedAssignments": [
+      {
+        "id": 1,
+        "taskName": "Project Proposal",
+        "dateGraded": "2025-02-18T14:30:00",
+        "grade": 9,
+        "feedback": "Excellent work! Clear objectives and well-structured.",
+        "groupId": 1,
+        "groupName": "Design Team"
+      },
+      {
+        "id": 2,
+        "taskName": "Research Analysis",
+        "dateGraded": "2025-02-17T09:15:00",
+        "grade": 7,
+        "feedback": "Good analysis but could use more detailed examples.",
+        "groupId": 2,
+        "groupName": "Research Group"
+      },
+      {
+        "id": 3,
+        "taskName": "UI Design Mockup",
+        "dateGraded": "2025-02-15T16:45:00",
+        "grade": 8,
+        "feedback": "Creative design solutions, nice attention to user flow.",
+        "groupId": 1,
+        "groupName": "Design Team"
+      },
+      {
+        "id": 4,
+        "taskName": "Database Schema",
+        "dateGraded": "2025-02-14T11:20:00",
+        "grade": 10,
+        "feedback": "Perfect implementation of all requirements.",
+        "groupId": 3,
+        "groupName": "Backend Team"
+      },
+      {
+        "id": 5,
+        "taskName": "Code Review",
+        "dateGraded": "2025-02-13T13:50:00",
+        "grade": 6,
+        "feedback": "Some critical issues were missed, needs more thorough review.",
+        "groupId": 3,
+        "groupName": "Backend Team"
+      }
+    ]
+  }
