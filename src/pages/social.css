@@ -98,7 +98,7 @@ h1 {
     margin-bottom: 30px;
 }
 
-.section span{
+.section .friend-username, .section .friend-status {
   font-size: 20px;
 }
 
