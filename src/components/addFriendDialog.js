@@ -116,7 +116,7 @@ const AddFriendDialog = ({ isOpen, onClose, onSendRequest }) => {
                   Username
                 </label>
                 <div className="relative">
-                  <span className="absolute left-2 top-0 text-gray-400">@</span>
+                  <span className="absolute left-2 top-1 text-gray-400">@</span>
                   <input
                     type="text"
                     value={username}
