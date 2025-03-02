@@ -22,7 +22,7 @@ function Profile() {
         <h2>Qualifications</h2>
         <textarea type="text" placeholder="Write your qualifications" />
       </div>
-      <button className="settings-button">Save</button>
+      <button className="change-password-button">Save</button>
       </div>
     </div>
   );

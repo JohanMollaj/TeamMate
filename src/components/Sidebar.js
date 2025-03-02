@@ -29,17 +29,6 @@ function Sidebar() {
                         </button>
                     </nav>
                 </div>
-                    <div className='sidebarBottom'>
-                        <div className="sidebar-footer">
-                            <button onClick={() => navigate('/profile')} className="icon-button">
-                                <FaUserCircle className="icon" />
-                            </button>
-                            
-                            <button onClick={() => navigate('/settings')} className="icon-button">
-                                <FaCog className="icon" />
-                            </button>
-                        </div>
-                    </div>
             </div>
         </div>
     )

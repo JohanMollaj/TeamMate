@@ -3,7 +3,7 @@
   display: block; /* Makes each button take up its line */
 }
 
-.settings-button {
+.change-password-button {
     flex-direction: column;
     background-color: #55759b;
     color: white;
@@ -14,7 +14,7 @@
     margin-bottom: 15px;
     transition: background-color 0.2s ease-in-out;
 }
-.settings-button:hover {
+.change-password-button:hover {
     background-color: #4a6485;
 }
 

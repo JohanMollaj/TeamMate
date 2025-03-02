@@ -80,7 +80,7 @@ function Friends({ onSelectChat }) {
                                 className="flex items-center gap-3 rounded-lg bg-zinc-700 p-3 w-full min-w-[230px]"
                                 onClick={() => onSelectChat(friend)}>
                                 <div className="friend flex items-center gap-2">
-                                    <User className="friend-icon" />
+                                    <User className="user-icon" />
                                     <span className="friend-username">{friend.name}</span>
                                     <div className="online-indicator">
                                         {friend.isOnline ? (

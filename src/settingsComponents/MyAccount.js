@@ -17,7 +17,7 @@ function MyAccount() {
         <h2>Email</h2>
         <p>[example@example.com]</p>
       </div>
-      <button className="settings-button">Change Password</button>
+      <button className="change-password-button">Change Password</button>
       <button className="delete-button">Delete Account</button>
     </div>
   );

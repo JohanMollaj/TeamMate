@@ -1,3 +1,148 @@
+/* Discord-style Profile Dropdown */
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 300px;
+  background-color: #2A2C32;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 100;
+  overflow: hidden;
+  animation: dropdown-fade 0.2s ease;
+}
+
+@keyframes dropdown-fade {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.profile-dropdown-header {
+  display: flex;
+  padding: 20px;
+  background-color: #3f414a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profile-dropdown-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 15px;
+}
+
+.profile-dropdown-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.dropdown-initials-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 600;
+  color: white;
+}
+
+.profile-dropdown-user-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.profile-dropdown-nickname {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.profile-dropdown-username {
+  font-size: 14px;
+  color: #a8a9b0;
+  margin-bottom: 8px;
+}
+
+.profile-dropdown-status {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+
+.status-online {
+  background-color: #3ba55c;
+}
+
+.status-idle {
+  background-color: #faa61a;
+}
+
+.status-dnd {
+  background-color: #ed4245;
+}
+
+.status-offline {
+  background-color: #747f8d;
+}
+
+.profile-dropdown-section {
+  padding: 15px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.profile-dropdown-section h3 {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #a8a9b0;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.profile-dropdown-section p {
+  font-size: 14px;
+  color: #dcddde;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.profile-dropdown-footer {
+  display: flex;
+  padding: 15px 20px;
+  gap: 10px;
+}
+
+.profile-dropdown-button {
+  flex: 1;
+  padding: 8px 0;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  background-color: #3f414a;
+  color: white;
+  transition: background-color 0.2s;
+}
+
+.profile-dropdown-button:hover {
+  background-color: #4d4f5b;
+}
+
+.profile-logout:hover {
+  background-color: #924444;
+}
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 
 html, body {
@@ -13,9 +158,119 @@ html, body {
 
 .container-dashboard{
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   height: 100vh;
-  width:100%;
+  width: 100%;
+  overflow: hidden;
+  padding-bottom: 20px; /* Add padding at the bottom to match the top spacing */
+  box-sizing: border-box;
+}
+
+/* New Full-width header */
+.dashboard-page-header {
+  width: calc(100% - 100px);
+  margin: 20px 20px 0 80px;
+  padding: 20px 40px;
+  padding-bottom: 0;
+  background-color: #2A2C32;
+  border-radius: 30px 30px 0 0;
+  color: white;
+  display: flex;
+  align-items: center; /* Vertically center all items */
+  justify-content: space-between; /* Space between title and user controls */
+  min-height: 80px; /* Ensure consistent height */
+}
+
+.dashboard-page-header h1 {
+  font-size: 42px;
+  margin: 0;
+}
+
+/* User controls in header */
+.user-controls {
+  display: flex;
+  align-items: center; /* Vertically center items */
+  gap: 20px;
+  height: 100%; /* Fill the header height */
+}
+
+.dashboard-page-header .settings-button {
+  background-color: #3f414a;
+  border: none;
+  color: white;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.settings-button:hover {
+  background-color: #4d4f5b;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center; /* Vertically center items */
+  gap: 12px;
+  background-color: #3f414a;
+  padding: 8px 16px;
+  padding-left: 5px;
+  border-radius: 30px;
+  flex-direction: row-reverse; /* Reverse the order */
+  height: 46px; /* Match the height of settings button */
+  position: relative; /* For dropdown positioning */
+  cursor: pointer; /* Indicate clickable */
+  transition: background-color 0.2s;
+}
+
+.user-profile:hover {
+  background-color: #4d4f5b;
+}
+
+.initials-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  /* Background color will be set dynamically via inline style */
+  /* Background fallback if inline style fails */
+  background-color: #4682B4;
+}
+
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #5a5d6b;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  text-align: right; /* Right-align the text */
+  justify-content: center; /* Vertically center the text content */
+}
+
+.user-nickname {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.user-username {
+  font-size: 14px;
+  color: #a8a9b0;
+}
+
+/* Content container for the dashboard panels */
+.dashboard-content {
+  flex: 1;
+  display: flex;
   overflow: hidden;
 }
 
@@ -32,22 +287,22 @@ html, body {
     
   }
   
-  .dashboard-button:active {
-    transform: translateY(2px); /* Move the text down 2 pixels */
-  }
+.dashboard-button:active {
+  transform: translateY(2px); /* Move the text down 2 pixels */
+}
 
-  .dashboard-button:hover {
-    color: #7a92af; /* Hover effect color */
-  }
+.dashboard-button:hover {
+  color: #7a92af; /* Hover effect color */
+}
 
 .dashboard {
-  margin: 20px 20px 20px 80px;
-  height: calc(100vh - 40px); /* Subtract the margin space to avoid overflow */
+  margin: 0 20px 20px 80px;
+  height: calc(100vh - 143px); /* Further adjusted to account for bottom spacing */
   width: calc(100% - 100px); /* Adjusted dynamically for the sidebar */
-  padding: 30px 40px 40px 40px;
+  padding: 10px 40px 40px 40px;
   color: white;
   background-color: #2A2C32;
-  border-radius: 45px; /* Rounded corners */
+  border-radius: 0 0 45px 45px; /* Rounded corners at bottom only */
   display: flex;
   flex-direction: row;
   overflow-y: none; /* Vertical scrolling inside the dashboard */
@@ -65,18 +320,12 @@ html, body {
 .sections{
   border-radius: 15px;
   overflow-y: auto;
-    flex-grow: 1;
-    scrollbar-width: thin;
-    scrollbar-color: #4a4e55 #2A2C32;
+  flex-grow: 1;
+  scrollbar-width: thin;
+  scrollbar-color: #4a4e55 #2A2C32;
   width: 65%;
   padding-right: 16px; /* Add padding for content */
   margin-right: 0;
-}
-
-.dashboardHeader {
-  font-size: 42px;
-  margin-bottom: 10px;
-  display: flex;
 }
 
 .dashboard .section {
@@ -109,6 +358,19 @@ html, body {
 .friend-icon, .group-icon {
   font-size: 42px;
   margin-bottom: 5px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.friend-icon.initials-avatar, .group-icon.initials-avatar {
+  /* Background color will be set dynamically via inline style */
+  color: white;
+  font-weight: 600;
+  font-size: 18px;
 }
 
 p {
@@ -122,7 +384,7 @@ p {
   background-color: #2A2C32;
   border-radius: 25px;
   padding: 20px;
-  height: calc(90vh - 40px);
+  height: calc(90vh - 150px); /* Adjusted to match the bottom spacing */
   overflow: hidden;
   display: flex;
   flex-direction: column;
