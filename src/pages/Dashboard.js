@@ -75,7 +75,7 @@ const [user, setUser] = useState({
     profileImage: null, // Set to image path when available
     bio: "Frontend developer passionate about UI/UX design",
     status: "online",
-    joinDate: "January 2023"
+    joinDate: "November 2024"
 });
 
 // State to control profile dropdown visibility
@@ -159,7 +159,14 @@ const NotificationTab = ({ label, icon: Icon, type }) => (
 useEffect(() => {
     const handleClickOutside = (event) => {
         const profileElement = document.querySelector('.user-profile');
-        if (profileElement && !profileElement.contains(event.target)) {
+        const dropdownElement = document.querySelector('.profile-dropdown');
+        
+        // Only close if click is outside both profile and dropdown
+        if (
+            profileElement && 
+            !profileElement.contains(event.target) && 
+            (!dropdownElement || !dropdownElement.contains(event.target))
+        ) {
             setShowProfileDropdown(false);
         }
     };
@@ -213,7 +220,7 @@ return(
                     
                     {/* Discord-style dropdown menu */}
                     {showProfileDropdown && (
-                        <div className="profile-dropdown">
+                        <div className="profile-dropdown" onClick={(e) => e.stopPropagation()}>
                             <div className="profile-dropdown-header">
                                 <div className="profile-dropdown-avatar">
                                     {user.profileImage ? (
