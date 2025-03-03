@@ -7,7 +7,54 @@ import { FaArrowRightArrowLeft } from "react-icons/fa6";
 import { FaUserGroup, FaPlus } from "react-icons/fa6";
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { User } from 'lucide-react';
+
+// Helper function for generating initials (same as dashboard)
+const getInitials = (name) => {
+    if (!name) return "U";
+    const words = name.split(' ');
+    if (words.length === 1) {
+        // Capitalize first letter, lowercase second letter
+        return name.substring(0, 1).toUpperCase() + 
+            (name.length > 1 ? name.substring(1, 2).toLowerCase() : "");
+    } else {
+        // First letter of first and last words, properly capitalized
+        return words[0][0].toUpperCase() + words[words.length - 1][0].toUpperCase();
+    }
+};
+
+// Generate consistent color based on name from our predefined palette (same as dashboard)
+const getConsistentColor = (name) => {
+    if (!name) return pastelColors[0]; // Default to first color
+    
+    // Create a simple hash from the name
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    
+    // Get a consistent index from the hash
+    const index = Math.abs(hash) % pastelColors.length;
+    
+    // Return the color at that index
+    return pastelColors[index];
+};
+
+// Define a set of darker pastel colors for better text readability (same as dashboard)
+const pastelColors = [
+    "#c25151", // red
+    "#bd7d3c", // orange
+    "#5db54c", // green
+    "#4ea4a6", // light blue
+    "#555b9e", // blue
+    "#7e599c", // purple
+];
+
+// Function to truncate long names
+const truncateName = (name, maxLength = 20) => {
+    if (!name) return '';
+    if (name.length <= maxLength) return name;
+    return name.slice(0, maxLength) + '...';
+};
 
 function Friends({ onSelectChat }) {
     const [search, setSearch] = useState("");
@@ -33,67 +80,70 @@ function Friends({ onSelectChat }) {
         return matchesSearch && matchesFilter;
     });
 
-        useEffect(() => {
-            fetch("/friends.json") // Adjust the path as needed
-                .then(response => response.json())
-                .then(data => setFriends(data));
-        }, []);
+    useEffect(() => {
+        fetch("/friends.json") // Adjust the path as needed
+            .then(response => response.json())
+            .then(data => setFriends(data));
+    }, []);
 
     return (
-        <div className='w-[220px]'>
+        <div className='friends-list-container'>
             <h3 id="filter-status">Showing: </h3>
-                <div className="filter-group">
-                    <button className={`filterOption ${filter === "all" ? "active" : ""}`}
-                        onClick={() => setFilter("all")}>All</button>
-                    <button className={`filterOption ${filter === "online" ? "active" : ""}`}
-                        onClick={() => setFilter("online")}>Online</button>
-                    <button className={`filterOption ${filter === "offline" ? "active" : ""}`}
-                        onClick={() => setFilter("offline")}>Offline</button>
-                </div>
-                <div className='search-box'>
-                    <input
-                        placeholder="Search friends..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="textarea"
+            <div className="filter-group">
+                <button className={`filterOption ${filter === "all" ? "active" : ""}`}
+                    onClick={() => setFilter("all")}>All</button>
+                <button className={`filterOption ${filter === "online" ? "active" : ""}`}
+                    onClick={() => setFilter("online")}>Online</button>
+                <button className={`filterOption ${filter === "offline" ? "active" : ""}`}
+                    onClick={() => setFilter("offline")}>Offline</button>
+            </div>
+            <div className='search-box'>
+                <input
+                    placeholder="Search friends..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="textarea"
+                />
+            </div>
+
+            <div className='section'>
+                <div className="friends">
+                    <button 
+                    onClick={() => setIsAddFriendOpen(true)}
+                    className="text-[18px] flex items-center rounded-lg bg-green-700 p-3 w-full min-w-[230px] items-center justify-center
+                    transition duration-200 ease-in-out hover:bg-green-800">
+                        Add Friend
+                    </button>
+
+                    <AddFriendDialog
+                        isOpen={isAddFriendOpen}
+                        onClose={() => setIsAddFriendOpen(false)}
+                        onSendRequest={handleSendRequest}
                     />
-                </div>
 
-                <div className='section'>
-                    <div className="friends">
-                        <button 
-                        onClick={() => setIsAddFriendOpen(true)}
-                        className="text-[18px] flex items-center rounded-lg bg-green-700 p-3 w-full min-w-[230px] items-center justify-center
-                        transition duration-200 ease-in-out hover:bg-green-800">
-                            Add Friend
-                        </button>
-
-                        <AddFriendDialog
-                            isOpen={isAddFriendOpen}
-                            onClose={() => setIsAddFriendOpen(false)}
-                            onSendRequest={handleSendRequest}
-                        />
-
-                        {filteredFriends.map((friend) => (
-                            <button
-                                key={friend.id}
-                                className="flex items-center gap-3 rounded-lg bg-zinc-700 p-3 w-full min-w-[230px]"
-                                onClick={() => onSelectChat(friend)}>
-                                <div className="friend flex items-center gap-2">
-                                    <User className="user-icon" />
-                                    <span className="friend-username">{friend.name}</span>
-                                    <div className="online-indicator">
-                                        {friend.isOnline ? (
-                                            <span className="friend-status online">Online</span>
-                                        ) : (
-                                            <span className="friend-status offline">Offline</span> 
-                                        )}
+                    {filteredFriends.map((friend) => (
+                        <button
+                            key={friend.id}
+                            className="friend-button"
+                            onClick={() => onSelectChat(friend)}>
+                            <div className="friend">
+                                {friend.profileImage ? (
+                                    <img src={friend.profileImage} alt={friend.name} className="friend-avatar" />
+                                ) : (
+                                    <div 
+                                        className="friend-avatar initials-avatar"
+                                        style={{ backgroundColor: getConsistentColor(friend.name) }}
+                                    >
+                                        {getInitials(friend.name)}
                                     </div>
-                                </div>
-                            </button>
-                        ))}
-                    </div>
+                                )}
+                                <span className={`status-indicator ${friend.isOnline ? "online" : "offline"}`}></span>
+                                <span className="friend-username">{truncateName(friend.name)}</span>
+                            </div>
+                        </button>
+                    ))}
                 </div>
+            </div>
         </div>
     );
 }
@@ -120,43 +170,53 @@ function Groups() {
     });
     
     return (
-        <div className='w-[230px]'>
+        <div className='friends-list-container'>
             <div className='search-box'>
-                    <input
-                        placeholder="Search groups..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="textarea"
-                    />
+                <input
+                    placeholder="Search groups..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="textarea"
+                />
             </div>
             <div className='section'>
-                    <div className="friends">
-                        {filteredGroups.map((group) => (
-                            <button
-                                key={group.id}
-                                className="flex items-center gap-3 rounded-lg bg-zinc-700 p-3 w-full w-min-[230px]">
-                                <div className="friend flex items-center gap-2">
-                                    <FaUserGroup className='icon' />
-                                    <span className="friend-username">{group.name}</span>
-                                </div>
-                            </button>
-                        ))}
-                        <button 
-                        onClick={() => setIsDialogOpen(true)}
-                        className="text-[18px] flex gap-2 items-center rounded-lg bg-slate-500 p-3 w-full min-w-[230px] items-center justify-center
-                        transition duration-200 ease-in-out hover:bg-slate-600">
-                            <FaPlus /> Create Group
+                <div className="friends">
+                    {filteredGroups.map((group) => (
+                        <button
+                            key={group.id}
+                            className="friend-button">
+                            <div className="friend">
+                                {group.groupImage ? (
+                                    <img src={group.groupImage} alt={group.name} className="friend-avatar" />
+                                ) : (
+                                    <div 
+                                        className="friend-avatar initials-avatar"
+                                        style={{ backgroundColor: getConsistentColor(group.name) }}
+                                    >
+                                        {getInitials(group.name)}
+                                    </div>
+                                )}
+                                <span className="friend-username">{truncateName(group.name)}</span>
+                            </div>
                         </button>
-                        <CreateGroupDialog
-                            isOpen={isDialogOpen}
-                            onClose={() => setIsDialogOpen(false)}
-                            onCreateGroup={handleCreateGroup}
-                        />  
-                    </div>
+                    ))}
+                    <button 
+                    onClick={() => setIsDialogOpen(true)}
+                    className="text-[18px] flex gap-2 items-center rounded-lg bg-slate-500 p-3 w-full min-w-[230px] items-center justify-center
+                    transition duration-200 ease-in-out hover:bg-slate-600">
+                        <FaPlus /> Create Group
+                    </button>
+                    <CreateGroupDialog
+                        isOpen={isDialogOpen}
+                        onClose={() => setIsDialogOpen(false)}
+                        onCreateGroup={handleCreateGroup}
+                    />  
                 </div>
+            </div>
         </div>
     );
 }
+
 const Social = () => {
     const location = useLocation();
     const [activeChat, setActiveChat] = useState(null);
@@ -193,9 +253,7 @@ const Social = () => {
 
     return (
         <div className="container-friends">
-            {/* Dashboard */}
-
-            <div className="friends-menu w-[220px]">
+            <div className="friends-menu">
                 <div className="filter-container">
                     <button className='switchOption'
                             onClick={toggleTab}>
