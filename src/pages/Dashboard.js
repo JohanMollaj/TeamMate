@@ -10,7 +10,14 @@ import { FaCog } from 'react-icons/fa';
 const DashboardTasks = () => {
     const [tasks, setTasks] = useState([]);
     const [filter, setFilter] = useState('all'); // 'all', 'today', 'week', 'month'
-  
+
+    // Helper function for truncating long names
+    const truncateName = (name, maxLength = 50) => {
+        if (!name) return '';
+        if (name.length <= maxLength) return name;
+        return name.slice(0, maxLength) + '...';
+    };    
+
     const formatDate = (dateString) => {
       const date = new Date(dateString);
       return date.toLocaleDateString('en-US', { 
@@ -153,7 +160,7 @@ const DashboardTasks = () => {
                   key={task.id} 
                   className={`dashboard-task-container ${statusClass}`}
                 >
-                  <div className='dashboard-task-title' data-status={status}>{task.title}</div>
+                  <div className='dashboard-task-title' data-status={status}>{truncateName(task.title)}</div>
                   <div className='dashboard-task-duedate'>{formatDate(task.dueDate)}</div>
                 </button>
               );
@@ -203,6 +210,13 @@ const notifications = {
         { id: 2, text: "Sarah accepted your friend request", time: "1 day ago" }
     ]
 };
+
+// Helper function for truncating long names
+const truncateName = (name, maxLength = 10) => {
+    if (!name) return '';
+    if (name.length <= maxLength) return name;
+    return name.slice(0, maxLength) + '...';
+  };
 
 // Helper function for generating initials (moved outside to be reused)
 const getInitials = (name) => {
@@ -397,7 +411,7 @@ return(
                                             {getInitials(friend.name)}
                                         </div>
                                     )}
-                                    <span>{friend.name}</span>
+                                    <span>{truncateName(friend.name)}</span>
                                 </button>
                             ))}
                         </div>
@@ -420,7 +434,7 @@ return(
                                             {getInitials(group.name)}
                                         </div>
                                     )}
-                                    <span>{group.name}</span>
+                                    <span>{truncateName(group.name)}</span>
                                 </button>
                             ))}
                         </div>

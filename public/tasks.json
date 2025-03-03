@@ -12,7 +12,7 @@
         "id": 2,
         "title": "Review Team Presentations",
         "description": "Review and provide feedback on team presentations",
-        "dueDate": "2025-02-27T17:00:00", 
+        "dueDate": "2025-03-27T17:00:00", 
         "assignedBy": "Michael Rodriguez",
         "completed": false
       },
@@ -28,7 +28,7 @@
         "id": 4,
         "title": "Client Meeting Preparation",
         "description": "Prepare slides for the upcoming client meeting",
-        "dueDate": "2025-02-23T10:00:00",
+        "dueDate": "2025-03-05T10:00:00",
         "assignedBy": "Emma Wilson",
         "completed": false
       },
