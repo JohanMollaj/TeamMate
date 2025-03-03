@@ -8,52 +8,161 @@ import { AtSign, UserPlus } from 'lucide-react';
 import { FaCog } from 'react-icons/fa';
 
 const DashboardTasks = () => {
-const [tasks, setTasks] = useState([]);
-
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric' 
-    }) + ' at ' + date.toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
-      minute: '2-digit'
-    });
-  };
-
-useEffect(() => {
-  const fetchTasks = async () => {
-    try {
-      const response = await fetch('/tasks.json');
-      const data = await response.json();
-      setTasks(data.tasks);
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-    }
-  };
+    const [tasks, setTasks] = useState([]);
+    const [filter, setFilter] = useState('all'); // 'all', 'today', 'week', 'month'
   
-  fetchTasks();
-}, []);
-
-const pendingTasks = tasks.filter(task => !task.completed);
-
-return (
-  <div>
-    {pendingTasks.length === 0 ? (
-      <p style={{ color: '#e5e7eb' }}>You have finished all your tasks!</p>
-    ) : (
-      <div className="flex flex-row gap-6">
-        {pendingTasks.map(task => (
-            <button key={task.id} className="dashboard-task-container">
-                <div className='dashboard-task-title'>{task.title}</div>
-                <div className='dashboard-task-duedate'>{formatDate(task.dueDate)}</div>
-            </button>
-        ))}
+    const formatDate = (dateString) => {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { 
+        month: 'short', 
+        day: 'numeric' 
+      }) + ' at ' + date.toLocaleTimeString('en-US', { 
+        hour: '2-digit', 
+        minute: '2-digit'
+      });
+    };
+  
+    useEffect(() => {
+      const fetchTasks = async () => {
+        try {
+          const response = await fetch('/tasks.json');
+          const data = await response.json();
+          setTasks(data.tasks);
+        } catch (error) {
+          console.error('Error fetching tasks:', error);
+        }
+      };
+      
+      fetchTasks();
+    }, []);
+  
+    // Filter tasks based on due date
+    const getFilteredTasks = () => {
+      const pendingTasks = tasks.filter(task => !task.completed);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      const nextWeek = new Date(today);
+      nextWeek.setDate(today.getDate() + 7);
+      
+      const nextMonth = new Date(today);
+      nextMonth.setMonth(today.getMonth() + 1);
+      
+      switch(filter) {
+        case 'today':
+          return pendingTasks.filter(task => {
+            const dueDate = new Date(task.dueDate);
+            dueDate.setHours(0, 0, 0, 0);
+            return dueDate.getTime() === today.getTime();
+          });
+        case 'week':
+          return pendingTasks.filter(task => {
+            const dueDate = new Date(task.dueDate);
+            dueDate.setHours(0, 0, 0, 0);
+            return dueDate >= today && dueDate < nextWeek;
+          });
+        case 'month':
+          return pendingTasks.filter(task => {
+            const dueDate = new Date(task.dueDate);
+            dueDate.setHours(0, 0, 0, 0);
+            return dueDate >= today && dueDate < nextMonth;
+          });
+        case 'overdue':
+          return pendingTasks.filter(task => {
+            const dueDate = new Date(task.dueDate);
+            dueDate.setHours(0, 0, 0, 0);
+            return dueDate < today;
+          });
+        default:
+          return pendingTasks;
+      }
+    };
+  
+    // Sort tasks by due date (closest first)
+    const sortedTasks = getFilteredTasks().sort((a, b) => {
+      return new Date(a.dueDate) - new Date(b.dueDate);
+    });
+  
+    // Get task status for styling
+    const getTaskStatus = (dueDate) => {
+      const taskDate = new Date(dueDate);
+      const today = new Date();
+      const tomorrow = new Date();
+      tomorrow.setDate(today.getDate() + 1);
+      
+      // Reset time parts for accurate date comparison
+      taskDate.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
+      tomorrow.setHours(0, 0, 0, 0);
+      
+      if (taskDate < today) return "Overdue";
+      if (taskDate.getTime() === today.getTime()) return "Today";
+      if (taskDate.getTime() === tomorrow.getTime()) return "Tomorrow";
+      return "Upcoming";
+    };
+  
+    return (
+      <div>
+        <div className="task-filter-controls">
+          <button 
+            className={`task-filter-button ${filter === 'all' ? 'active' : ''}`}
+            onClick={() => setFilter('all')}
+          >
+            All
+          </button>
+          <button 
+            className={`task-filter-button ${filter === 'today' ? 'active' : ''}`}
+            onClick={() => setFilter('today')}
+          >
+            Today
+          </button>
+          <button 
+            className={`task-filter-button ${filter === 'week' ? 'active' : ''}`}
+            onClick={() => setFilter('week')}
+          >
+            This Week
+          </button>
+          <button 
+            className={`task-filter-button ${filter === 'month' ? 'active' : ''}`}
+            onClick={() => setFilter('month')}
+          >
+            This Month
+          </button>
+          <button 
+            className={`task-filter-button ${filter === 'overdue' ? 'active' : ''}`}
+            onClick={() => setFilter('overdue')}
+          >
+            Overdue
+          </button>
+        </div>
+        
+        {sortedTasks.length === 0 ? (
+          <p className="no-tasks-message">
+            {filter === 'all' 
+              ? "You have finished all your tasks!" 
+              : `No tasks ${filter === 'overdue' ? 'overdue' : `due ${filter}`}.`}
+          </p>
+        ) : (
+          <div className="flex flex-col gap-6">
+            {sortedTasks.map(task => {
+              const status = getTaskStatus(task.dueDate);
+              const statusClass = `status-${status.toLowerCase()}`;
+              
+              return (
+                <button 
+                  key={task.id} 
+                  className={`dashboard-task-container ${statusClass}`}
+                >
+                  <div className='dashboard-task-title' data-status={status}>{task.title}</div>
+                  <div className='dashboard-task-duedate'>{formatDate(task.dueDate)}</div>
+                </button>
+              );
+            })}
+          </div>
+        )}
       </div>
-    )}
-  </div>
-);
-};
+    );
+  };
 
 function Dashboard() {
 const navigate = useNavigate();
@@ -113,7 +222,6 @@ const getInitials = (name) => {
 const pastelColors = [
     "#c25151", // red
     "#bd7d3c", // orange
-    "#bfb936", // yellow
     "#5db54c", // green
     "#4ea4a6", // light blue
     "#555b9e", // blue
@@ -318,7 +426,7 @@ return(
                         </div>
                     </div>
 
-                    <div className="section">
+                    <div className="section task-section">
                         <button onClick={() => navigate('/tasks')} className="dashboard-button">
                             <h2>Tasks</h2>
                         </button>
