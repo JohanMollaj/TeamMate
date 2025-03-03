@@ -231,7 +231,7 @@ h1 {
 
 .userHeader .status-indicator {
   position: static;
-  margin-left: 10px;
+  margin-left: -5px;
 }
 
 .chatboxHeader {

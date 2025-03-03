@@ -13,6 +13,9 @@
     gap: 10px;
     flex-shrink: 0;
 }
+.userHeader h1{
+    font-size: 40px;
+}
 .userHeader .friend-status{
   margin-left: 10px;
 }
