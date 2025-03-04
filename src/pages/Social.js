@@ -56,7 +56,86 @@ const truncateName = (name, maxLength = 20) => {
     return name.slice(0, maxLength) + '...';
 };
 
-function Friends({ onSelectChat }) {
+// Initialize group messages function - moved outside component
+function initializeGroupMessages() {
+    // Check if we've already initialized messages
+    const hasInitialized = localStorage.getItem('groupMessagesInitialized');
+    if (hasInitialized) return;
+    
+    // Get existing messages
+    const existingMessages = JSON.parse(localStorage.getItem('chatMessages') || '[]');
+    
+    // Sample group messages
+    const sampleGroupMessages = [
+        {
+            senderID: "1",
+            groupID: "1",
+            type: "group",
+            time: "2024-02-04T16:00:00Z",
+            message: "Hello everyone! Welcome to our new project group!"
+        },
+        {
+            senderID: "2",
+            groupID: "1",
+            type: "group",
+            time: "2024-02-04T16:01:00Z",
+            message: "Thanks for setting this up. Looking forward to working with all of you!"
+        },
+        {
+            senderID: "3",
+            groupID: "1",
+            type: "group",
+            time: "2024-02-04T16:02:00Z",
+            message: "Excited to be part of this team!"
+        },
+        {
+            senderID: "1",
+            groupID: "1",
+            type: "group",
+            time: "2024-02-04T16:03:00Z",
+            message: "I'll share the project details and timeline soon. Let's schedule a kickoff meeting for tomorrow."
+        },
+        {
+            senderID: "2",
+            groupID: "2",
+            type: "group",
+            time: "2024-02-04T17:00:00Z",
+            message: "Hey team, anyone free this weekend for the company picnic?"
+        },
+        {
+            senderID: "4",
+            groupID: "2",
+            type: "group",
+            time: "2024-02-04T17:01:00Z",
+            message: "I'll be there! What time are we meeting?"
+        },
+        {
+            senderID: "1",
+            groupID: "2",
+            type: "group",
+            time: "2024-02-04T17:02:00Z",
+            message: "Count me in! I can bring some snacks and drinks."
+        },
+        {
+            senderID: "5",
+            groupID: "2",
+            type: "group",
+            time: "2024-02-04T17:03:00Z",
+            message: "I might be a bit late, but I'll definitely join you all!"
+        }
+    ];
+    
+    // Add these to existing messages and save
+    const updatedMessages = [...existingMessages, ...sampleGroupMessages];
+    localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
+    
+    // Mark as initialized
+    localStorage.setItem('groupMessagesInitialized', 'true');
+    
+    console.log('Group messages initialized');
+}
+
+function Friends({ onSelectChat, allUsers }) {
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState("all");
     const [friends, setFriends] = useState([]);
@@ -83,7 +162,14 @@ function Friends({ onSelectChat }) {
     useEffect(() => {
         fetch("/friends.json") // Adjust the path as needed
             .then(response => response.json())
-            .then(data => setFriends(data));
+            .then(data => {
+                // Add chatType to distinguish direct messages
+                const friendsWithChatType = data.map(friend => ({
+                    ...friend,
+                    chatType: 'direct'
+                }));
+                setFriends(friendsWithChatType);
+            });
     }, []);
 
     return (
@@ -148,20 +234,58 @@ function Friends({ onSelectChat }) {
     );
 }
 
-function Groups() {
+function Groups({ onSelectChat, allUsers }) {
     const [search, setSearch] = useState("");
     const [groups, setGroups] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const handleCreateGroup = (groupData) => {
         console.log('Creating group:', groupData);
-        // Add your group creation logic here
+        // Create a new group with members and add to the state
+        const newGroup = {
+            id: `group_${Date.now()}`, // Generate unique ID
+            name: groupData.name,
+            description: groupData.description,
+            chatType: 'group', // Important: Set the chat type explicitly
+            members: groupData.members || ["1"], // Include current user by default
+            createdBy: "1", // Current user created the group
+            createdAt: new Date().toISOString()
+        };
+        
+        setGroups(prevGroups => [...prevGroups, newGroup]);
+        
+        // Save to localStorage or send to backend
+        const savedGroups = JSON.parse(localStorage.getItem('groups') || '[]');
+        localStorage.setItem('groups', JSON.stringify([...savedGroups, newGroup]));
     };
 
     useEffect(() => {
-        fetch("/groups.json") // Adjust the path as needed
-            .then(response => response.json())
-            .then(data => setGroups(data));
+        // First try to get from localStorage
+        const savedGroups = localStorage.getItem('groups');
+        if (savedGroups) {
+            setGroups(JSON.parse(savedGroups));
+        } else {
+            // Otherwise fetch from JSON file
+            fetch("/groups.json")
+                .then(response => response.json())
+                .then(data => {
+                    // Add chatType and other necessary group fields
+                    const groupsWithChatType = data.map(group => ({
+                        ...group,
+                        chatType: 'group', // Important: Set the chat type explicitly
+                        members: ["1", "2", "3"], // Sample members - would come from backend in real app
+                        createdBy: "1", // Sample creator
+                        createdAt: new Date().toISOString()
+                    }));
+                    setGroups(groupsWithChatType);
+                    localStorage.setItem('groups', JSON.stringify(groupsWithChatType));
+                })
+                .catch(error => {
+                    console.error("Error loading groups:", error);
+                    // Initialize with empty array if fetch fails
+                    setGroups([]);
+                });
+        }
     }, []);
 
     const filteredGroups = groups.filter((group) => {
@@ -184,7 +308,8 @@ function Groups() {
                     {filteredGroups.map((group) => (
                         <button
                             key={group.id}
-                            className="friend-button">
+                            className="friend-button"
+                            onClick={() => onSelectChat(group)}>
                             <div className="friend">
                                 {group.groupImage ? (
                                     <img src={group.groupImage} alt={group.name} className="friend-avatar" />
@@ -197,6 +322,9 @@ function Groups() {
                                     </div>
                                 )}
                                 <span className="friend-username">{truncateName(group.name)}</span>
+                                <span className="member-count">
+                                    {group.members?.length || 0} members
+                                </span>
                             </div>
                         </button>
                     ))}
@@ -221,12 +349,31 @@ const Social = () => {
     const location = useLocation();
     const [activeChat, setActiveChat] = useState(null);
     const [activeTab, setActiveTab] = useState("Friends");
+    const [allUsers, setAllUsers] = useState([]);
     
+    // Initialize group messages - call the function in a separate useEffect
+    useEffect(() => {
+        initializeGroupMessages();
+    }, []);
+    
+    useEffect(() => {
+        // Load all users for reference (needed for displaying sender names in group chats)
+        fetch("/friends.json")
+            .then(response => response.json())
+            .then(data => {
+                setAllUsers(data);
+            });
+    }, []);
+
     useEffect(() => {
         // Handle user passed from dashboard
         if (location.state?.user) {
-            setActiveChat(location.state.user);
-            localStorage.setItem("lastActiveChat", JSON.stringify(location.state.user));
+            const user = {
+                ...location.state.user,
+                chatType: 'direct' // Ensure chatType is set
+            };
+            setActiveChat(user);
+            localStorage.setItem("lastActiveChat", JSON.stringify(user));
         } else {
             // If no user passed, check localStorage
             const savedChat = localStorage.getItem("lastActiveChat");
@@ -236,9 +383,9 @@ const Social = () => {
         }
     }, [location.state]);
 
-    const handleChatSelect = (user) => {
-        setActiveChat(user);
-        localStorage.setItem("lastActiveChat", JSON.stringify(user)); // Save the chat
+    const handleChatSelect = (chat) => {
+        setActiveChat(chat);
+        localStorage.setItem("lastActiveChat", JSON.stringify(chat)); // Save the chat
     };
 
     useEffect(() => {
@@ -249,7 +396,7 @@ const Social = () => {
 
     const toggleTab = () => {
         setActiveTab((prevTab) => (prevTab === "Friends" ? "Groups" : "Friends"));
-      };
+    };
 
     return (
         <div className="container-friends">
@@ -260,12 +407,15 @@ const Social = () => {
                             <FaArrowRightArrowLeft /></button>
                     <h1>{activeTab}</h1>
                 </div>
-                {activeTab === "Friends" ? <Friends onSelectChat={handleChatSelect} /> : <Groups />}
+                {activeTab === "Friends" ? 
+                    <Friends onSelectChat={handleChatSelect} allUsers={allUsers} /> : 
+                    <Groups onSelectChat={handleChatSelect} allUsers={allUsers} />
+                }
             </div>
 
-            {activeChat && <FriendsChatbox activeChat={activeChat} />}
+            {activeChat && <FriendsChatbox activeChat={activeChat} allUsers={allUsers} />}
         </div>
-    )
-}
+    );
+};
 
 export default Social;

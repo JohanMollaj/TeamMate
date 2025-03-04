@@ -2,6 +2,6 @@
     { "id": "1", "name": "Johan", "isOnline": true },
     { "id": "2", "name": "Vian Janku", "isOnline": false },
     { "id": "3", "name": "Rael Oruci", "isOnline": true },
-    { "id": "4", "name": "kAriel", "isOnline": false },
+    { "id": "4", "name": "Ariel", "isOnline": false },
     { "id": "5", "name": "Bashkia Tirane", "isOnline": true }
 ]

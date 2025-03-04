@@ -32,27 +32,37 @@ const CreateGroupDialog = ({ isOpen, onClose, onCreateGroup }) => {
     if (showJoinDialog) {
       onCreateGroup({ type: 'join', inviteCode });
     } else {
-      onCreateGroup({ type: 'create', name: groupName, description: groupDescription });
+      onCreateGroup({ 
+        type: 'create', 
+        name: groupName, 
+        description: groupDescription,
+        // By default, we'll add the current user as a member
+        // This can be expanded later when you want to add the member selection feature
+        members: ["1"] 
+      });
     }
     handleClose();
   };
 
   return (
     <div 
-      className={`fixed inset-0 flex items-center justify-center z-50 transition-opacity duration-200
-        ${isAnimating ? 'opacity-100' : 'opacity-0'}`}
+      className="fixed inset-0 flex items-center justify-center z-50 transition-opacity duration-200"
+      style={{ opacity: isAnimating ? 1 : 0 }}
     >
       <div 
-        className={`absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-200
-          ${isAnimating ? 'opacity-100' : 'opacity-0'}`}
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity duration-200"
+        style={{ opacity: isAnimating ? 1 : 0 }}
         onClick={handleClose}
       />
 
       <div 
-        className={`bg-[#1C1D20] rounded-xl w-full max-w-md p-6 relative shadow-2xl
+        className="bg-[#1C1D20] rounded-xl w-full max-w-md p-6 relative shadow-2xl
           transform transition-all duration-200 ease-out
-          ${isAnimating ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}
-          hover:shadow-[0_0_30px_rgba(0,0,0,0.3)] transition-shadow`}
+          hover:shadow-[0_0_30px_rgba(0,0,0,0.3)] transition-shadow"
+        style={{ 
+          transform: isAnimating ? 'translateY(0)' : 'translateY(4px)',
+          opacity: isAnimating ? 1 : 0
+        }}
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold text-white">
@@ -136,9 +146,11 @@ const CreateGroupDialog = ({ isOpen, onClose, onCreateGroup }) => {
             </button>
             <button
               type="submit"
+              disabled={!showJoinDialog && (groupName.trim() === '')}
               className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg 
                 hover:bg-blue-700 transition-all duration-200 ease-out
-                hover:scale-105 transform hover:shadow-lg"
+                hover:scale-105 transform hover:shadow-lg
+                disabled:bg-blue-900 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {showJoinDialog ? 'Join group' : 'Create group'}
             </button>
@@ -163,4 +175,4 @@ const CreateGroupDialog = ({ isOpen, onClose, onCreateGroup }) => {
   );
 };
 
-  export default CreateGroupDialog;
+export default CreateGroupDialog;

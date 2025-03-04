@@ -36,15 +36,21 @@ const getConsistentColor = (name) => {
     return pastelColors[index];
 };
 
-function FriendsChatbox({ activeChat }){
+function FriendsChatbox({ activeChat, allUsers = [] }) {
     const messagesEndRef = useRef(null);
     const [messages, setMessages] = useState([]);
     const [filteredMessages, setFilteredMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
+    const [groupMembers, setGroupMembers] = useState([]);
+
+    // Helper function to get user by ID
+    const getUserById = (userId) => {
+        return allUsers.find(user => user.id === userId) || { id: userId, name: `User ${userId}` };
+    };
 
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [messages]); // Scroll when messages update    
+    }, [filteredMessages]); // Scroll when filtered messages update    
 
     useEffect(() => {
         const storedMessages = localStorage.getItem('chatMessages');
@@ -54,22 +60,56 @@ function FriendsChatbox({ activeChat }){
             fetch("/messages.json")
                 .then(response => response.json())
                 .then(data => {
-                    setMessages(data);
-                    localStorage.setItem('chatMessages', JSON.stringify(data));
+                    // Initialize with type field if it doesn't exist
+                    const updatedData = data.map(msg => ({
+                        ...msg,
+                        type: msg.groupID ? 'group' : 'direct'
+                    }));
+                    setMessages(updatedData);
+                    localStorage.setItem('chatMessages', JSON.stringify(updatedData));
+                })
+                .catch(error => {
+                    console.error("Error loading messages:", error);
+                    // Initialize with empty array if fetch fails
+                    setMessages([]);
                 });
         }
     }, []);
 
     useEffect(() => {
         if (messages.length > 0 && activeChat) {
-            // Filter messages for conversations where the active chat user is either the sender or receiver
-            const conversationMessages = messages.filter(msg => 
-                (msg.senderID === activeChat.id && msg.receiverID === "1") || 
-                (msg.senderID === "1" && msg.receiverID === activeChat.id)
-            );
-            setFilteredMessages(conversationMessages);
+            console.log("Active chat:", activeChat);
+            console.log("Available messages:", messages);
+            
+            if (activeChat.chatType === 'group') {
+                // Filter group messages for the active group
+                const groupMessages = messages.filter(msg => 
+                    (msg.type === 'group' || msg.groupID) && msg.groupID === activeChat.id
+                );
+                console.log("Filtered group messages:", groupMessages);
+                setFilteredMessages(groupMessages);
+                
+                // Set group members
+                if (activeChat.members) {
+                    setGroupMembers(activeChat.members);
+                } else {
+                    setGroupMembers([]);
+                }
+            } else {
+                // Default to direct messages
+                // Filter direct messages between the two users
+                const directMessages = messages.filter(msg => 
+                    (msg.type !== 'group' && !msg.groupID) && 
+                    ((msg.senderID === activeChat.id && msg.receiverID === "1") || 
+                     (msg.senderID === "1" && msg.receiverID === activeChat.id))
+                );
+                console.log("Filtered direct messages:", directMessages);
+                setFilteredMessages(directMessages);
+            }
+        } else {
+            setFilteredMessages([]);
         }
-    }, [messages, activeChat]);
+    }, [messages, activeChat, allUsers]);
 
     const handleInputChange = (e) => {
         setNewMessage(e.target.value);
@@ -78,13 +118,26 @@ function FriendsChatbox({ activeChat }){
     const handleSendMessage = () => {
         if (newMessage.trim() === '' || !activeChat) return;
         
-        // Create a new message object
-        const newMessageObj = {
-            senderID: "1", // Current user's ID
-            receiverID: activeChat.id,
-            time: new Date().toISOString(),
-            message: newMessage.trim()
-        };
+        // Create a new message object based on chat type
+        let newMessageObj;
+        
+        if (activeChat.chatType === 'group') {
+            newMessageObj = {
+                senderID: "1", // Current user's ID
+                groupID: activeChat.id,
+                type: 'group',
+                time: new Date().toISOString(),
+                message: newMessage.trim()
+            };
+        } else {
+            newMessageObj = {
+                senderID: "1", // Current user's ID
+                receiverID: activeChat.id,
+                type: 'direct',
+                time: new Date().toISOString(),
+                message: newMessage.trim()
+            };
+        }
 
         const updatedMessages = [...messages, newMessageObj];
         setMessages(updatedMessages);
@@ -103,12 +156,16 @@ function FriendsChatbox({ activeChat }){
     };
 
     return (
-        <>{ activeChat &&(
+        <>{ activeChat && (
             <div className='chatboxContainer'>
                 <div className='chatboxHeader'>
                     <div className='userHeader'>
-                        {activeChat.profileImage ? (
-                            <img src={activeChat.profileImage} alt={activeChat.name} className="friend-avatar" />
+                        {activeChat.profileImage || activeChat.groupImage ? (
+                            <img 
+                                src={activeChat.profileImage || activeChat.groupImage} 
+                                alt={activeChat.name} 
+                                className="friend-avatar" 
+                            />
                         ) : (
                             <div 
                                 className="friend-avatar initials-avatar"
@@ -118,29 +175,47 @@ function FriendsChatbox({ activeChat }){
                             </div>
                         )}
                         <h1>{activeChat.name}</h1>
-                        <span className={`status-indicator ${activeChat.isOnline ? "online" : "offline"}`}></span>
+                        {activeChat.chatType === 'direct' && (
+                            <span className={`status-indicator ${activeChat.isOnline ? "online" : "offline"}`}></span>
+                        )}
+                        {activeChat.chatType === 'group' && (
+                            <span className="member-count">{`${groupMembers.length || 0} members`}</span>
+                        )}
                     </div>
                 </div>
                 <div className='chatboxMain'>
                     <div className="chatboxMessages">
-                        {filteredMessages.map((msg, index) => {
-                            const messageDate = new Date(msg.time);
-                            const formattedDate = messageDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                            const formattedTime = messageDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                        {filteredMessages.length > 0 ? (
+                            filteredMessages.map((msg, index) => {
+                                const messageDate = new Date(msg.time);
+                                const formattedDate = messageDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                                const formattedTime = messageDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
-                            const isCurrentUser = msg.senderID === "1";
-                            const senderName = isCurrentUser ? "You" : activeChat.name;
+                                const isCurrentUser = msg.senderID === "1";
+                                let senderName;
+                                
+                                if (activeChat.chatType === 'direct') {
+                                    senderName = isCurrentUser ? "You" : activeChat.name;
+                                } else {
+                                    // For group chats, we need to show the sender's name
+                                    senderName = isCurrentUser ? "You" : getUserById(msg.senderID).name;
+                                }
 
-                            return (
-                                <div key={index} className={`message ${isCurrentUser ? 'sent' : 'received'}`}>
-                                    <span className="messageSender">{senderName}: </span>
-                                    <span className="messageText">{msg.message} </span>
-                                    <span className="messageTime">
-                                        {formattedDate} • {formattedTime}
-                                    </span>
-                                </div>
-                            );
-                        })}
+                                return (
+                                    <div key={index} className={`message ${isCurrentUser ? 'sent' : 'received'}`}>
+                                        <span className="messageSender">{senderName}: </span>
+                                        <span className="messageText">{msg.message} </span>
+                                        <span className="messageTime">
+                                            {formattedDate} • {formattedTime}
+                                        </span>
+                                    </div>
+                                );
+                            })
+                        ) : (
+                            <div className="no-messages">
+                                <p>No messages yet. Start the conversation!</p>
+                            </div>
+                        )}
                         <div ref={messagesEndRef} /> {/* Invisible scroll target */}
                     </div>
                     
@@ -150,16 +225,17 @@ function FriendsChatbox({ activeChat }){
                         </button>
                         <div className='chatboxMessage'>
                             <input 
-                            type='text' 
-                            className='chatboxInput' 
-                            placeholder='Type a message...'
-                            value={newMessage}
-                            onChange={handleInputChange}
-                            onKeyDown={handleKeyDown}/>
+                                type='text' 
+                                className='chatboxInput' 
+                                placeholder={`Message ${activeChat.chatType === 'group' ? activeChat.name : ''}...`}
+                                value={newMessage}
+                                onChange={handleInputChange}
+                                onKeyDown={handleKeyDown}
+                            />
                         </div>
                         <button 
-                        className='chatboxButton send'
-                        onClick={handleSendMessage}>
+                            className='chatboxButton send'
+                            onClick={handleSendMessage}>
                             <FaPaperPlane />
                         </button>
                     </div>
