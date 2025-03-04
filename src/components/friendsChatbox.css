@@ -1,12 +1,12 @@
-.chatboxContainer{
+.chatboxContainer {
     color: white;
     background-color: #2A2C32;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
     height: 100%;   
     width: 100%;
     border-radius: 0 0 20px 20px;
+    overflow: hidden; /* Contains everything */
 }
 .userHeader{
     margin: 0;
@@ -20,16 +20,17 @@
   margin-left: 10px;
 }
 
-.chatboxHeader{
+.chatboxHeader {
     width: 100%;
     padding: 10px 20px;
     background-color: #2A2C32;
     display: flex;
+    flex-shrink: 0; /* Prevent shrinking */
 }
-.chatboxMain{
+.chatboxMain {
     width: 100%;
-    height: calc(100% - 85px); 
-    min-height: 0;
+    flex: 1; /* Take remaining space */
+    min-height: 0; /* CRITICAL for flex child scrolling */
     border-radius: 15px 15px 15px 15px;
     border-top: rgb(186, 186, 186) 2px solid;
     padding: 10px 20px;
@@ -37,32 +38,44 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    overflow: hidden;
+    overflow: hidden; /* Let children handle overflow */
 }
 .chatboxMessages {
-    flex: 1;
-    overflow: auto;
+    flex: 1; /* Take all available space */
+    min-height: 0; /* CRITICAL for scrolling in flex child */
+    overflow-y: auto; /* Enable vertical scrolling */
     padding: 15px;
-    padding-bottom: 0;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
     gap: 5px;
-    min-height: 0;
-    position: relative;
+    margin-bottom: 10px; /* Space between messages and input */
 }
 
 .message {
-    color: white;
     width: fit-content;
+    max-width: 80%; /* Prevent messages from being too wide */
     word-break: break-word;
     margin-top: 0.5rem;
+    position: relative;
+    padding-right: 25px; /* Space for options button */
 }
+
+/* Added message container for better styling with options */
+.message-container {
+    position: relative;
+    background-color: #4e5058;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: white;
+    display: inline-block;
+    transition: all 0.2s ease;
+}
+
 .messageSender{
     display: block;
 }
 .messageTime{
-        display: block;
+    display: block;
 }
 .message .messageTime {
     padding: 2px 0;
@@ -96,6 +109,13 @@
     word-wrap: break-word;
 }
 
+/* Message editing indicator */
+.edited-indicator {
+    margin-left: 0.35rem;
+    font-size: 0.75rem;
+    color: #b9bbbe;
+    font-style: italic;
+}
 
 .chatbox {
     z-index: 5;
@@ -108,6 +128,8 @@
     height: 50px;
     width: 100%;
     min-width: 500px;
+    flex-shrink: 0; /* Prevent input from shrinking */
+    margin-top: auto; /* Push to bottom */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 .chatboxMessage{
@@ -123,7 +145,7 @@
     font-size: 1rem;
     border-radius: 20px;
     outline: none;
-    background: none    ;
+    background: none;
     color: white;
 }
 
@@ -139,4 +161,141 @@
 .chatboxButton:hover{
     cursor: pointer;
     color: rgb(185, 205, 221);
+}
+
+/* Message options styling */
+.message-options {
+    display: inline-block;
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.sent .message-container:hover .message-options {
+    opacity: 1;
+}
+
+.options-button {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 3px;
+    font-size: 0.75rem;
+}
+
+.options-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.options-menu {
+    position: absolute;
+    top: 1.5rem;
+    right: 0;
+    background-color: #2A2C32;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    z-index: 10;
+    width: 130px;
+    overflow: hidden;
+    border: 1px solid #4e5058;
+}
+
+.menu-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    background: none;
+    border: none;
+    text-align: left;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.menu-option:hover {
+    background-color: #4e5058;
+}
+
+.menu-option.delete {
+    color: #f87171;
+}
+
+.menu-option.delete:hover {
+    background-color: rgba(248, 113, 113, 0.2);
+}
+
+/* Edit functionality */
+.edit-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    min-width: 200px;
+}
+
+.edit-input {
+    width: 100%;
+    background-color: #2A2C32;
+    border: 1px solid #4e5058;
+    border-radius: 6px;
+    padding: 0.5rem;
+    color: white;
+    resize: vertical;
+    min-height: 60px;
+    outline: none;
+}
+
+.edit-input:focus {
+    border-color: #3B82F6;
+}
+
+.edit-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.edit-buttons button {
+    padding: 0.25rem 0.75rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.edit-save {
+    background-color: #3B82F6;
+    color: white;
+}
+
+.edit-save:hover {
+    background-color: #2563EB;
+}
+
+.edit-cancel {
+    background-color: #4e5058;
+    color: white;
+}
+
+.edit-cancel:hover {
+    background-color: #6B7280;
+}
+
+.no-messages {
+    text-align: center;
+    color: #b9bbbe;
+    margin-top: 2rem;
+}
+
+/* Make sure the edit container is properly sized for sent messages */
+.sent .edit-container {
+    text-align: left;
 }

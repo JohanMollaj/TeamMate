@@ -1,7 +1,8 @@
 import React from 'react';
 import { useState, useEffect, useRef } from "react";
 import './friendsChatbox.css';
-import { FaCirclePlus, FaPaperPlane } from "react-icons/fa6";
+import { FaCirclePlus, FaPaperPlane, FaTrash, FaPen, FaCopy } from "react-icons/fa6";
+import { EllipsisVertical } from 'lucide-react';
 
 // Helper functions from dashboard
 const getInitials = (name) => {
@@ -36,12 +37,21 @@ const getConsistentColor = (name) => {
     return pastelColors[index];
 };
 
+// Generate a truly unique ID for messages
+const generateUniqueId = () => {
+    return `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+};
+
 function FriendsChatbox({ activeChat, allUsers = [] }) {
     const messagesEndRef = useRef(null);
     const [messages, setMessages] = useState([]);
     const [filteredMessages, setFilteredMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const [groupMembers, setGroupMembers] = useState([]);
+    const [editingMessageId, setEditingMessageId] = useState(null);
+    const [editText, setEditText] = useState('');
+    const [activeMessageMenu, setActiveMessageMenu] = useState(null);
+    const messageMenuRef = useRef(null);
 
     // Helper function to get user by ID
     const getUserById = (userId) => {
@@ -53,16 +63,52 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
     }, [filteredMessages]); // Scroll when filtered messages update    
 
     useEffect(() => {
+        if (messagesEndRef.current && activeChat) {
+            // Force scroll to bottom when chat changes
+            setTimeout(() => {
+                messagesEndRef.current.scrollIntoView({ behavior: "auto" });
+            }, 100);
+        }
+    }, [activeChat]); 
+
+    useEffect(() => {
         const storedMessages = localStorage.getItem('chatMessages');
+        localStorage.removeItem('chatMessages'); // DELETE THIS ONLY WHEN YOU NEED TO TEST LOCALSTORAGE
         if (storedMessages) {
-            setMessages(JSON.parse(storedMessages));
+            try {
+                const parsedMessages = JSON.parse(storedMessages);
+                
+                // Add unique IDs to any messages that don't have them
+                const messagesWithIds = parsedMessages.map((msg, index) => {
+                    if (!msg.id) {
+                        return {
+                            ...msg,
+                            id: generateUniqueId(),
+                            type: msg.groupID ? 'group' : 'direct'
+                        };
+                    }
+                    return msg;
+                });
+                
+                setMessages(messagesWithIds);
+                
+                // Update localStorage with the IDs if needed
+                if (JSON.stringify(messagesWithIds) !== storedMessages) {
+                    localStorage.setItem('chatMessages', JSON.stringify(messagesWithIds));
+                }
+            } catch (error) {
+                console.error("Error parsing messages from localStorage:", error);
+                setMessages([]);
+                localStorage.removeItem('chatMessages');
+            }
         } else {
             fetch("/messages.json")
                 .then(response => response.json())
                 .then(data => {
                     // Initialize with type field if it doesn't exist
-                    const updatedData = data.map(msg => ({
+                    const updatedData = data.map((msg) => ({
                         ...msg,
+                        id: generateUniqueId(), // Generate a truly unique ID
                         type: msg.groupID ? 'group' : 'direct'
                     }));
                     setMessages(updatedData);
@@ -70,23 +116,31 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
                 })
                 .catch(error => {
                     console.error("Error loading messages:", error);
-                    // Initialize with empty array if fetch fails
                     setMessages([]);
                 });
         }
+
+        // Click handler to close menu when clicking outside
+        const handleOutsideClick = (event) => {
+            if (messageMenuRef.current && !messageMenuRef.current.contains(event.target)) {
+                setActiveMessageMenu(null);
+            }
+        };
+
+        document.addEventListener('mousedown', handleOutsideClick);
+        
+        return () => {
+            document.removeEventListener('mousedown', handleOutsideClick);
+        };
     }, []);
 
     useEffect(() => {
         if (messages.length > 0 && activeChat) {
-            console.log("Active chat:", activeChat);
-            console.log("Available messages:", messages);
-            
             if (activeChat.chatType === 'group') {
                 // Filter group messages for the active group
                 const groupMessages = messages.filter(msg => 
                     (msg.type === 'group' || msg.groupID) && msg.groupID === activeChat.id
                 );
-                console.log("Filtered group messages:", groupMessages);
                 setFilteredMessages(groupMessages);
                 
                 // Set group members
@@ -103,7 +157,6 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
                     ((msg.senderID === activeChat.id && msg.receiverID === "1") || 
                      (msg.senderID === "1" && msg.receiverID === activeChat.id))
                 );
-                console.log("Filtered direct messages:", directMessages);
                 setFilteredMessages(directMessages);
             }
         } else {
@@ -123,6 +176,7 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
         
         if (activeChat.chatType === 'group') {
             newMessageObj = {
+                id: generateUniqueId(),
                 senderID: "1", // Current user's ID
                 groupID: activeChat.id,
                 type: 'group',
@@ -131,6 +185,7 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
             };
         } else {
             newMessageObj = {
+                id: generateUniqueId(),
                 senderID: "1", // Current user's ID
                 receiverID: activeChat.id,
                 type: 'direct',
@@ -150,9 +205,85 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
     };
 
     const handleKeyDown = (e) => {
-        if (e.key === 'Enter') {
-            handleSendMessage();
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            if (editingMessageId) {
+                handleEditSave();
+            } else {
+                handleSendMessage();
+            }
         }
+    };
+
+    const handleToggleMessageMenu = (messageId, event) => {
+        event.stopPropagation();
+        if (activeMessageMenu === messageId) {
+            setActiveMessageMenu(null);
+        } else {
+            setActiveMessageMenu(messageId);
+        }
+    };
+
+    const handleEditStart = (message) => {
+        setEditingMessageId(message.id);
+        setEditText(message.message);
+        setActiveMessageMenu(null);
+    };
+
+    const handleEditChange = (e) => {
+        setEditText(e.target.value);
+    };
+
+    const handleEditSave = () => {
+        if (editText.trim() === '') return;
+
+        // Safely find and update just the specific message by ID
+        const messageIndex = messages.findIndex(msg => msg.id === editingMessageId);
+        
+        if (messageIndex !== -1) {
+            const updatedMessages = [...messages];
+            updatedMessages[messageIndex] = {
+                ...updatedMessages[messageIndex],
+                message: editText.trim(),
+                edited: true
+            };
+            
+            setMessages(updatedMessages);
+            localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
+        }
+        
+        setEditingMessageId(null);
+        setEditText('');
+    };
+
+    const handleEditCancel = () => {
+        setEditingMessageId(null);
+        setEditText('');
+    };
+
+    const handleCopyMessage = (message) => {
+        navigator.clipboard.writeText(message.message)
+            .then(() => {
+                // Maybe show a toast notification here
+                console.log('Message copied to clipboard');
+            })
+            .catch(err => {
+                console.error('Could not copy text: ', err);
+            });
+        setActiveMessageMenu(null);
+    };
+
+    const handleDeleteMessage = (messageId) => {
+        // Safely filter out only the specific message by ID
+        const messageToDelete = messages.find(msg => msg.id === messageId);
+        
+        if (messageToDelete) {
+            const updatedMessages = messages.filter(msg => msg.id !== messageId);
+            setMessages(updatedMessages);
+            localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
+        }
+        
+        setActiveMessageMenu(null);
     };
 
     return (
@@ -186,7 +317,7 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
                 <div className='chatboxMain'>
                     <div className="chatboxMessages">
                         {filteredMessages.length > 0 ? (
-                            filteredMessages.map((msg, index) => {
+                            filteredMessages.map((msg) => {
                                 const messageDate = new Date(msg.time);
                                 const formattedDate = messageDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                                 const formattedTime = messageDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
@@ -202,12 +333,72 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
                                 }
 
                                 return (
-                                    <div key={index} className={`message ${isCurrentUser ? 'sent' : 'received'}`}>
-                                        <span className="messageSender">{senderName}: </span>
-                                        <span className="messageText">{msg.message} </span>
-                                        <span className="messageTime">
-                                            {formattedDate} • {formattedTime}
-                                        </span>
+                                    <div key={msg.id} className={`message ${isCurrentUser ? 'sent' : 'received'}`}>
+                                        <div className="message-container">
+                                            <span className="messageSender">{senderName}: </span>
+                                            
+                                            {editingMessageId === msg.id ? (
+                                                <div className="edit-container">
+                                                    <textarea 
+                                                        value={editText}
+                                                        onChange={handleEditChange}
+                                                        onKeyDown={handleKeyDown}
+                                                        className="edit-input"
+                                                        autoFocus
+                                                    />
+                                                    <div className="edit-buttons">
+                                                        <button onClick={handleEditSave} className="edit-save">Save</button>
+                                                        <button onClick={handleEditCancel} className="edit-cancel">Cancel</button>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    <span className="messageText">{msg.message}</span>
+                                                    {msg.edited && <span className="edited-indicator">(edited)</span>}
+                                                </>
+                                            )}
+                                            
+                                            <span className="messageTime">
+                                                {formattedDate} • {formattedTime}
+                                            </span>
+                                            
+                                            {isCurrentUser && !editingMessageId && (
+                                                <div className="message-options">
+                                                    <button 
+                                                        className="options-button"
+                                                        onClick={(e) => handleToggleMessageMenu(msg.id, e)}
+                                                    >
+                                                        <EllipsisVertical />
+                                                    </button>
+                                                    
+                                                    {activeMessageMenu === msg.id && (
+                                                        <div className="options-menu" ref={messageMenuRef}>
+                                                            <button 
+                                                                className="menu-option"
+                                                                onClick={() => handleEditStart(msg)}
+                                                            >
+                                                                <FaPen />
+                                                                <span>Edit</span>
+                                                            </button>
+                                                            <button 
+                                                                className="menu-option"
+                                                                onClick={() => handleCopyMessage(msg)}
+                                                            >
+                                                                <FaCopy />
+                                                                <span>Copy</span>
+                                                            </button>
+                                                            <button 
+                                                                className="menu-option delete"
+                                                                onClick={() => handleDeleteMessage(msg.id)}
+                                                            >
+                                                                <FaTrash />
+                                                                <span>Delete</span>
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
                                 );
                             })
