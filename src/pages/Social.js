@@ -50,7 +50,7 @@ const pastelColors = [
 ];
 
 // Function to truncate long names
-const truncateName = (name, maxLength = 20) => {
+const truncateName = (name, maxLength = 15) => {
     if (!name) return '';
     if (name.length <= maxLength) return name;
     return name.slice(0, maxLength) + '...';

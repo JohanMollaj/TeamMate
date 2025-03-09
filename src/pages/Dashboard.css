@@ -144,7 +144,6 @@
 html, body {
   background-color: #1C1D20;
   margin: 0;
-  font-family: "Lexend", sans-serif;
   height: 100vh;
   width: 100%;
   scrollbar-width: thin;
@@ -293,7 +292,7 @@ html, body {
 
 .dashboard {
   margin: 0 20px 20px 80px;
-  height: calc(100vh - 143px); /* Further adjusted to account for bottom spacing */
+  height: calc(100vh - 123px); /* Further adjusted to account for bottom spacing */
   width: calc(100% - 100px); /* Adjusted dynamically for the sidebar */
   padding: 10px 40px 40px 40px;
   color: white;
@@ -506,6 +505,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   width: 100px;
+  white-space: nowrap;
 }
 
 .friend-icon, .group-icon {
