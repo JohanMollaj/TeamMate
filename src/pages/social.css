@@ -245,32 +245,6 @@ h1 {
   display: flex;
 }
 
-.chatboxMain {
-  width: 100%;
-  height: calc(100% - 85px); 
-  min-height: 0;
-  border-radius: 15px 15px 15px 15px;
-  border-top: rgb(186, 186, 186) 2px solid;
-  padding: 10px 20px;
-  background-color: #3f414a;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  overflow: hidden;
-}
-
-.chatboxMessages {
-  flex: 1;
-  overflow: auto;
-  padding: 15px;
-  padding-bottom: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  gap: 5px;
-  min-height: 0;
-  position: relative;
-}
 
 .message {
   color: white;

@@ -1,32 +1,3 @@
-.chatboxContainer {
-    color: white;
-    background-color: #2A2C32;
-    display: flex;
-    flex-direction: column;
-    height: 100%;   
-    width: 100%;
-    border-radius: 0 0 20px 20px;
-    overflow: hidden; /* Contains everything */
-}
-.userHeader{
-    margin: 0;
-    gap: 10px;
-    flex-shrink: 0;
-}
-.userHeader h1{
-    font-size: 40px;
-}
-.userHeader .friend-status{
-  margin-left: 10px;
-}
-
-.chatboxHeader {
-    width: 100%;
-    padding: 10px 20px;
-    background-color: #2A2C32;
-    display: flex;
-    flex-shrink: 0; /* Prevent shrinking */
-}
 .chatboxMain {
     width: 100%;
     flex: 1; /* Take remaining space */
@@ -40,17 +11,23 @@
     position: relative;
     overflow: hidden; /* Let children handle overflow */
 }
+
 .chatboxMessages {
-    flex: 1; /* Take all available space */
-    min-height: 0; /* CRITICAL for scrolling in flex child */
+    flex: 1; /* Take all available space in the flex container */
+    min-height: 0; /* CRITICAL for flex child scrolling */
     overflow-y: auto; /* Enable vertical scrolling */
     padding: 15px;
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
     gap: 5px;
     margin-bottom: 10px; /* Space between messages and input */
+    background-color: #3f414a;
+    box-sizing: border-box; /* Include padding in the element's total height */
+    scrollbar-width: thin;
+    scrollbar-color:  #2A2C32 #3f414a;
 }
 
+/* Ensure proper alignment of sent/received messages */
 .message {
     width: fit-content;
     max-width: 80%; /* Prevent messages from being too wide */
@@ -60,7 +37,17 @@
     padding-right: 25px; /* Space for options button */
 }
 
-/* Added message container for better styling with options */
+.message.received {
+    align-self: flex-start;
+    margin-right: auto; /* Push to the left */
+}
+
+.message.sent {
+    align-self: flex-end;
+    margin-left: auto; /* Push to the right */
+}
+
+/* Message options styling */
 .message-container {
     position: relative;
     background-color: #4e5058;
@@ -71,99 +58,6 @@
     transition: all 0.2s ease;
 }
 
-.messageSender{
-    display: block;
-}
-.messageTime{
-    display: block;
-}
-.message .messageTime {
-    padding: 2px 0;
-    border-radius: 10px;
-    color: #e5e7eb;
-    opacity: 1;
-    transition: opacity 0.2s ease;
-    white-space: nowrap;
-}
-.message:hover .messageTime {
-    opacity: 1;
-    cursor: default;
-}
-
-.messageSender,
-.messageTime{
-    font-size: 0.8rem;
-    color: #b9bbbe;
-}
-.message.received {
-    align-self: flex-start;
-    border-bottom-left-radius: 0.25rem;
-}
-.message.sent {
-    align-self: flex-end;
-    border-bottom-right-radius: 0.25rem;
-}
-.messageText {
-    color: #ffffff;
-    line-height: 1.4;
-    word-wrap: break-word;
-}
-
-/* Message editing indicator */
-.edited-indicator {
-    margin-left: 0.35rem;
-    font-size: 0.75rem;
-    color: #b9bbbe;
-    font-style: italic;
-}
-
-.chatbox {
-    z-index: 5;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #2c2f33;
-    border-radius: 20px;
-    padding: 10px 15px;
-    height: 50px;
-    width: 100%;
-    min-width: 500px;
-    flex-shrink: 0; /* Prevent input from shrinking */
-    margin-top: auto; /* Push to bottom */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-.chatboxMessage{
-    flex: 1;
-    display: flex;
-    width: 100%;
-}
-.chatboxInput {
-    margin: 0;
-    width: 100%;
-    border: none;
-    padding: 10px;
-    font-size: 1rem;
-    border-radius: 20px;
-    outline: none;
-    background: none;
-    color: white;
-}
-
-.chatboxInput::placeholder {
-    color: #b9bbbe;
-}
-
-.chatboxButton{
-    font-size: 1.15rem;
-    color: white;
-    transition: color 0.2s ease-in-out;
-}
-.chatboxButton:hover{
-    cursor: pointer;
-    color: rgb(185, 205, 221);
-}
-
-/* Message options styling */
 .message-options {
     display: inline-block;
     position: absolute;
@@ -247,7 +141,7 @@
     border-radius: 6px;
     padding: 0.5rem;
     color: white;
-    resize: vertical;
+    resize: none;
     min-height: 60px;
     outline: none;
 }
@@ -289,13 +183,20 @@
     background-color: #6B7280;
 }
 
-.no-messages {
-    text-align: center;
-    color: #b9bbbe;
-    margin-top: 2rem;
-}
-
 /* Make sure the edit container is properly sized for sent messages */
 .sent .edit-container {
     text-align: left;
+}
+
+/* Edit indicator */
+.edited-indicator {
+    margin-left: 0.35rem;
+    font-size: 0.75rem;
+    color: #b9bbbe;
+    font-style: italic;
+}
+
+.no-messages{
+    display: flex;
+    justify-content: center;
 }
