@@ -394,25 +394,34 @@ const Social = () => {
         }
     }, [location.state]);
 
-    const toggleTab = () => {
-        setActiveTab((prevTab) => (prevTab === "Friends" ? "Groups" : "Friends"));
+    const setTab = (tabName) => {
+        setActiveTab(tabName);
     };
 
     return (
         <div className="container-friends">
             <div className="friends-menu">
                 <div className="filter-container">
-                    <button className='switchOption'
-                            onClick={toggleTab}>
-                            <FaArrowRightArrowLeft /></button>
                     <h1>{activeTab}</h1>
+                    <div className="tab-buttons">
+                        <button 
+                            className={`tab-button ${activeTab === "Friends" ? "active" : ""}`}
+                            onClick={() => setTab("Friends")}>
+                            Friends
+                        </button>
+                        <button 
+                            className={`tab-button ${activeTab === "Groups" ? "active" : ""}`}
+                            onClick={() => setTab("Groups")}>
+                            Groups
+                        </button>
+                    </div>
                 </div>
                 {activeTab === "Friends" ? 
                     <Friends onSelectChat={handleChatSelect} allUsers={allUsers} /> : 
                     <Groups onSelectChat={handleChatSelect} allUsers={allUsers} />
                 }
             </div>
-
+    
             {activeChat && <FriendsChatbox activeChat={activeChat} allUsers={allUsers} />}
         </div>
     );
