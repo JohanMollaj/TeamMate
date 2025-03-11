@@ -72,16 +72,19 @@ html, body {
   background-color: #ffffff1a;
 }
 
+#filter-status{
+  font-size: 20px;
+}
+
 .textarea {
   color: white;
   resize: none;
-  border: none;
-  border-bottom: solid white 1px;
+
   border-radius: 5px;
   line-height: 25px;
-  background-color: #2A2C32;
+  background-color: #434751;
   margin-top: 10px;
-  padding: 10px;
+  padding: 20px;
   padding-left: 15px;
   font-family: inherit;
   font-size: 18px;
@@ -92,8 +95,6 @@ html, body {
 }
 
 .textarea:focus {
-  border: none;
-  border-bottom: solid white 2px;
   outline: none;
 }
 
