@@ -18,13 +18,13 @@
     overflow-y: auto; /* Enable vertical scrolling */
     padding: 15px;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column; /* Changed from column-reverse to column */
     gap: 5px;
     margin-bottom: 10px; /* Space between messages and input */
     background-color: #3f414a;
     box-sizing: border-box; /* Include padding in the element's total height */
     scrollbar-width: thin;
-    scrollbar-color:  #2A2C32 #3f414a;
+    scrollbar-color: #2A2C32 #3f414a;
 }
 
 /* Ensure proper alignment of sent/received messages */
@@ -199,4 +199,5 @@
 .no-messages{
     display: flex;
     justify-content: center;
+    margin-top: auto; /* Push to the bottom when there are no messages */
 }

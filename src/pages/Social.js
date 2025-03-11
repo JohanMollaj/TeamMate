@@ -192,8 +192,7 @@ function Friends({ onSelectChat, allUsers }) {
                 />
             </div>
 
-            <div className='section'>
-                <div className="friends">
+                <div className="friends mb-5">
                     <button 
                     onClick={() => setIsAddFriendOpen(true)}
                     className="text-[18px] flex items-center rounded-lg bg-green-700 p-3 w-full min-w-[230px] items-center justify-center
@@ -229,7 +228,6 @@ function Friends({ onSelectChat, allUsers }) {
                         </button>
                     ))}
                 </div>
-            </div>
         </div>
     );
 }
@@ -303,7 +301,6 @@ function Groups({ onSelectChat, allUsers }) {
                     className="textarea"
                 />
             </div>
-            <div className='section'>
                 <div className="friends">
                     {filteredGroups.map((group) => (
                         <button
@@ -340,7 +337,6 @@ function Groups({ onSelectChat, allUsers }) {
                         onCreateGroup={handleCreateGroup}
                     />  
                 </div>
-            </div>
         </div>
     );
 }

@@ -1,0 +1,151 @@
+/* Theme CSS Variables */
+:root {
+  /* Common variables */
+  --transition-speed: 0.3s;
+}
+
+/* Dark Theme (Default) */
+.dark-theme {
+  /* Background colors */
+  --bg-primary: #1C1D20;
+  --bg-secondary: #2A2C32;
+  --bg-tertiary: #3f414a;
+  --bg-input: #434751;
+  --bg-dark: #18191d;
+
+  /* Text colors */
+  --text-primary: #ffffff;
+  --text-secondary: #b9bbbe;
+  --text-muted: #a8a9b0;
+  --text-placeholder: #888888;
+
+  /* UI colors */
+  --border-color: #4a4e55;
+  --sidebar-color: #1C1D20;
+  --button-hover: #4d4f5b;
+  --button-active: #7a92af;
+  --button-danger: #9c3737;
+  --button-danger-hover: #7c2f2f;
+  --scrollbar-thumb: #4a4e55;
+  --scrollbar-track: #2A2C32;
+  
+  /* Status colors (keep these the same in both themes) */
+  --status-online: #3ba55c;
+  --status-offline: #747f8d;
+  --status-dnd: #ed4245;
+  --status-idle: #faa61a;
+}
+
+/* Light Theme */
+.light-theme {
+  /* Background colors */
+  --bg-primary: #f5f5f5;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #e9e9e9;
+  --bg-input: #f0f0f0;
+  --bg-dark: #e6e6e6;
+
+  /* Text colors */
+  --text-primary: #2e3338;
+  --text-secondary: #4f5660;
+  --text-muted: #747f8d;
+  --text-placeholder: #72767d;
+
+  /* UI colors */
+  --border-color: #dadce0;
+  --sidebar-color: #f5f5f5;
+  --button-hover: #e3e5e8;
+  --button-active: #5a72ab;
+  --button-danger: #f04747;
+  --button-danger-hover: #d84040;
+  --scrollbar-thumb: #c4c4c4;
+  --scrollbar-track: #e3e5e8;
+  
+  /* Status colors (keep these the same in both themes) */
+  --status-online: #3ba55c;
+  --status-offline: #747f8d;
+  --status-dnd: #ed4245;
+  --status-idle: #faa61a;
+}
+
+/* Apply variables to elements */
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+.profile, .settings, .container-friends, .tasks, .dashboard {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+.section, .notifications-panel, .chatboxMain, .graded-assignments-container {
+  background-color: var(--bg-tertiary);
+  transition: background-color var(--transition-speed);
+}
+
+input, textarea, .textarea, .chatboxInput {
+  background-color: var(--bg-input);
+  color: var(--text-primary);
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-placeholder);
+}
+
+.sidebar, .sidebar-icons .icon, .project-icon {
+  background-color: var(--sidebar-color);
+  color: var(--text-primary);
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+.friend-button, .message-container {
+  background-color: var(--bg-tertiary);
+  transition: background-color var(--transition-speed);
+}
+
+.friend-button:hover, .sidebar-button:hover {
+  background-color: var(--button-hover);
+}
+
+.sidebar-button.active {
+  background-color: var(--button-active);
+}
+
+.change-password-button {
+  background-color: var(--button-active);
+}
+
+.delete-button {
+  background-color: var(--button-danger);
+}
+
+.delete-button:hover {
+  background-color: var(--button-danger-hover);
+}
+
+/* Status indicators */
+.status-indicator.online {
+  background-color: var(--status-online);
+}
+
+.status-indicator.offline {
+  background-color: var(--status-offline);
+}
+
+/* Scrollbars */
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-track);
+}
+
+/* Add smooth transitions to all elements */
+* {
+  transition: background-color var(--transition-speed), color var(--transition-speed), border-color var(--transition-speed);
+}
