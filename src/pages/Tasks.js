@@ -387,7 +387,7 @@ const CompletedTasks = ({ tasks, onTaskClick }) => {
 // Shared TaskItem component updated to be a button
 const TaskItem = ({ task, onTaskClick }) => (
   <button 
-    className="bg-[#3f414a] rounded-lg p-4 mb-2 w-full text-left hover:bg-[#4a4b55] transition-colors cursor-pointer"
+    className="bg-[var(--bg-tertiary)] rounded-lg p-4 mb-2 w-full text-left hover:bg-[#4a4b55] transition-colors cursor-pointer"
     onClick={() => onTaskClick(task)}
   >
     <div className="flex justify-between items-start">

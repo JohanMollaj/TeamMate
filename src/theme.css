@@ -31,6 +31,15 @@
     --button-active: #7a92af;
     --button-danger: #9c3737;
     --button-danger-hover: #7c2f2f;
+
+    --notification-active: #6b7280;
+    --notification-hover: #4b5563;
+    --notification-button: rgb(55, 65, 81);
+
+    --chatbox-button: #ffffff;
+    --chatbox-button-hover: #b9cddd;
+
+    --status-border:#ffffff;
     --scrollbar-thumb: #4a4e55;
     --scrollbar-track: #2A2C32;
     --logo-filter: none;
@@ -50,6 +59,9 @@
     /* Chart colors */
     --chart-green: #66BB6A;
     --chart-dark: #2A2C32;
+
+    /* border colors */
+    --border-color: #ffffff;
   }
   
   /* Light Theme */
@@ -58,12 +70,12 @@
     --bg-primary: #f4f4f6;
     --bg-secondary: #ffffff;
     --bg-tertiary: #f0f2f5;
-    --bg-input: #f6f7f9;
+    --bg-input: #e7e8e9;
     --bg-dark: #e6e6e9;
     --bg-button: #ebedf0;
     --bg-dropdown: #ffffff;
     --bg-menu: #ffffff;
-    --bg-chatbox: #f0f2f5;
+    --bg-chatbox: #e0e2e6;
     
     /* Text colors */
     --text-primary: #2e3338;
@@ -79,8 +91,24 @@
     --button-active: #5a72ab;
     --button-danger: #f04747;
     --button-danger-hover: #d84040;
+
+    --notification-active: #a2adb8;
+    --notification-hover: #dcdee1;
+    --notification-button: #f0f2f5;
+    --notification-circle: #c7cfda;
+
+    --chatbox-button: #4e4e4e;
+    --chatbox-button-hover: #1f1f1f;
+
+    --status-border:#ffffff;
     --scrollbar-thumb: #c4c4c4;
-    --scrollbar-track: #e3e5e8;
+    --scrollbar-track: #ffffff;
+
+    --scrollbar-thumb2: #ffffff;
+    --scrollbar-track2: #f0f2f5;
+
+
+
     --logo-filter: invert(1);
     
     /* Status colors (keep these the same in both themes) */
@@ -98,13 +126,18 @@
     /* Chart colors */
     --chart-green: #66BB6A;
     --chart-dark: #e6e6e9;
+
+    /* border colors */
+    --border-color: #000000;
   }
   
   /* Apply variables to elements */
-  body {
+  html, body {
     background-color: var(--bg-primary);
     color: var(--text-primary);
-    transition: background-color var(--transition-speed), color var(--transition-speed);
+    transition: background-color var(--transition-speed), color var(--transition-speed);scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+    scrollbar-gutter: stable;
   }
   
   .sidebar, .profile, .settings, .container-friends, .tasks, .container-dashboard, .container-settings, .container-tasks, .container-profile {

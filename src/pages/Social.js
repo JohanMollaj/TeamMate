@@ -195,7 +195,7 @@ function Friends({ onSelectChat, allUsers }) {
                 <div className="friends mb-5">
                     <button 
                     onClick={() => setIsAddFriendOpen(true)}
-                    className="text-[18px] flex items-center rounded-lg bg-green-700 p-3 w-full min-w-[230px] items-center justify-center
+                    className="text-[18px] text-white flex items-center rounded-lg bg-green-700 p-3 w-full min-w-[230px] items-center justify-center
                     transition duration-200 ease-in-out hover:bg-green-800">
                         Add Friend
                     </button>
@@ -327,7 +327,7 @@ function Groups({ onSelectChat, allUsers }) {
                     ))}
                     <button 
                     onClick={() => setIsDialogOpen(true)}
-                    className="text-[18px] flex gap-2 items-center rounded-lg bg-slate-500 p-3 w-full min-w-[230px] items-center justify-center
+                    className="text-[18px] text-white flex gap-2 items-center rounded-lg bg-slate-500 p-3 w-full min-w-[230px] items-center justify-center
                     transition duration-200 ease-in-out hover:bg-slate-600">
                         <FaPlus /> Create Group
                     </button>

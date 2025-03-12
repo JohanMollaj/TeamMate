@@ -264,14 +264,14 @@ const NotificationTab = ({ label, icon: Icon, type }) => (
     <button 
         className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
             activeTab === type 
-                ? 'bg-gray-500 text-white' 
-                : 'bg-gray-700/10 hover:bg-gray-600'
+                ? 'bg-[var(--notification-active)] text-[var(--text-primary)]' 
+                : 'bg-[var(--notifcation-button)] hover:bg-[var(--notification-hover)]'
         }`}
         onClick={() => setActiveTab(type)}
     >
         <Icon size={18} />
         <span>{label}</span>
-        <span className="ml-2 bg-gray-700 px-2 py-1 rounded-full text-xs">
+        <span className="ml-2 bg-[var(--notification-circle)] px-2 py-1 rounded-full text-xs">
             {notifications[type].length}
         </span>
     </button>

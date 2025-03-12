@@ -5,7 +5,6 @@
     border-radius: 15px 15px 15px 15px;
     border-top: rgb(186, 186, 186) 2px solid;
     padding: 10px 20px;
-    background-color: #3f414a;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -21,10 +20,9 @@
     flex-direction: column; /* Changed from column-reverse to column */
     gap: 5px;
     margin-bottom: 10px; /* Space between messages and input */
-    background-color: #3f414a;
     box-sizing: border-box; /* Include padding in the element's total height */
     scrollbar-width: thin;
-    scrollbar-color: #2A2C32 #3f414a;
+    scrollbar-color: var(--scrollbar-thumb2) var(--scrollbar-track2);
 }
 
 /* Ensure proper alignment of sent/received messages */
@@ -50,7 +48,6 @@
 /* Message options styling */
 .message-container {
     position: relative;
-    background-color: #4e5058;
     padding: 8px 12px;
     border-radius: 8px;
     color: white;

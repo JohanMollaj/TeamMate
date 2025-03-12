@@ -61,11 +61,11 @@ const TaskCharts = ({ tasks = [] }) => {
     if (active && payload && payload.length) {
       return (
         <div style={{
-          backgroundColor: '#1C1D20',
+          backgroundColor: 'var(--bg-tertiary)',
           padding: '10px',
           border: 'none',
           borderRadius: '8px',
-          color: 'white'
+          color: 'var(--text-primary)',
         }}>
           <p>{`${payload[0].name}: ${payload[0].value}%`}</p>
         </div>
@@ -92,7 +92,7 @@ const TaskCharts = ({ tasks = [] }) => {
         textAlign: 'center' 
       }}>
         <div style={{ 
-          backgroundColor: '#3f414a',
+          backgroundColor: 'var(--bg-tertiary)',
           padding: '20px',
           paddingTop: '0', 
           borderRadius: '15px',
@@ -102,8 +102,8 @@ const TaskCharts = ({ tasks = [] }) => {
           justifyContent: 'center',
           alignItems: 'center'
         }}>
-          <h2 style={{ color: 'white', fontSize: '20px' }}>Task Completion Rate</h2>
-          <p style={{ color: 'white', marginTop: '20px' }}>No tasks assigned yet</p>
+          <h2 style={{ color: 'var(--text-primary)', fontSize: '20px' }}>Task Completion Rate</h2>
+          <p style={{ color: 'var(--text-primary)', marginTop: '20px' }}>No tasks assigned yet</p>
         </div>
       </div>
     );
@@ -121,13 +121,13 @@ const TaskCharts = ({ tasks = [] }) => {
     }}>
       {/* Task Completion Donut Chart */}
       <div style={{ 
-        backgroundColor: '#3f414a',
+        backgroundColor: 'var(--bg-tertiary)',
         padding: '20px',
         paddingTop: '0', 
         borderRadius: '15px',
         height: '300px'
       }}>
-        <h2 style={{ color: 'white', fontSize: '20px' }}>Task Completion Rate</h2>
+        <h2 style={{ color: 'var(--text-primary)', fontSize: '20px' }}>Task Completion Rate</h2>
         <ResponsiveContainer width="100%" height="90%">
           <PieChart>
             <Pie
@@ -146,8 +146,8 @@ const TaskCharts = ({ tasks = [] }) => {
                       y={cy}
                       textAnchor="middle"
                       dominantBaseline="middle"
-                      fill="white"
-                      style={{ fontSize: '24px', fontWeight: 'bold' }}
+                      fill="var(--text-primary)"
+                      style={{ fontSize: '24px', fontWeight: 'bold'}}
                     >
                       {completionRate}%
                     </text>
@@ -170,7 +170,7 @@ const TaskCharts = ({ tasks = [] }) => {
                   justifyContent: 'center', 
                   listStyle: 'none',
                   padding: 0,
-                  color: 'white'
+                  color: 'var(--text-secondary)'
                 }}>
                   {payload.map((entry, index) => (
                     <li key={`item-${index}`} style={{ margin: '0 10px' }}>
@@ -194,13 +194,13 @@ const TaskCharts = ({ tasks = [] }) => {
       </div>
       
       <div style={{ 
-        backgroundColor: '#3f414a',
+        backgroundColor: 'var(--bg-tertiary)',
         padding: '20px',
         paddingTop: '0', 
         borderRadius: '15px',
         height: '400px'
       }}>
-        <h2 style={{ color: 'white', fontSize: '20px' }}>Task Status Breakdown</h2>
+        <h2 style={{ color: 'var(--text-primary)', fontSize: '20px' }}>Task Status Breakdown</h2>
         <ResponsiveContainer width="100%" height="90%">
           <PieChart>
             <Pie
