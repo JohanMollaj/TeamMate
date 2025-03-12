@@ -1,151 +1,425 @@
 /* Theme CSS Variables */
 :root {
-  /* Common variables */
-  --transition-speed: 0.3s;
-}
-
-/* Dark Theme (Default) */
-.dark-theme {
-  /* Background colors */
-  --bg-primary: #1C1D20;
-  --bg-secondary: #2A2C32;
-  --bg-tertiary: #3f414a;
-  --bg-input: #434751;
-  --bg-dark: #18191d;
-
-  /* Text colors */
-  --text-primary: #ffffff;
-  --text-secondary: #b9bbbe;
-  --text-muted: #a8a9b0;
-  --text-placeholder: #888888;
-
-  /* UI colors */
-  --border-color: #4a4e55;
-  --sidebar-color: #1C1D20;
-  --button-hover: #4d4f5b;
-  --button-active: #7a92af;
-  --button-danger: #9c3737;
-  --button-danger-hover: #7c2f2f;
-  --scrollbar-thumb: #4a4e55;
-  --scrollbar-track: #2A2C32;
+    /* Common variables */
+    --transition-speed: 0.1s;
+  }
   
-  /* Status colors (keep these the same in both themes) */
-  --status-online: #3ba55c;
-  --status-offline: #747f8d;
-  --status-dnd: #ed4245;
-  --status-idle: #faa61a;
-}
-
-/* Light Theme */
-.light-theme {
-  /* Background colors */
-  --bg-primary: #f5f5f5;
-  --bg-secondary: #ffffff;
-  --bg-tertiary: #e9e9e9;
-  --bg-input: #f0f0f0;
-  --bg-dark: #e6e6e6;
-
-  /* Text colors */
-  --text-primary: #2e3338;
-  --text-secondary: #4f5660;
-  --text-muted: #747f8d;
-  --text-placeholder: #72767d;
-
-  /* UI colors */
-  --border-color: #dadce0;
-  --sidebar-color: #f5f5f5;
-  --button-hover: #e3e5e8;
-  --button-active: #5a72ab;
-  --button-danger: #f04747;
-  --button-danger-hover: #d84040;
-  --scrollbar-thumb: #c4c4c4;
-  --scrollbar-track: #e3e5e8;
+  /* Dark Theme (Default) */
+  .dark-theme {
+    /* Background colors */
+    --bg-primary: #1C1D20;
+    --bg-secondary: #2A2C32;
+    --bg-tertiary: #3f414a;
+    --bg-input: #434751;
+    --bg-dark: #18191d;
+    --bg-button: #3f414a;
+    --bg-dropdown: #2A2C32;
+    --bg-menu: #2A2C32;
+    --bg-chatbox: #2c2f33;
+    
+    /* Text colors */
+    --text-primary: #ffffff;
+    --text-secondary: #b9bbbe;
+    --text-muted: #a8a9b0;
+    --text-placeholder: #888888;
   
-  /* Status colors (keep these the same in both themes) */
-  --status-online: #3ba55c;
-  --status-offline: #747f8d;
-  --status-dnd: #ed4245;
-  --status-idle: #faa61a;
-}
-
-/* Apply variables to elements */
-body {
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  transition: background-color var(--transition-speed), color var(--transition-speed);
-}
-
-.profile, .settings, .container-friends, .tasks, .dashboard {
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
-  transition: background-color var(--transition-speed), color var(--transition-speed);
-}
-
-.section, .notifications-panel, .chatboxMain, .graded-assignments-container {
-  background-color: var(--bg-tertiary);
-  transition: background-color var(--transition-speed);
-}
-
-input, textarea, .textarea, .chatboxInput {
-  background-color: var(--bg-input);
-  color: var(--text-primary);
-  transition: background-color var(--transition-speed), color var(--transition-speed);
-}
-
-input::placeholder, textarea::placeholder {
-  color: var(--text-placeholder);
-}
-
-.sidebar, .sidebar-icons .icon, .project-icon {
-  background-color: var(--sidebar-color);
-  color: var(--text-primary);
-  transition: background-color var(--transition-speed), color var(--transition-speed);
-}
-
-.friend-button, .message-container {
-  background-color: var(--bg-tertiary);
-  transition: background-color var(--transition-speed);
-}
-
-.friend-button:hover, .sidebar-button:hover {
-  background-color: var(--button-hover);
-}
-
-.sidebar-button.active {
-  background-color: var(--button-active);
-}
-
-.change-password-button {
-  background-color: var(--button-active);
-}
-
-.delete-button {
-  background-color: var(--button-danger);
-}
-
-.delete-button:hover {
-  background-color: var(--button-danger-hover);
-}
-
-/* Status indicators */
-.status-indicator.online {
-  background-color: var(--status-online);
-}
-
-.status-indicator.offline {
-  background-color: var(--status-offline);
-}
-
-/* Scrollbars */
-::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb);
-}
-
-::-webkit-scrollbar-track {
-  background-color: var(--scrollbar-track);
-}
-
-/* Add smooth transitions to all elements */
-* {
-  transition: background-color var(--transition-speed), color var(--transition-speed), border-color var(--transition-speed);
-}
+    /* UI colors */
+    --border-color: #4a4e55;
+    --divider: rgba(255, 255, 255, 0.1);
+    --sidebar-color: #1C1D20;
+    --button-hover: #4d4f5b;
+    --button-active: #7a92af;
+    --button-danger: #9c3737;
+    --button-danger-hover: #7c2f2f;
+    --scrollbar-thumb: #4a4e55;
+    --scrollbar-track: #2A2C32;
+    --logo-filter: none;
+    
+    /* Status colors (keep these the same in both themes) */
+    --status-online: #3ba55c;
+    --status-offline: #747f8d;
+    --status-dnd: #ed4245;
+    --status-idle: #faa61a;
+    
+    /* Task colors */
+    --task-overdue: #e74c3c;
+    --task-today: #f39c12;
+    --task-upcoming: #2ecc71;
+    --task-tomorrow: #3498db;
+    
+    /* Chart colors */
+    --chart-green: #66BB6A;
+    --chart-dark: #2A2C32;
+  }
+  
+  /* Light Theme */
+  .light-theme {
+    /* Background colors */
+    --bg-primary: #f4f4f6;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #f0f2f5;
+    --bg-input: #f6f7f9;
+    --bg-dark: #e6e6e9;
+    --bg-button: #ebedf0;
+    --bg-dropdown: #ffffff;
+    --bg-menu: #ffffff;
+    --bg-chatbox: #f0f2f5;
+    
+    /* Text colors */
+    --text-primary: #2e3338;
+    --text-secondary: #4f5660;
+    --text-muted: #747f8d;
+    --text-placeholder: #72767d;
+  
+    /* UI colors */
+    --border-color: #dadce0;
+    --divider: rgba(0, 0, 0, 0.1);
+    --sidebar-color: #f4f4f6;
+    --button-hover: #e3e5e8;
+    --button-active: #5a72ab;
+    --button-danger: #f04747;
+    --button-danger-hover: #d84040;
+    --scrollbar-thumb: #c4c4c4;
+    --scrollbar-track: #e3e5e8;
+    --logo-filter: invert(1);
+    
+    /* Status colors (keep these the same in both themes) */
+    --status-online: #3ba55c;
+    --status-offline: #747f8d;
+    --status-dnd: #ed4245;
+    --status-idle: #faa61a;
+    
+    /* Task colors */
+    --task-overdue: #e74c3c;
+    --task-today: #f39c12;
+    --task-upcoming: #2ecc71;
+    --task-tomorrow: #3498db;
+    
+    /* Chart colors */
+    --chart-green: #66BB6A;
+    --chart-dark: #e6e6e9;
+  }
+  
+  /* Apply variables to elements */
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+  }
+  
+  .sidebar, .profile, .settings, .container-friends, .tasks, .container-dashboard, .container-settings, .container-tasks, .container-profile {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+  }
+  
+  .dashboard, .profile, .settings {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+  }
+  
+  .section, .dashboard .section, .notifications-panel, .assignments-container, .task-section {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+  
+  .chatboxMain {
+    background-color: var(--bg-tertiary);
+    border-color: var(--border-color);
+  }
+  
+  .chatboxMessages {
+    background-color: var(--bg-tertiary);
+  }
+  
+  .chatbox {
+    background-color: var(--bg-chatbox);
+  }
+  
+  .chatboxInput {
+    color: var(--text-primary);
+  }
+  
+  .chatboxInput::placeholder {
+    color: var(--text-placeholder);
+  }
+  
+  .message-container {
+    background-color: var(--bg-button);
+    color: var(--text-primary);
+  }
+  
+  .messageText {
+    color: var(--text-primary);
+  }
+  
+  .messageSender, .messageTime {
+    color: var(--text-secondary);
+  }
+  
+  input, textarea, .textarea {
+    background-color: var(--bg-input);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+  }
+  
+  input::placeholder, textarea::placeholder {
+    color: var(--text-placeholder);
+  }
+  
+  .sidebar {
+    background-color: var(--sidebar-color);
+  }
+  
+  .sidebar-icons .icon, .icon-button {
+    color: var(--text-primary);
+  }
+  
+  .project-icon {
+    background-color: var(--sidebar-color);
+  }
+  
+  .friend-button, .group-button {
+    background-color: var(--bg-button);
+    color: var(--text-primary);
+  }
+  
+  .friend-button:hover, .group-button:hover {
+    background-color: var(--button-hover);
+  }
+  
+  .friend-username, .group-username {
+    color: var(--text-primary);
+  }
+  
+  .sidebar-button {
+    background-color: var(--bg-button);
+    color: var(--text-primary);
+  }
+  
+  .sidebar-button:hover {
+    background-color: var(--button-hover);
+  }
+  
+  .sidebar-button.active {
+    background-color: var(--button-active);
+    color: white;
+  }
+  
+  .change-password-button {
+    background-color: var(--button-active);
+    color: white;
+  }
+  
+  .delete-button {
+    background-color: var(--button-danger);
+    color: white;
+  }
+  
+  .delete-button:hover {
+    background-color: var(--button-danger-hover);
+  }
+  
+  /* Dashboard elements */
+  .dashboard-page-header {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+  }
+  
+  .user-profile, .settings-button {
+    background-color: var(--bg-button);
+  }
+  
+  .user-nickname {
+    color: var(--text-primary);
+  }
+  
+  .user-username {
+    color: var(--text-secondary);
+  }
+  
+  .task-filter-button {
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+  }
+  
+  .task-filter-button.active {
+    background-color: var(--button-active);
+    color: white;
+  }
+  
+  .dashboard-task-container {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+  
+  .dashboard-task-container:hover {
+    background-color: var(--button-hover);
+  }
+  
+  .dashboard-task-title {
+    color: var(--text-primary);
+  }
+  
+  .dashboard-task-duedate {
+    color: var(--text-secondary);
+  }
+  
+  /* Status indicators */
+  .status-indicator.online {
+    background-color: var(--status-online);
+  }
+  
+  .status-indicator.offline {
+    background-color: var(--status-offline);
+  }
+  
+  /* Notification panel */
+  .notification-item {
+    background-color: var(--bg-tertiary);
+  }
+  
+  .notification-item:hover {
+    background-color: var(--button-hover);
+  }
+  
+  .notification-text {
+    color: var(--text-primary);
+  }
+  
+  .notification-time {
+    color: var(--text-secondary);
+  }
+  
+  .notification-tab {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+  
+  .notification-tab.active {
+    background-color: var(--button-active);
+  }
+  
+  .notification-tab:hover:not(.active) {
+    background-color: var(--button-hover);
+  }
+  
+  /* Scrollbars */
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb);
+  }
+  
+  ::-webkit-scrollbar-track {
+    background-color: var(--scrollbar-track);
+  }
+  
+  /* Task status colors */
+  .dashboard-task-container.status-overdue:before {
+    background-color: var(--task-overdue);
+  }
+  
+  .dashboard-task-container.status-today:before {
+    background-color: var(--task-today);
+  }
+  
+  .dashboard-task-container.status-tomorrow:before {
+    background-color: var(--task-tomorrow);
+  }
+  
+  .dashboard-task-container.status-upcoming:before {
+    background-color: var(--task-upcoming);
+  }
+  
+  /* Chart styling */
+  .chartLegend {
+    background-color: currentColor;
+  }
+  
+  /* Profile dropdown */
+  .profile-dropdown {
+    background-color: var(--bg-dropdown);
+    color: var(--text-primary);
+  }
+  
+  .profile-dropdown-header {
+    background-color: var(--bg-tertiary);
+    border-bottom: 1px solid var(--divider);
+  }
+  
+  .profile-dropdown-nickname {
+    color: var(--text-primary);
+  }
+  
+  .profile-dropdown-username {
+    color: var(--text-secondary);
+  }
+  
+  .profile-dropdown-section {
+    border-bottom: 1px solid var(--divider);
+  }
+  
+  .profile-dropdown-section h3 {
+    color: var(--text-secondary);
+  }
+  
+  .profile-dropdown-section p {
+    color: var(--text-primary);
+  }
+  
+  .profile-dropdown-button {
+    background-color: var(--bg-button);
+    color: var(--text-primary);
+  }
+  
+  .profile-dropdown-button:hover {
+    background-color: var(--button-hover);
+  }
+  
+  /* Appearance theme option */
+  .theme-option {
+    border-color: var(--border-color);
+  }
+  
+  .theme-option.selected {
+    border-color: var(--button-active);
+  }
+  
+  .theme-label {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+  
+  .theme-selected-indicator {
+    background-color: var(--button-active);
+  }
+  
+  .theme-description {
+    background-color: var(--bg-tertiary);
+  }
+  
+  .theme-description p {
+    color: var(--text-secondary);
+  }
+  
+  .setting-note {
+    color: var(--text-secondary);
+  }
+  
+  /* Logo color in light mode */
+  .light-theme .logo {
+    filter: var(--logo-filter);
+  }
+  
+  /* Settings sidebar */
+  .settings-sidebar {
+    border-right-color: var(--border-color);
+  }
+  
+  .settings-section h2 {
+    color: var(--text-secondary);
+  }
+  
+  /* Add smooth transitions to all elements */
+  * {
+    transition: background-color var(--transition-speed), color var(--transition-speed), border-color var(--transition-speed);
+  }

@@ -1,7 +1,6 @@
 .settings-sidebar {
     width: 200px;
     min-width: 200px;
-    color: #fff;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -23,7 +22,6 @@
 .settings-section h2 {
     font-size: 1.2rem;
     margin-bottom: 10px;
-    color: #bbb;
 }
 
 .sidebar-button {
@@ -31,8 +29,6 @@
     padding: 10px 15px;
     margin-bottom: 10px;
     text-align: left;
-    background-color: #4a4e55;
-    color: white;
     border: none;
     border-radius: 5px;
     font-size: 1rem;
@@ -40,18 +36,9 @@
     transition: background-color 0.3s ease-in-out;
 }
 
-.sidebar-button:hover {
-    background-color: #586074;
-    /* Hover effect */
-}
-
-.sidebar-button.active {
-    background-color: #7a92af;
-    /* Clicked effect */
-}
-
 .logout-button:hover{
     background-color: #a94848;
+    color: white;
 }
 
 h1 {

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { ThemeContext } from '../ThemeContext';
+import { ThemeContext } from '../ThemeContext.jsx'; // Make sure to include the .js extension
 import './appearance.css';
 import { Moon, Sun } from 'lucide-react';
 

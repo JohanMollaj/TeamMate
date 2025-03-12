@@ -4,7 +4,6 @@
   top: calc(100% + 10px);
   right: 0;
   width: 300px;
-  background-color: #2A2C32;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   z-index: 100;
@@ -21,7 +20,6 @@
 .profile-dropdown-header {
   display: flex;
   padding: 20px;
-  background-color: #3f414a;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -48,7 +46,6 @@
   justify-content: center;
   font-size: 24px;
   font-weight: 600;
-  color: white;
 }
 
 .profile-dropdown-user-info {
@@ -65,7 +62,6 @@
 
 .profile-dropdown-username {
   font-size: 14px;
-  color: #a8a9b0;
   margin-bottom: 8px;
 }
 
@@ -106,14 +102,12 @@
 .profile-dropdown-section h3 {
   font-size: 12px;
   text-transform: uppercase;
-  color: #a8a9b0;
   margin-bottom: 8px;
   font-weight: 600;
 }
 
 .profile-dropdown-section p {
   font-size: 14px;
-  color: #dcddde;
   margin: 0;
   line-height: 1.4;
 }
@@ -132,17 +126,11 @@
   font-weight: 500;
   border: none;
   cursor: pointer;
-  background-color: #3f414a;
-  color: white;
   transition: background-color 0.2s;
 }
-
-.profile-dropdown-button:hover {
-  background-color: #4d4f5b;
-}@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
 
 html, body {
-  background-color: #1C1D20;
   margin: 0;
   height: 100vh;
   width: 100%;
@@ -167,9 +155,7 @@ html, body {
   margin: 20px 20px 0 80px;
   padding: 20px 40px;
   padding-bottom: 0;
-  background-color: #2A2C32;
   border-radius: 30px 30px 0 0;
-  color: white;
   display: flex;
   align-items: center; /* Vertically center all items */
   justify-content: space-between; /* Space between title and user controls */
@@ -190,9 +176,7 @@ html, body {
 }
 
 .dashboard-page-header .settings-button {
-  background-color: #3f414a;
   border: none;
-  color: white;
   width: 46px;
   height: 46px;
   border-radius: 50%;
@@ -203,15 +187,10 @@ html, body {
   transition: background-color 0.2s;
 }
 
-.settings-button:hover {
-  background-color: #4d4f5b;
-}
-
 .user-profile {
   display: flex;
   align-items: center; /* Vertically center items */
   gap: 12px;
-  background-color: #3f414a;
   padding: 8px 16px;
   padding-left: 5px;
   border-radius: 30px;
@@ -222,17 +201,12 @@ html, body {
   transition: background-color 0.2s;
 }
 
-.user-profile:hover {
-  background-color: #4d4f5b;
-}
-
 .initials-avatar {
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
   font-weight: 600;
-  color: white;
   /* Background color will be set dynamically via inline style */
   /* Background fallback if inline style fails */
   background-color: #4682B4;
@@ -259,7 +233,6 @@ html, body {
 
 .user-username {
   font-size: 14px;
-  color: #a8a9b0;
 }
 
 /* Content container for the dashboard panels */
@@ -273,7 +246,6 @@ html, body {
     font-family: inherit;
     background: none; /* Remove default button background */
     border: none; /* Remove default button border */
-    color: white; /* Text color */
     font-size: 30px; /* Match the font size from the <a> styles */
     cursor: pointer; /* Pointer cursor on hover */
     transition: color 0.3s; /* Smooth color transition */
@@ -295,17 +267,12 @@ html, body {
   height: calc(100vh - 123px); /* Further adjusted to account for bottom spacing */
   width: calc(100% - 100px); /* Adjusted dynamically for the sidebar */
   padding: 10px 40px 40px 40px;
-  color: white;
-  background-color: #2A2C32;
   border-radius: 0 0 45px 45px; /* Rounded corners at bottom only */
   display: flex;
   flex-direction: row;
   overflow-y: none; /* Vertical scrolling inside the dashboard */
   box-sizing: border-box; /* Include padding in dimensions */
   scrollbar-width: thin;
-  scrollbar-color: #4a4e55 #2A2C32;
-  scrollbar-gutter: stable;
-
   &::-webkit-scrollbar-thumb {
     border-radius: 4px;
     border: 2px solid white;  /* Creates padding effect */
@@ -317,7 +284,6 @@ html, body {
   overflow-y: auto;
   flex-grow: 1;
   scrollbar-width: thin;
-  scrollbar-color: #4a4e55 #2A2C32;
   width: 65%;
   padding-right: 16px; /* Add padding for content */
   margin-right: 0;
@@ -327,7 +293,6 @@ html, body {
   margin-bottom: 30px;
   width: 100%;
   padding: 25px 30px;
-  background-color: #3f414a;
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   overflow: auto;
@@ -345,7 +310,6 @@ html, body {
 }
 
 .task-filter-button {
-  background-color: #2A2C32;
   border: none;
   color: #a8a9b0;
   padding: 6px 12px;
@@ -356,19 +320,17 @@ html, body {
 }
 
 .task-filter-button:hover {
-  background-color: #363942;
+  background-color: #dfdfdf;
 }
 
 .task-filter-button.active {
   background-color: #5a72ab;
-  color: white;
 }
 
 .dashboard-task-container {
   display: flex;
   flex-direction: column;
   width: 100%;
-  background-color: #3f414a;
   border-radius: 12px;
   padding: 0;
   transition: all 0.2s ease;
@@ -384,7 +346,6 @@ html, body {
 .dashboard-task-container:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  background-color: #464a56;
 }
 
 .dashboard-task-container:before {
@@ -534,7 +495,6 @@ p {
 .notifications-panel {
   width: 530px;
   min-width: 530px;
-  background-color: #2A2C32;
   border-radius: 25px;
   padding: 20px;
   height: calc(90vh - 150px); /* Adjusted to match the bottom spacing */
@@ -571,14 +531,9 @@ p {
   width: 490px;
   padding: 15px;
   border-radius: 15px;
-  background-color: #3f414a;
   margin-bottom: 15px;
   transition: background-color 0.2s;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.notification-item:hover {
-  background-color: #4d4f5b;
 }
 
 .notification-text {
@@ -589,7 +544,6 @@ p {
 .notification-time {
   display: block;
   font-size: 0.8rem;
-  color: #888;
 }
 
 .notification-tabs {
@@ -612,13 +566,7 @@ p {
   border: none;
   cursor: pointer;
   transition: background-color 0.2s;
-  color: white;
-  background-color: #3f414a;
   font-family: inherit;
-}
-
-.notification-tab.active {
-  background-color: #3c4c60;
 }
 
 .notification-tab:hover:not(.active) {

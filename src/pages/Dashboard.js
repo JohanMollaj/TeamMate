@@ -265,7 +265,7 @@ const NotificationTab = ({ label, icon: Icon, type }) => (
         className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
             activeTab === type 
                 ? 'bg-gray-500 text-white' 
-                : 'bg-gray-700/10 text-gray-300 hover:bg-gray-600'
+                : 'bg-gray-700/10 hover:bg-gray-600'
         }`}
         onClick={() => setActiveTab(type)}
     >

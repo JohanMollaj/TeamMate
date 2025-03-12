@@ -11,10 +11,8 @@
 }
 
 input{
-    background-color: #18191d;
     width: 300px;
     border-radius: 10px;
-    color: white;
     border: none;
     padding: 10px;
     margin-bottom: 10px;
@@ -38,11 +36,9 @@ input::placeholder{
 }
 
 textarea{
-    background-color: #18191d;
     width: 300px;
     height: 100px;
     border-radius: 10px;
-    color: white;
     border: none;
     padding: 10px;
     margin-bottom: 10px;

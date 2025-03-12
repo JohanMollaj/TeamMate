@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import './theme.css'; // Import our new theme CSS
+import './theme.css'; // Import our theme CSS
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Dashboard from './pages/Dashboard.js'
@@ -11,7 +11,7 @@ import Tasks from './pages/Tasks.js';
 import NoPage from './pages/NoPage.js';
 
 import Sidebar from './components/Sidebar.js';
-import { ThemeProvider } from './ThemeContext'; // Import our theme provider
+import { ThemeProvider } from './ThemeContext.jsx'; // Make sure to include the .js extension
 
 
 function App() {
