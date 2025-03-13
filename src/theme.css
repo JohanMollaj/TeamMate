@@ -39,6 +39,8 @@
     --chatbox-button: #ffffff;
     --chatbox-button-hover: #b9cddd;
 
+    --friend-confirmation: #16a34a;
+
     --status-border:#ffffff;
     --scrollbar-thumb: #4a4e55;
     --scrollbar-track: #2A2C32;
@@ -99,6 +101,8 @@
 
     --chatbox-button: #4e4e4e;
     --chatbox-button-hover: #1f1f1f;
+
+    --friend-confirmation: #359e27;
 
     --status-border:#ffffff;
     --scrollbar-thumb: #c4c4c4;

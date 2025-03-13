@@ -56,7 +56,7 @@ const CreateGroupDialog = ({ isOpen, onClose, onCreateGroup }) => {
       />
 
       <div 
-        className="bg-[#1C1D20] rounded-xl w-full max-w-md p-6 relative shadow-2xl
+        className="bg-[var(--bg-primary)] rounded-xl w-full max-w-md p-6 relative shadow-2xl
           transform transition-all duration-200 ease-out
           hover:shadow-[0_0_30px_rgba(0,0,0,0.3)] transition-shadow"
         style={{ 
@@ -65,19 +65,19 @@ const CreateGroupDialog = ({ isOpen, onClose, onCreateGroup }) => {
         }}
       >
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-white">
+          <h2 className="text-xl font-semibold text-[(text-primary)]">
             {showJoinDialog ? 'Join group' : 'Create group'}
           </h2>
           <button 
             onClick={handleClose}
-            className="text-gray-400 hover:text-white transition-colors duration-200
+              className="text-[var(--text-secondary)] hover:text-[(--text-primary)] transition-colors duration-200
               transform hover:scale-110 transition-transform"
           >
             <X size={20} />
           </button>
         </div>
 
-        <p className="text-gray-400 text-sm mb-6">
+        <p className="text-[(--text-secondary)] text-sm mb-6">
           {showJoinDialog 
             ? 'Enter an invite code to join an existing group.'
             : 'Create a new group to chat and collaborate with others.'}
@@ -87,14 +87,14 @@ const CreateGroupDialog = ({ isOpen, onClose, onCreateGroup }) => {
           {!showJoinDialog ? (
             <div className="space-y-4">
               <div className="transform transition-all duration-200 ease-out hover:translate-x-1">
-                <label className="block text-sm font-medium text-white mb-1">
+                <label className="block text-sm font-medium text-[(--text-primary)] mb-1">
                   Group name
                 </label>
                 <input
                   type="text"
                   value={groupName}
                   onChange={(e) => setGroupName(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#2A2C32] border border-gray-600 rounded-lg text-white 
+                  className="w-full px-3 py-2 bg-[(--bg-input)] border border-gray-600 rounded-lg text-[(text-primary)] 
                     focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500
                     transition-all duration-200 ease-out"
                   placeholder="Enter group name"
@@ -103,13 +103,13 @@ const CreateGroupDialog = ({ isOpen, onClose, onCreateGroup }) => {
               </div>
 
               <div className="transform transition-all duration-200 ease-out hover:translate-x-1">
-                <label className="block text-sm font-medium text-white mb-1">
+                <label className="block text-sm font-medium text-[(text-primary)] mb-1">
                   Description
                 </label>
                 <textarea
                   value={groupDescription}
                   onChange={(e) => setGroupDescription(e.target.value)}
-                  className="w-full px-3 py-2 bg-[#2A2C32] border border-gray-600 rounded-lg text-white 
+                  className="w-full px-3 py-2 bg-[(bg-input)] border border-gray-600 rounded-lg text-[(text-primary)] 
                     focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500
                     resize-none transition-all duration-200 ease-out"
                   placeholder="Enter group description"
@@ -119,14 +119,14 @@ const CreateGroupDialog = ({ isOpen, onClose, onCreateGroup }) => {
             </div>
           ) : (
             <div className="transform transition-all duration-200 ease-out hover:translate-x-1">
-              <label className="block text-sm font-medium text-white mb-1">
+              <label className="block text-sm font-medium text-[(text-primary)] mb-1">
                 Invite Code
               </label>
               <input
                 type="text"
                 value={inviteCode}
                 onChange={(e) => setInviteCode(e.target.value)}
-                className="w-full px-3 py-2 bg-[#2A2C32] border border-gray-600 rounded-lg text-white 
+                className="w-full px-3 py-2 bg-[(bg-input)] border border-gray-600 rounded-lg text-[(text-primary)] 
                   focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500
                   transition-all duration-200 ease-out"
                 placeholder="Enter invite code"
@@ -139,7 +139,7 @@ const CreateGroupDialog = ({ isOpen, onClose, onCreateGroup }) => {
             <button
               type="button"
               onClick={handleClose}
-              className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white 
+              className="px-4 py-2 text-sm font-medium text-[(text-secondary)] hover:text-[(text-primary)] 
                 transition-colors duration-200 hover:scale-105 transform"
             >
               Cancel

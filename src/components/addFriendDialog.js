@@ -75,7 +75,7 @@ const AddFriendDialog = ({ isOpen, onClose, onSendRequest }) => {
 
       {/* Dialog */}
       <div 
-        className={`bg-[#1C1D20] rounded-xl w-full max-w-md p-6 relative shadow-2xl
+        className={`bg-[var(--bg-primary)] rounded-xl w-full max-w-md p-6 relative shadow-2xl
           transform transition-all duration-200 ease-out
           ${isAnimating ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}
           hover:shadow-[0_0_30px_rgba(0,0,0,0.3)] transition-shadow`}
@@ -83,10 +83,10 @@ const AddFriendDialog = ({ isOpen, onClose, onSendRequest }) => {
         
         {/* Header */}
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold text-white">Add Friend</h2>
+          <h2 className="text-xl font-semibold text-[var(--text-primary)]">Add Friend</h2>
           <button 
             onClick={handleClose}
-            className="text-gray-400 hover:text-white transition-colors duration-200
+            className="text-[var(--text-primary)] hover:text-white transition-colors duration-200
               transform hover:scale-110 transition-transform"
           >
             <X size={20} />
@@ -99,29 +99,29 @@ const AddFriendDialog = ({ isOpen, onClose, onSendRequest }) => {
             <div className="bg-green-500/20 p-3 rounded-full mb-4">
               <Check size={24} className="text-green-500" />
             </div>
-            <p className="text-green-400 text-center">
+            <p className="text-[var(--friend-confirmation)] text-center">
               Friend request sent to @{username}!
             </p>
           </div>
         ) : (
           // Add Friend Form
           <>
-            <p className="text-gray-400 text-sm mb-6">
+            <p className="text-[var(--text-secondary)] text-sm mb-6">
               Enter a username to send them a friend request.
             </p>
 
             <form onSubmit={handleSubmit}>
               <div className="transform transition-all duration-200 ease-out hover:translate-x-1">
-                <label className="block text-sm font-medium text-white mb-1 ">
+                <label className="block text-sm font-medium text-[var(--text-primary)] mb-1 ">
                   Username
                 </label>
                 <div className="relative">
-                  <span className="absolute left-2 top-1 text-gray-400">@</span>
+                  <span className="absolute left-2 top-1 text-[var(--text-secondary)]">@</span>
                   <input
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full pl-8 pr-3 py-2 bg-[#2A2C32] border border-gray-600 rounded-lg text-white 
+                    className="w-full pl-8 pr-3 py-2 bg-[var(--bg-input)] border border-gray-600 rounded-lg text-[var(--text-primary)] 
                       focus:outline-none focus:border-green-700 focus:ring-1 focus:ring-green-700
                       transition-all duration-200 ease-out"
                     placeholder="username"
@@ -134,7 +134,7 @@ const AddFriendDialog = ({ isOpen, onClose, onSendRequest }) => {
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white 
+                  className="px-4 py-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] 
                     transition-colors duration-200 hover:scale-105 transform"
                 >
                   Cancel

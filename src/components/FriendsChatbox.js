@@ -404,7 +404,7 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
                             })
                         ) : (
                             <div className="no-messages">
-                                <p>No messages yet. Start the conversation!</p>
+                                <p className='text-[var(--text-secondary)]'>No messages yet. Start the conversation!</p>
                             </div>
                         )}
                         <div ref={messagesEndRef} /> {/* Invisible scroll target */}
