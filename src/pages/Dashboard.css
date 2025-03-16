@@ -319,7 +319,7 @@ html, body {
 }
 
 .task-filter-button:hover {
-  background-color: #dfdfdf;
+  background-color: var(--button-hover);
 }
 
 .task-filter-button.active {

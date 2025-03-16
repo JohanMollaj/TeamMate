@@ -16,10 +16,12 @@
     --bg-dropdown: #2A2C32;
     --bg-menu: #2A2C32;
     --bg-chatbox: #2c2f33;
+    --bg-message: #303439;
     
     /* Text colors */
     --text-primary: #ffffff;
     --text-secondary: #b9bbbe;
+    --text-tertiary: #8e9297;
     --text-muted: #a8a9b0;
     --text-placeholder: #888888;
   
@@ -27,14 +29,19 @@
     --border-color: #4a4e55;
     --divider: rgba(255, 255, 255, 0.1);
     --sidebar-color: #1C1D20;
-    --button-hover: #4d4f5b;
+    --button-hover: #585a64;
     --button-active: #7a92af;
     --button-danger: #9c3737;
     --button-danger-hover: #7c2f2f;
 
+    --filter-button: #ffffff00;
+    --filter-button-hover: #ffffff1a;
+    --filter-button-active: #ffffff5d;
+
     --notification-active: #6b7280;
     --notification-hover: #4b5563;
     --notification-button: rgb(55, 65, 81);
+    --notification-circle: #333943;
 
     --chatbox-button: #ffffff;
     --chatbox-button-hover: #b9cddd;
@@ -64,12 +71,14 @@
 
     /* border colors */
     --border-color: #ffffff;
+
+    --sidebar-button: #7a92af;
   }
   
   /* Light Theme */
   .light-theme {
     /* Background colors */
-    --bg-primary: #f4f4f6;
+    --bg-primary: #e7e7eb;
     --bg-secondary: #ffffff;
     --bg-tertiary: #f0f2f5;
     --bg-input: #e7e8e9;
@@ -78,10 +87,13 @@
     --bg-dropdown: #ffffff;
     --bg-menu: #ffffff;
     --bg-chatbox: #e0e2e6;
+    --bg-message: #d6dde7;
+
     
     /* Text colors */
     --text-primary: #2e3338;
     --text-secondary: #4f5660;
+    --text-tertiary: #6b7280;
     --text-muted: #747f8d;
     --text-placeholder: #72767d;
   
@@ -93,6 +105,10 @@
     --button-active: #5a72ab;
     --button-danger: #f04747;
     --button-danger-hover: #d84040;
+
+    --filter-button: #00000000;
+    --filter-button-hover: #0000001a;
+    --filter-button-active: #00000035;
 
     --notification-active: #a2adb8;
     --notification-hover: #dcdee1;
@@ -110,6 +126,8 @@
 
     --scrollbar-thumb2: #ffffff;
     --scrollbar-track2: #f0f2f5;
+
+    --sidebar-button: #7a92af;
 
 
 
@@ -144,7 +162,7 @@
     scrollbar-gutter: stable;
   }
   
-  .sidebar, .profile, .settings, .container-friends, .tasks, .container-dashboard, .container-settings, .container-tasks, .container-profile {
+  .profile, .settings, .container-dashboard, .container-settings, .container-tasks, .container-profile {
     background-color: var(--bg-primary);
     color: var(--text-primary);
     transition: background-color var(--transition-speed), color var(--transition-speed);
@@ -205,15 +223,16 @@
   }
   
   .sidebar {
-    background-color: var(--sidebar-color);
+    background-color: var(--bg-primary);
   }
   
-  .sidebar-icons .icon, .icon-button {
+  .sidebar-icons {
     color: var(--text-primary);
   }
   
+  
   .project-icon {
-    background-color: var(--sidebar-color);
+    background-color: var(--bg-primary);
   }
   
   .friend-button, .group-button {

@@ -79,13 +79,14 @@ const TaskModal = ({ task, isOpen, onClose, onSubmit }) => {
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" 
       onClick={handleOutsideClick}
     >
-      <div className="bg-[#2a2b31] rounded-lg max-w-2xl w-full max-h-[90vh] overflow-auto shadow-xl">
+      <div className="bg-[--bg-secondary] rounded-lg max-w-2xl w-full max-h-[90vh] overflow-auto shadow-xl
+      [&::-webkit-scrollbar]:w-2">
         {/* Header */}
         <div className="flex justify-between items-center p-4 border-b border-gray-700">
-          <h2 className="text-xl font-semibold text-white">{task.title}</h2>
+          <h2 className="text-xl font-semibold text-[--text-primary]">{task.title}</h2>
           <button 
             onClick={onClose}
-            className="text-gray-400 hover:text-white"
+            className="text-[--text-secondary] hover:text-[--text-primary]"
           >
             <X size={20} />
           </button>
@@ -94,26 +95,26 @@ const TaskModal = ({ task, isOpen, onClose, onSubmit }) => {
         {/* Content */}
         <div className="p-6">
           <div className="mb-6">
-            <h3 className="text-lg font-medium text-gray-200 mb-2">Description</h3>
-            <p className="text-gray-300">{task.description}</p>
+            <h3 className="text-lg font-medium text-[--text-secondary] mb-2">Description</h3>
+            <p className="text-[--text-primary]">{task.description}</p>
           </div>
           
           <div className="mb-6 grid grid-cols-2 gap-4">
             <div>
-              <h4 className="text-sm text-gray-400 mb-1">Due Date</h4>
-              <p className="text-white">
+              <h4 className="text-sm text-[--text-secondary] mb-1">Due Date</h4>
+              <p className="text-[--text-primary]">
                 {new Date(task.dueDate).toLocaleDateString()} at {new Date(task.dueDate).toLocaleTimeString()}
               </p>
             </div>
             <div>
-              <h4 className="text-sm text-gray-400 mb-1">Assigned By</h4>
-              <p className="text-white">{task.assignedBy}</p>
+              <h4 className="text-sm text-[--text-secondary] mb-1">Assigned By</h4>
+              <p className="text-[--text-primary]">{task.assignedBy}</p>
             </div>
           </div>
           
           {!task.completed && (
             <div className="mt-8">
-              <h3 className="text-lg font-medium text-gray-200 mb-4">Submit Assignment</h3>
+              <h3 className="text-lg font-medium text-[--text-primary] mb-4">Submit Assignment</h3>
               
               {/* File upload area */}
               <div 
@@ -133,13 +134,13 @@ const TaskModal = ({ task, isOpen, onClose, onSubmit }) => {
                   onChange={handleFileChange}
                 />
                 
-                <Paperclip size={32} className="mx-auto mb-2 text-gray-400" />
-                <p className="text-gray-300 mb-2">
+                <Paperclip size={32} className="mx-auto mb-2 text-[--text-tertiary]" />
+                <p className="text-[--text-tertiary] mb-2">
                   Drag & drop files here, or click to browse
                 </p>
                 <button 
                   onClick={() => fileInputRef.current.click()}
-                  className="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-600 flex items-center mx-auto"
+                  className="bg-[--bg-button] text-[--text-primary] px-4 py-2 rounded-md hover:bg-[--button-hover] flex items-center mx-auto"
                 >
                   <Upload size={16} className="mr-2" />
                   Browse Files
@@ -149,17 +150,17 @@ const TaskModal = ({ task, isOpen, onClose, onSubmit }) => {
               {/* File list */}
               {files.length > 0 && (
                 <div className="mb-6">
-                  <h4 className="text-sm font-medium text-gray-300 mb-2">Selected Files ({files.length})</h4>
+                  <h4 className="text-sm font-medium text-[--text-secondary] mb-2">Selected Files ({files.length})</h4>
                   <ul className="space-y-2">
                     {files.map((file, index) => (
-                      <li key={index} className="flex justify-between items-center bg-gray-700 p-2 rounded">
+                      <li key={index} className="flex justify-between items-center bg-[--bg-primary] p-2 rounded">
                         <div className="flex items-center">
-                          <FileText size={16} className="mr-2 text-gray-400" />
-                          <span className="text-sm text-gray-200">{file.name}</span>
+                          <FileText size={16} className="mr-2 text-[--text-primary]" />
+                          <span className="text-sm text-[--text-primary]">{file.name}</span>
                         </div>
                         <button 
                           onClick={() => removeFile(index)}
-                          className="text-gray-400 hover:text-red-400"
+                          className="text-[--text-tertiary] hover:text-red-400"
                         >
                           <X size={16} />
                         </button>
@@ -171,11 +172,11 @@ const TaskModal = ({ task, isOpen, onClose, onSubmit }) => {
               
               {/* Comment area */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
+                <label className="block text-sm font-medium text-[--text-primary] mb-2">
                   Additional Comments (Optional)
                 </label>
                 <textarea 
-                  className="w-full bg-[#3e454d] border border-gray-600 rounded-md p-3 text-white"
+                  className="w-full bg-[--bg-input] border border-gray-600 rounded-md p-3 text-white"
                   rows="3"
                   placeholder="Add any comments about your submission..."
                   value={comment}
@@ -387,14 +388,14 @@ const CompletedTasks = ({ tasks, onTaskClick }) => {
 // Shared TaskItem component updated to be a button
 const TaskItem = ({ task, onTaskClick }) => (
   <button 
-    className="bg-[var(--bg-tertiary)] rounded-lg p-4 mb-2 w-full text-left hover:bg-[#4a4b55] transition-colors cursor-pointer"
+    className="bg-[var(--bg-button)] rounded-lg p-4 mb-2 w-full text-left hover:bg-[var(--button-hover)] transition-colors cursor-pointer"
     onClick={() => onTaskClick(task)}
   >
     <div className="flex justify-between items-start">
       <div>
         <h4 className="text-lg font-medium">{task.title}</h4>
-        <p className="text-sm text-gray-300 line-clamp-2">{task.description}</p>
-        <div className="mt-2 text-sm text-gray-400">
+        <p className="text-sm text-[var(--text-secondary)] line-clamp-2">{task.description}</p>
+        <div className="mt-2 text-sm text-[var(--text-secondary)]">
           Due: {new Date(task.dueDate).toLocaleDateString()} at {new Date(task.dueDate).toLocaleTimeString()}
         </div>
         <div className="text-sm text-gray-400">

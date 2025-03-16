@@ -52,14 +52,12 @@
   .icon-button {
   background: none;
   border: none;
-  color: white;
   cursor: pointer;
   padding: 10px;
-  transition: color 0.3s ease-in-out;
+  transition: color 0.1s ease-in-out;
 }
-
 .icon-button:hover {
-  color: #7a92af; /* Change color on hover */
+  color: var(--sidebar-button); /* Change color on hover */
 }
 
 .icon {
