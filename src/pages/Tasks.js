@@ -176,7 +176,7 @@ const TaskModal = ({ task, isOpen, onClose, onSubmit }) => {
                   Additional Comments (Optional)
                 </label>
                 <textarea 
-                  className="w-full bg-[--bg-input] border border-gray-600 rounded-md p-3 text-white"
+                  className="w-full bg-[--bg-input] border border-gray-600 rounded-md p-3 text-[--text-primary] focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all duration-200 ease-out"
                   rows="3"
                   placeholder="Add any comments about your submission..."
                   value={comment}

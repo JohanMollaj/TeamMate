@@ -103,13 +103,13 @@ const CreateGroupDialog = ({ isOpen, onClose, onCreateGroup }) => {
               </div>
 
               <div className="transform transition-all duration-200 ease-out hover:translate-x-1">
-                <label className="block text-sm font-medium text-[(text-primary)] mb-1">
+                <label className="block text-sm font-medium text-[(--text-primary)] mb-1">
                   Description
                 </label>
                 <textarea
                   value={groupDescription}
                   onChange={(e) => setGroupDescription(e.target.value)}
-                  className="w-full px-3 py-2 bg-[(bg-input)] border border-gray-600 rounded-lg text-[(text-primary)] 
+                  className="w-full px-3 py-2 bg-[var(--bg-input)] border border-gray-600 rounded-lg text-[(text-primary)] 
                     focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500
                     resize-none transition-all duration-200 ease-out"
                   placeholder="Enter group description"
