@@ -283,6 +283,7 @@ html, body {
   overflow-y: auto;
   flex-grow: 1;
   scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb1) var(--bg-secondary);
   width: 65%;
   padding-right: 16px; /* Add padding for content */
   margin-right: 0;

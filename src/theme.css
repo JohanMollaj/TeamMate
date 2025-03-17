@@ -49,8 +49,10 @@
     --friend-confirmation: #16a34a;
 
     --status-border:#ffffff;
-    --scrollbar-thumb: #4a4e55;
-    --scrollbar-track: #2A2C32;
+    --scrollbar-thumb1: #4a4e55;
+    --scrollbar-thumb2: #2A2C32;
+    --scrollbar-thumb3: #3f414a;
+
     --logo-filter: none;
     
     /* Status colors (keep these the same in both themes) */
@@ -121,11 +123,9 @@
     --friend-confirmation: #359e27;
 
     --status-border:#ffffff;
-    --scrollbar-thumb: #c4c4c4;
-    --scrollbar-track: #ffffff;
-
-    --scrollbar-thumb2: #ffffff;
-    --scrollbar-track2: #f0f2f5;
+    --scrollbar-thumb1: #979a9f;
+    --scrollbar-thumb2: #868891;
+    --scrollbar-thumb3: #3f414a;
 
     --sidebar-button: #7a92af;
 
