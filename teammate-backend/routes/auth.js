@@ -87,32 +87,47 @@ router.post('/register', async (req, res) => {
 // @desc    Authenticate user & get token
 // @access  Public
 router.post('/login', async (req, res) => {
+  console.log('Login request received:', req.body);
   const { email, password } = req.body;
 
+  // if (!email || !password) {
+  //   return res.status(400).json({ msg: 'Please provide email and password' });
+  // } 
+
+  // try {
+  //   // Check for user
+  //   const user = await User.findOne({ email });
+  //   if (!user) {
+  //     return res.status(400).json({ msg: 'Invalid credentials' });
+  //   }
+
+  //   // Check password
+  //   const isMatch = await bcrypt.compare(password, user.password);
+  //   if (!isMatch) {
+  //     return res.status(400).json({ msg: 'Invalid credentials' });
+  //   }
+
+  //   // Update online status
+  //   user.isOnline = true;
+  //   await user.save();
+
+  //   // Create payload
+  //   const payload = {
+  //     user: {
+  //       id: user.id
+  //     }
+  //   };
   try {
-    // Check for user
-    const user = await User.findOne({ email });
+    // Create and return a token without password validation
+    const payload = { user: { id: '12345' } };
+    
+    console.log('User ID from token:', req.user.id);
+    const user = await User.findById(req.user.id).select('-password');
+    console.log('User found:', user ? 'Yes' : 'No');
+    
     if (!user) {
-      return res.status(400).json({ msg: 'Invalid credentials' });
+      return res.status(404).json({ msg: 'User not found' });
     }
-
-    // Check password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ msg: 'Invalid credentials' });
-    }
-
-    // Update online status
-    user.isOnline = true;
-    await user.save();
-
-    // Create payload
-    const payload = {
-      user: {
-        id: user.id
-      }
-    };
-
     // Sign token
     jwt.sign(
       payload,

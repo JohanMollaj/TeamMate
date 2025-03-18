@@ -38,17 +38,18 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     setError(null);
     try {
-      const response = await api.post('/auth/login', { email, password });
-      localStorage.setItem('token', response.data.token);
+        console.log('Attempting login with:', { email, password });
+        const response = await api.post('/auth/login', { email, password });
+        localStorage.setItem('token', response.data.token);
       
-      // Get user data
-      const userResponse = await api.get('/auth');
-      setCurrentUser(userResponse.data);
-      setIsAuthenticated(true);
-      return true;
-    } catch (error) {
-      setError(error.response?.data?.msg || 'Login failed. Please check your credentials.');
-      return false;
+        // Get user data
+        const userResponse = await api.get('/auth');
+        setCurrentUser(userResponse.data);
+        setIsAuthenticated(true);
+        return true;
+        } catch (error) {
+        setError(error.response?.data?.msg || 'Login failed. Please check your credentials.');
+        return false;
     }
   };
 
