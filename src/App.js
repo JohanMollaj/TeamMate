@@ -9,10 +9,12 @@ import Profile from './pages/Profile.js';
 import Settings from './pages/Settings.js';
 import Tasks from './pages/Tasks.js';
 import NoPage from './pages/NoPage.js';
+import Login from './pages/Login';
 
 import Sidebar from './components/Sidebar.js';
 import { ThemeProvider } from './ThemeContext.jsx'; // Make sure to include the .js extension
 import { AuthProvider } from './context/AuthContext.jsx';
+import ProtectedRoute from './components/ProtectedRoute';
 
 
 function App() {
@@ -21,23 +23,30 @@ function App() {
       <ThemeProvider>
         <BrowserRouter>
           <div className='App'>
-            <Sidebar/>
-            <div className='Routes'>
-              <Routes>
-                <Route index element = {<Social/>} />
-                <Route path="/dashboard" element = {<Dashboard />} />
-                <Route path="/social" element = {<Social />} />
-                <Route path="/profile" element = {<Profile />} />
-                <Route path="/settings" element = {<Settings />} />
-                <Route path="/tasks" element = {<Tasks />} />
-                <Route path="*" element = {<NoPage />} />
-              </Routes>
-            </div>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              {/* <Route path="/register" element={<Register />} /> */}
+              <Route path="/" element={
+                <ProtectedRoute>
+                  <Sidebar />
+                  <div className='Routes'>
+                    <Routes>
+                      <Route index element={<Social/>} />
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/social" element={<Social />} />
+                      <Route path="/profile" element={<Profile />} />
+                      <Route path="/settings" element={<Settings />} />
+                      <Route path="/tasks" element={<Tasks />} />
+                      <Route path="*" element={<NoPage />} />
+                    </Routes>
+                  </div>
+                </ProtectedRoute>
+              } />
+            </Routes>
           </div>
         </BrowserRouter>
       </ThemeProvider>
     </AuthProvider>
-      
   );
 }
 
