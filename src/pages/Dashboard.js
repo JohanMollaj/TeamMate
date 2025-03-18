@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { AtSign, UserPlus } from 'lucide-react';
 import { FaCog } from 'react-icons/fa';
-import api from '../utils/api';
+import { usersAPI, tasksAPI } from '../utils/api';
 
 const DashboardTasks = () => {
     const [tasks, setTasks] = useState([]);
@@ -31,18 +31,17 @@ const DashboardTasks = () => {
     };
   
     useEffect(() => {
-      const fetchTasks = async () => {
-        try {
-          const response = await fetch('/tasks.json');
-          const data = await response.json();
-          setTasks(data.tasks);
-        } catch (error) {
-          console.error('Error fetching tasks:', error);
-        }
-      };
-      
-      fetchTasks();
-    }, []);
+        const fetchTasks = async () => {
+            try {
+                const response = await tasksAPI.getUserTasks();
+                setTasks(response.data);
+            } catch (error) {
+                console.error('Error fetching tasks:', error);
+            }
+            };
+            
+            fetchTasks();
+        }, []);
   
     // Filter tasks based on due date
     const getFilteredTasks = () => {
@@ -180,10 +179,17 @@ const [friends, setFriends] = useState([]);
 const [groups, setGroups] = useState([]);
 
 useEffect(() => {
-    fetch("/users.json") // Adjust the path as needed
-        .then(response => response.json())
-        .then(data => setFriends(data));
-}, []);    // Define a set of predefined pastel colors
+    const fetchFriends = async () => {
+      try {
+        const response = await usersAPI.getAllUsers();
+        setFriends(response.data);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchFriends();
+  }, []);    // Define a set of predefined pastel colors
 
 // Add user state that would come from authentication/database
 const [user, setUser] = useState({

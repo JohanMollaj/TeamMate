@@ -6,6 +6,27 @@ const auth = require('../middleware/auth');
 const User = require('../models/User');
 require('dotenv').config();
 
+const { check, validationResult } = require('express-validator');
+
+// Then update the register route:
+router.post(
+  '/register', 
+  [
+    check('name', 'Name is required').not().isEmpty(),
+    check('email', 'Please include a valid email').isEmail(),
+    check('username', 'Username is required').not().isEmpty(),
+    check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 })
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    
+    // Rest of the registration code...
+  }
+);
+
 // @route   POST api/auth/register
 // @desc    Register user
 // @access  Public
