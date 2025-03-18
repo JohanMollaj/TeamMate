@@ -2,6 +2,7 @@ import './social.css';
 import FriendsChatbox from '../components/FriendsChatbox';
 import CreateGroupDialog from '../components/createGroupDialog';
 import AddFriendDialog from '../components/addFriendDialog';
+import api from '../utils/api';
 
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
 import { FaUserGroup, FaPlus } from "react-icons/fa6";
@@ -160,7 +161,7 @@ function Friends({ onSelectChat, allUsers }) {
     });
 
     useEffect(() => {
-        fetch("/friends.json") // Adjust the path as needed
+        fetch("/users.json") // Adjust the path as needed
             .then(response => response.json())
             .then(data => {
                 // Add chatType to distinguish direct messages
@@ -354,7 +355,7 @@ const Social = () => {
     
     useEffect(() => {
         // Load all users for reference (needed for displaying sender names in group chats)
-        fetch("/friends.json")
+        fetch("/users.json")
             .then(response => response.json())
             .then(data => {
                 setAllUsers(data);

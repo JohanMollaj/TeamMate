@@ -1,6 +1,7 @@
 import './settings.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../utils/api';
 
 import Sidebar from '../settingsComponents/settingsSidebar.js';
 import MyAccount from '../settingsComponents/MyAccount.js';

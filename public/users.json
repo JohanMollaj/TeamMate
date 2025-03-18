@@ -1,0 +1,52 @@
+[
+    {
+      "id": "1",
+      "name": "Johan Mollaj",
+      "username": "johan.m",
+      "email": "johan@teammate.com",
+      "password": "$2a$10$rNC7KaH9NJx8TzqZLD9mLeSI1JCm8Y9bLkj0NjQWmx9lL2W0d5sZa",
+      "bio": "Frontend developer passionate about UI/UX design and creating intuitive user experiences.",
+      "isOnline": true,
+      "profilePicture": null
+    },
+    {
+      "id": "2",
+      "name": "Vian Janku",
+      "username": "vian.janku",
+      "email": "vian@teammate.com",
+      "password": "$2a$10$rNC7KaH9NJx8TzqZLD9mLeSI1JCm8Y9bLkj0NjQWmx9lL2W0d5sZa",
+      "bio": "UX researcher with a background in cognitive psychology. Always looking for ways to improve user interactions.",
+      "isOnline": false,
+      "profilePicture": null
+    },
+    {
+      "id": "3",
+      "name": "Rael Oruci",
+      "username": "rael.o",
+      "email": "rael@teammate.com",
+      "password": "$2a$10$rNC7KaH9NJx8TzqZLD9mLeSI1JCm8Y9bLkj0NjQWmx9lL2W0d5sZa",
+      "bio": "Backend developer specializing in database optimization and API design.",
+      "isOnline": true,
+      "profilePicture": null
+    },
+    {
+      "id": "4",
+      "name": "Ariel",
+      "username": "ariel",
+      "email": "ariel@teammate.com",
+      "password": "$2a$10$rNC7KaH9NJx8TzqZLD9mLeSI1JCm8Y9bLkj0NjQWmx9lL2W0d5sZa",
+      "bio": "Product manager with 5 years of experience in agile development environments.",
+      "isOnline": false,
+      "profilePicture": null
+    },
+    {
+      "id": "5",
+      "name": "Bashkia Tirane",
+      "username": "bashkia.tirane",
+      "email": "bashkia@teammate.com",
+      "password": "$2a$10$rNC7KaH9NJx8TzqZLD9mLeSI1JCm8Y9bLkj0NjQWmx9lL2W0d5sZa",
+      "bio": "Official account for city administration projects and announcements.",
+      "isOnline": true,
+      "profilePicture": null
+    }
+  ]

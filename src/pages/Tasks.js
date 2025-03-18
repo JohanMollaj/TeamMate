@@ -2,6 +2,7 @@ import './tasks.css';
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronDown, ChevronUp, Clock, CheckCircle, AlertCircle, AlertTriangle, X, Upload, FileText, Paperclip } from 'lucide-react';
 import TaskCharts from '../components/TaskCharts';
+import api from '../utils/api';
 
 // Modal component for task details
 const TaskModal = ({ task, isOpen, onClose, onSubmit }) => {

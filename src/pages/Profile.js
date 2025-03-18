@@ -2,6 +2,7 @@ import './profile.css';
 import { FaPencil } from "react-icons/fa6";
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from '../utils/api';
 
 function Profile(){
     const navigate  = useNavigate();

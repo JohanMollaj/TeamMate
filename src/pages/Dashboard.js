@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { AtSign, UserPlus } from 'lucide-react';
 import { FaCog } from 'react-icons/fa';
+import api from '../utils/api';
 
 const DashboardTasks = () => {
     const [tasks, setTasks] = useState([]);
@@ -179,7 +180,7 @@ const [friends, setFriends] = useState([]);
 const [groups, setGroups] = useState([]);
 
 useEffect(() => {
-    fetch("/friends.json") // Adjust the path as needed
+    fetch("/users.json") // Adjust the path as needed
         .then(response => response.json())
         .then(data => setFriends(data));
 }, []);    // Define a set of predefined pastel colors

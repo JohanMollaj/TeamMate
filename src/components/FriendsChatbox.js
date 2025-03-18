@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import './friendsChatbox.css';
 import { FaCirclePlus, FaPaperPlane, FaTrash, FaPen, FaCopy } from "react-icons/fa6";
 import { EllipsisVertical } from 'lucide-react';
+import api from '../utils/api';
 
 // Helper functions from dashboard
 const getInitials = (name) => {
