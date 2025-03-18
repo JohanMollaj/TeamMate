@@ -2,7 +2,7 @@ import './social.css';
 import FriendsChatbox from '../components/FriendsChatbox';
 import CreateGroupDialog from '../components/createGroupDialog';
 import AddFriendDialog from '../components/addFriendDialog';
-import api from '../utils/api';
+import { usersAPI, groupsAPI, messagesAPI } from '../utils/api';
 
 import { FaArrowRightArrowLeft } from "react-icons/fa6";
 import { FaUserGroup, FaPlus } from "react-icons/fa6";
@@ -238,53 +238,42 @@ function Groups({ onSelectChat, allUsers }) {
     const [groups, setGroups] = useState([]);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    const handleCreateGroup = (groupData) => {
-        console.log('Creating group:', groupData);
-        // Create a new group with members and add to the state
-        const newGroup = {
-            id: `group_${Date.now()}`, // Generate unique ID
+    const handleCreateGroup = async (groupData) => {
+        try {
+          const response = await groupsAPI.createGroup({
             name: groupData.name,
-            description: groupData.description,
-            chatType: 'group', // Important: Set the chat type explicitly
-            members: groupData.members || ["1"], // Include current user by default
-            createdBy: "1", // Current user created the group
-            createdAt: new Date().toISOString()
-        };
-        
-        setGroups(prevGroups => [...prevGroups, newGroup]);
-        
-        // Save to localStorage or send to backend
-        const savedGroups = JSON.parse(localStorage.getItem('groups') || '[]');
-        localStorage.setItem('groups', JSON.stringify([...savedGroups, newGroup]));
+            description: groupData.description
+          });
+          
+          const newGroup = {
+            ...response.data,
+            chatType: 'group'
+          };
+          
+          setGroups(prevGroups => [...prevGroups, newGroup]);
+        } catch (error) {
+          console.error('Error creating group:', error);
+        }
     };
 
     useEffect(() => {
-        // First try to get from localStorage
-        const savedGroups = localStorage.getItem('groups');
-        if (savedGroups) {
-            setGroups(JSON.parse(savedGroups));
-        } else {
-            // Otherwise fetch from JSON file
-            fetch("/groups.json")
-                .then(response => response.json())
-                .then(data => {
-                    // Add chatType and other necessary group fields
-                    const groupsWithChatType = data.map(group => ({
-                        ...group,
-                        chatType: 'group', // Important: Set the chat type explicitly
-                        members: ["1", "2", "3"], // Sample members - would come from backend in real app
-                        createdBy: "1", // Sample creator
-                        createdAt: new Date().toISOString()
-                    }));
-                    setGroups(groupsWithChatType);
-                    localStorage.setItem('groups', JSON.stringify(groupsWithChatType));
-                })
-                .catch(error => {
-                    console.error("Error loading groups:", error);
-                    // Initialize with empty array if fetch fails
-                    setGroups([]);
-                });
-        }
+        const fetchGroups = async () => {
+          try {
+            const response = await groupsAPI.getUserGroups();
+            // Make sure chatType is set for all groups
+            const groupsWithChatType = response.data.map(group => ({
+              ...group,
+              chatType: 'group'
+            }));
+            setGroups(groupsWithChatType);
+          } catch (error) {
+            console.error('Error fetching groups:', error);
+            // Initialize with empty array if fetch fails
+            setGroups([]);
+          }
+        };
+    
+    fetchGroups();
     }, []);
 
     const filteredGroups = groups.filter((group) => {
@@ -354,13 +343,17 @@ const Social = () => {
     }, []);
     
     useEffect(() => {
-        // Load all users for reference (needed for displaying sender names in group chats)
-        fetch("/users.json")
-            .then(response => response.json())
-            .then(data => {
-                setAllUsers(data);
-            });
-    }, []);
+        const fetchUsers = async () => {
+          try {
+            const response = await usersAPI.getAllUsers();
+            setAllUsers(response.data);
+          } catch (error) {
+            console.error('Error loading users:', error);
+          }
+        };
+    
+        fetchUsers();
+      }, []);
 
     useEffect(() => {
         // Handle user passed from dashboard

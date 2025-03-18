@@ -2,7 +2,7 @@ import './tasks.css';
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronDown, ChevronUp, Clock, CheckCircle, AlertCircle, AlertTriangle, X, Upload, FileText, Paperclip } from 'lucide-react';
 import TaskCharts from '../components/TaskCharts';
-import api from '../utils/api';
+import { tasksAPI } from '../utils/api';
 
 // Modal component for task details
 const TaskModal = ({ task, isOpen, onClose, onSubmit }) => {
@@ -415,9 +415,8 @@ export default function(){
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const response = await fetch('/tasks.json');
-        const data = await response.json();
-        setTasks(data.tasks);
+        const response = await tasksAPI.getUserTasks();
+        setTasks(response.data);
       } catch (error) {
         console.error('Error fetching tasks:', error);
       }
@@ -459,21 +458,21 @@ export default function(){
     setSelectedTask(null);
   };
 
-  const handleSubmitTask = (submission) => {
-    console.log('Task submitted:', submission);
-    
-    // Here you would typically send this to your API
-    // For now, let's just mark it as completed in the local state
-    const updatedTasks = tasks.map(task => 
-      task.id === submission.taskId 
-        ? { ...task, completed: true, submissionDate: new Date().toISOString() } 
-        : task
-    );
-    
-    setTasks(updatedTasks);
-    
-    // Optional: Save to localStorage or send to API
-    // localStorage.setItem('tasks', JSON.stringify(updatedTasks));
+  const handleSubmitTask = async (submission) => {
+    try {
+      const response = await tasksAPI.updateTask(submission.taskId, {
+        completed: true
+      });
+      
+      // Update tasks in state
+      const updatedTasks = tasks.map(task => 
+        task._id === submission.taskId ? response.data : task
+      );
+      
+      setTasks(updatedTasks);
+    } catch (error) {
+      console.error('Error submitting task:', error);
+    }
   };
 
   return(

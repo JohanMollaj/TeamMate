@@ -12,28 +12,32 @@ import NoPage from './pages/NoPage.js';
 
 import Sidebar from './components/Sidebar.js';
 import { ThemeProvider } from './ThemeContext.jsx'; // Make sure to include the .js extension
+import { AuthProvider } from './context/AuthContext.jsx';
 
 
 function App() {
   return (
-    <ThemeProvider>
-      <BrowserRouter>
-        <div className='App'>
-          <Sidebar/>
-          <div className='Routes'>
-            <Routes>
-              <Route index element = {<Social/>} />
-              <Route path="/dashboard" element = {<Dashboard />} />
-              <Route path="/social" element = {<Social />} />
-              <Route path="/profile" element = {<Profile />} />
-              <Route path="/settings" element = {<Settings />} />
-              <Route path="/tasks" element = {<Tasks />} />
-              <Route path="*" element = {<NoPage />} />
-            </Routes>
+    <AuthProvider>
+      <ThemeProvider>
+        <BrowserRouter>
+          <div className='App'>
+            <Sidebar/>
+            <div className='Routes'>
+              <Routes>
+                <Route index element = {<Social/>} />
+                <Route path="/dashboard" element = {<Dashboard />} />
+                <Route path="/social" element = {<Social />} />
+                <Route path="/profile" element = {<Profile />} />
+                <Route path="/settings" element = {<Settings />} />
+                <Route path="/tasks" element = {<Tasks />} />
+                <Route path="*" element = {<NoPage />} />
+              </Routes>
+            </div>
           </div>
-        </div>
-      </BrowserRouter>
-    </ThemeProvider>
+        </BrowserRouter>
+      </ThemeProvider>
+    </AuthProvider>
+      
   );
 }
 

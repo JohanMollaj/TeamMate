@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import './friendsChatbox.css';
 import { FaCirclePlus, FaPaperPlane, FaTrash, FaPen, FaCopy } from "react-icons/fa6";
 import { EllipsisVertical } from 'lucide-react';
-import api from '../utils/api';
+import { messagesAPI } from '../utils/api';
 
 // Helper functions from dashboard
 const getInitials = (name) => {
@@ -73,53 +73,23 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
     }, [activeChat]); 
 
     useEffect(() => {
-        const storedMessages = localStorage.getItem('chatMessages');
-        localStorage.removeItem('chatMessages'); // DELETE THIS ONLY WHEN YOU NEED TO TEST LOCALSTORAGE
-        if (storedMessages) {
+        const fetchMessages = async () => {
+            if (!activeChat) return;
+            
             try {
-                const parsedMessages = JSON.parse(storedMessages);
-                
-                // Add unique IDs to any messages that don't have them
-                const messagesWithIds = parsedMessages.map((msg, index) => {
-                    if (!msg.id) {
-                        return {
-                            ...msg,
-                            id: generateUniqueId(),
-                            type: msg.groupID ? 'group' : 'direct'
-                        };
-                    }
-                    return msg;
-                });
-                
-                setMessages(messagesWithIds);
-                
-                // Update localStorage with the IDs if needed
-                if (JSON.stringify(messagesWithIds) !== storedMessages) {
-                    localStorage.setItem('chatMessages', JSON.stringify(messagesWithIds));
-                }
+              let response;
+              
+              if (activeChat.chatType === 'group') {
+                response = await messagesAPI.getGroupMessages(activeChat.id);
+              } else {
+                response = await messagesAPI.getDirectMessages(activeChat.id);
+              }
+              
+              setMessages(response.data);
             } catch (error) {
-                console.error("Error parsing messages from localStorage:", error);
-                setMessages([]);
-                localStorage.removeItem('chatMessages');
+              console.error('Error fetching messages:', error);
             }
-        } else {
-            fetch("/messages.json")
-                .then(response => response.json())
-                .then(data => {
-                    // Initialize with type field if it doesn't exist
-                    const updatedData = data.map((msg) => ({
-                        ...msg,
-                        id: generateUniqueId(), // Generate a truly unique ID
-                        type: msg.groupID ? 'group' : 'direct'
-                    }));
-                    setMessages(updatedData);
-                    localStorage.setItem('chatMessages', JSON.stringify(updatedData));
-                })
-                .catch(error => {
-                    console.error("Error loading messages:", error);
-                    setMessages([]);
-                });
-        }
+        };
 
         // Click handler to close menu when clicking outside
         const handleOutsideClick = (event) => {
@@ -133,7 +103,9 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
         return () => {
             document.removeEventListener('mousedown', handleOutsideClick);
         };
-    }, []);
+
+        fetchMessages();
+    }, [activeChat]);
 
     useEffect(() => {
         if (messages.length > 0 && activeChat) {
@@ -169,41 +141,34 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
         setNewMessage(e.target.value);
     };
 
-    const handleSendMessage = () => {
+    const handleSendMessage = async () => {
         if (newMessage.trim() === '' || !activeChat) return;
         
-        // Create a new message object based on chat type
-        let newMessageObj;
-        
-        if (activeChat.chatType === 'group') {
-            newMessageObj = {
-                id: generateUniqueId(),
-                senderID: "1", // Current user's ID
-                groupID: activeChat.id,
-                type: 'group',
-                time: new Date().toISOString(),
-                message: newMessage.trim()
-            };
-        } else {
-            newMessageObj = {
-                id: generateUniqueId(),
-                senderID: "1", // Current user's ID
-                receiverID: activeChat.id,
-                type: 'direct',
-                time: new Date().toISOString(),
-                message: newMessage.trim()
-            };
+        try {
+          let response;
+          
+          if (activeChat.chatType === 'group') {
+            response = await messagesAPI.sendGroupMessage({
+              group: activeChat.id,
+              message: newMessage.trim()
+            });
+          } else {
+            response = await messagesAPI.sendDirectMessage({
+              receiver: activeChat.id,
+              message: newMessage.trim()
+            });
+          }
+          
+          // Add the new message to state
+          const newMessageObj = response.data;
+          setMessages(prev => [...prev, newMessageObj]);
+          
+          // Clear input field
+          setNewMessage('');
+        } catch (error) {
+          console.error('Error sending message:', error);
         }
-
-        const updatedMessages = [...messages, newMessageObj];
-        setMessages(updatedMessages);
-        
-        // Save to localStorage
-        localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
-        
-        // Clear input field
-        setNewMessage('');
-    };
+      };
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
@@ -235,26 +200,22 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
         setEditText(e.target.value);
     };
 
-    const handleEditSave = () => {
+    const handleEditSave = async () => {
         if (editText.trim() === '') return;
-
-        // Safely find and update just the specific message by ID
-        const messageIndex = messages.findIndex(msg => msg.id === editingMessageId);
         
-        if (messageIndex !== -1) {
-            const updatedMessages = [...messages];
-            updatedMessages[messageIndex] = {
-                ...updatedMessages[messageIndex],
-                message: editText.trim(),
-                edited: true
-            };
-            
-            setMessages(updatedMessages);
-            localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
+        try {
+          const response = await messagesAPI.editMessage(editingMessageId, editText.trim());
+          
+          // Update messages state with edited message
+          setMessages(prev => 
+            prev.map(msg => msg.id === editingMessageId ? response.data : msg)
+          );
+          
+          setEditingMessageId(null);
+          setEditText('');
+        } catch (error) {
+          console.error('Error editing message:', error);
         }
-        
-        setEditingMessageId(null);
-        setEditText('');
     };
 
     const handleEditCancel = () => {
