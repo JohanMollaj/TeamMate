@@ -1,16 +1,24 @@
-import { useContext } from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { FaSpinner } from 'react-icons/fa';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useContext(AuthContext);
+  const location = useLocation();
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="loading-container">
+        <FaSpinner className="spinner" size={40} />
+        <p>Loading...</p>
+      </div>
+    );
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" />;
+    // Redirect to login but save the intended destination
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
   return children;

@@ -10,6 +10,7 @@ import Settings from './pages/Settings.js';
 import Tasks from './pages/Tasks.js';
 import NoPage from './pages/NoPage.js';
 import Login from './pages/Login';
+import Register from './pages/Register';
 
 import Sidebar from './components/Sidebar.js';
 import { ThemeProvider } from './ThemeContext.jsx'; // Make sure to include the .js extension
@@ -22,16 +23,19 @@ function App() {
     <AuthProvider>
       <ThemeProvider>
         <BrowserRouter>
-          <div className='App'>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              {/* <Route path="/register" element={<Register />} /> */}
-              <Route path="/" element={
-                <ProtectedRoute>
+          <Routes>
+            {/* Public routes - accessible without authentication */}
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            
+            {/* Protected routes - require authentication */}
+            <Route path="/" element={
+              <ProtectedRoute>
+                <div className='App'>
                   <Sidebar />
                   <div className='Routes'>
                     <Routes>
-                      <Route index element={<Social/>} />
+                      <Route index element={<Social />} />
                       <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/social" element={<Social />} />
                       <Route path="/profile" element={<Profile />} />
@@ -40,10 +44,10 @@ function App() {
                       <Route path="*" element={<NoPage />} />
                     </Routes>
                   </div>
-                </ProtectedRoute>
-              } />
-            </Routes>
-          </div>
+                </div>
+              </ProtectedRoute>
+            } />
+          </Routes>
         </BrowserRouter>
       </ThemeProvider>
     </AuthProvider>
