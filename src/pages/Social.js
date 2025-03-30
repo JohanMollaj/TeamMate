@@ -7,10 +7,89 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { User } from 'lucide-react';
 
+<<<<<<< Updated upstream
 function Friends({ onSelectChat }) {
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState("all");
     const [friends, setFriends] = useState([]);
+=======
+// Helper function for generating initials (same as dashboard)
+const getInitials = (name) => {
+    if (!name) return "U";
+    const words = name.split(' ');
+    if (words.length === 1) {
+        // Capitalize first letter, lowercase second letter
+        return name.substring(0, 1).toUpperCase() + 
+            (name.length > 1 ? name.substring(1, 2).toLowerCase() : "");
+    } else {
+        // First letter of first and last words, properly capitalized
+        return words[0][0].toUpperCase() + words[words.length - 1][0].toUpperCase();
+    }
+};
+
+// Generate consistent color based on name from our predefined palette (same as dashboard)
+const getConsistentColor = (name) => {
+    if (!name) return pastelColors[0]; // Default to first color
+    
+    // Create a simple hash from the name
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    
+    // Get a consistent index from the hash
+    const index = Math.abs(hash) % pastelColors.length;
+    
+    // Return the color at that index
+    return pastelColors[index];
+};
+
+// Define a set of darker pastel colors for better text readability (same as dashboard)
+const pastelColors = [
+    "#c25151", // red
+    "#bd7d3c", // orange
+    "#5db54c", // green
+    "#4ea4a6", // light blue
+    "#555b9e", // blue
+    "#7e599c", // purple
+];
+
+// Function to truncate long names
+const truncateName = (name, maxLength = 15) => {
+    if (!name) return '';
+    if (name.length <= maxLength) return name;
+    return name.slice(0, maxLength) + '...';
+};
+
+function Friends({ onSelectChat, allUsers }) {
+    const [search, setSearch] = useState("");
+    const [filter, setFilter] = useState("all");
+    const [friends, setFriends] = useState([]);
+    const [isAddFriendOpen, setIsAddFriendOpen] = useState(false);
+
+    const handleSendRequest = async (username) => {
+        try {
+            // Find the user ID by username (this would be a backend lookup in production)
+            // For now we'll just log it
+            console.log(`Friend request sent to: ${username}`, {
+                timestamp: new Date().toISOString(),
+                action: 'friend_request_sent',
+                target_user: username,
+                status: 'success'
+            });
+            
+            // In a real implementation, we would call the API:
+            // const response = await fetch('/api/users/1/friend-requests', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ toUserId: '2' }) // Replace with actual user ID
+            // });
+        } catch (error) {
+            console.error("Error sending friend request:", error);
+            throw error;
+        }
+    };
+>>>>>>> Stashed changes
 
     const filteredFriends = friends.filter((friend) => {
         const matchesSearch = friend.name.toLowerCase().includes(search.toLowerCase());
@@ -21,11 +100,59 @@ function Friends({ onSelectChat }) {
         return matchesSearch && matchesFilter;
     });
 
+<<<<<<< Updated upstream
         useEffect(() => {
             fetch("/friends.json") // Adjust the path as needed
                 .then(response => response.json())
                 .then(data => setFriends(data));
         }, []);
+=======
+    useEffect(() => {
+        const fetchFriends = async () => {
+            try {
+                // Try to fetch from the API
+                const response = await fetch("/api/users");
+                
+                if (!response.ok) {
+                    throw new Error(`API request failed: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Add chatType to distinguish direct messages
+                const friendsWithChatType = data.map(friend => ({
+                    ...friend,
+                    id: friend._id,
+                    chatType: 'direct',
+                    name: friend.name || friend.username
+                }));
+                
+                setFriends(friendsWithChatType);
+            } catch (error) {
+                console.error("Error fetching friends from API:", error);
+                
+                // Fallback to JSON file if API fails
+                console.warn("Falling back to friends.json");
+                fetch("/friends.json")
+                    .then(response => response.json())
+                    .then(data => {
+                        // Add chatType to distinguish direct messages
+                        const friendsWithChatType = data.map(friend => ({
+                            ...friend,
+                            chatType: 'direct'
+                        }));
+                        setFriends(friendsWithChatType);
+                    })
+                    .catch(fallbackError => {
+                        console.error("Error with fallback:", fallbackError);
+                        setFriends([]);
+                    });
+            }
+        };
+        
+        fetchFriends();
+    }, []);
+>>>>>>> Stashed changes
 
     return (
         <div className='w-[220px]'>
@@ -81,11 +208,134 @@ function Friends({ onSelectChat }) {
 function Groups() {
     const [search, setSearch] = useState("");
     const [groups, setGroups] = useState([]);
+<<<<<<< Updated upstream
 
     useEffect(() => {
         fetch("/groups.json") // Adjust the path as needed
             .then(response => response.json())
             .then(data => setGroups(data));
+=======
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const handleCreateGroup = async (groupData) => {
+        try {
+            // Send to API
+            const response = await fetch('/api/groups', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: groupData.name,
+                    description: groupData.description,
+                    createdBy: "1", // Current user
+                    members: groupData.members || ["1"] // Include current user by default
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to create group');
+            }
+
+            const newGroup = await response.json();
+            
+            // Add to local state with needed properties for UI
+            const groupWithChatType = {
+                ...newGroup,
+                id: newGroup._id,
+                chatType: 'group'
+            };
+            
+            setGroups(prevGroups => [...prevGroups, groupWithChatType]);
+        } catch (error) {
+            console.error("Error creating group:", error);
+            
+            // Fallback to localStorage if API isn't working yet
+            console.warn("Falling back to localStorage for group creation");
+            
+            // Create a new group with members and add to the state
+            const newGroup = {
+                id: `group_${Date.now()}`, // Generate unique ID
+                name: groupData.name,
+                description: groupData.description,
+                chatType: 'group', // Important: Set the chat type explicitly
+                members: groupData.members || ["1"], // Include current user by default
+                createdBy: "1", // Current user created the group
+                createdAt: new Date().toISOString()
+            };
+            
+            setGroups(prevGroups => [...prevGroups, newGroup]);
+            
+            // Save to localStorage
+            const savedGroups = JSON.parse(localStorage.getItem('groups') || '[]');
+            localStorage.setItem('groups', JSON.stringify([...savedGroups, newGroup]));
+        }
+    };
+
+    useEffect(() => {
+        const fetchGroups = async () => {
+            try {
+                // Try to fetch from the API
+                const response = await fetch("/api/groups");
+                
+                if (!response.ok) {
+                    throw new Error(`API request failed: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Format for UI
+                const groupsWithChatType = data.map(group => ({
+                    ...group,
+                    id: group._id,
+                    chatType: 'group'
+                }));
+                
+                setGroups(groupsWithChatType);
+            } catch (error) {
+                console.error("Error fetching groups from API:", error);
+                
+                // First try to get from localStorage
+                const savedGroups = localStorage.getItem('groups');
+                if (savedGroups) {
+                    try {
+                        setGroups(JSON.parse(savedGroups));
+                    } catch (parseError) {
+                        console.error("Error parsing localStorage groups:", parseError);
+                        fallbackToJSON();
+                    }
+                } else {
+                    // Otherwise fetch from JSON file
+                    fallbackToJSON();
+                }
+            }
+        };
+        
+        // Fallback to JSON file
+        const fallbackToJSON = () => {
+            console.warn("Falling back to groups.json");
+            fetch("/groups.json")
+                .then(response => response.json())
+                .then(data => {
+                    // Add chatType and other necessary group fields
+                    const groupsWithChatType = data.map(group => ({
+                        ...group,
+                        chatType: 'group', // Important: Set the chat type explicitly
+                        members: ["1", "2", "3"], // Sample members - would come from backend in real app
+                        createdBy: "1", // Sample creator
+                        createdAt: new Date().toISOString()
+                    }));
+                    setGroups(groupsWithChatType);
+                    localStorage.setItem('groups', JSON.stringify(groupsWithChatType));
+                })
+                .catch(fallbackError => {
+                    console.error("Error with fallback:", fallbackError);
+                    setGroups([]);
+                });
+        };
+        
+        fetchGroups();
+>>>>>>> Stashed changes
     }, []);
 
     const filteredGroups = groups.filter((group) => {
@@ -125,6 +375,40 @@ const Social = () => {
     const [activeChat, setActiveChat] = useState(null);
     const [activeTab, setActiveTab] = useState("Friends");
     
+<<<<<<< Updated upstream
+=======
+    useEffect(() => {
+        // Load all users for reference (needed for displaying sender names in group chats)
+        const fetchAllUsers = async () => {
+            try {
+                const response = await fetch("/api/users");
+                
+                if (!response.ok) {
+                    throw new Error(`API request failed: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                setAllUsers(data);
+            } catch (error) {
+                console.error("Error fetching all users:", error);
+                
+                // Fallback to JSON file if API fails
+                fetch("/friends.json")
+                    .then(response => response.json())
+                    .then(data => {
+                        setAllUsers(data);
+                    })
+                    .catch(fallbackError => {
+                        console.error("Error with fallback:", fallbackError);
+                        setAllUsers([]);
+                    });
+            }
+        };
+        
+        fetchAllUsers();
+    }, []);
+
+>>>>>>> Stashed changes
     useEffect(() => {
         // Handle user passed from dashboard
         if (location.state?.user) {
