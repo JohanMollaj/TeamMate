@@ -1,0 +1,31 @@
+{
+  "1": [
+    {
+      "id": "notif_1",
+      "type": "message",
+      "title": "New message from Vian Janku",
+      "message": "I'm good! What about you?",
+      "time": "2025-02-04T12:31:00Z",
+      "read": false,
+      "senderId": "2"
+    },
+    {
+      "id": "notif_2",
+      "type": "friend_request",
+      "title": "New friend request",
+      "message": "Ariel sent you a friend request",
+      "time": "2025-02-03T10:15:00Z",
+      "read": true,
+      "senderId": "4"
+    },
+    {
+      "id": "notif_3",
+      "type": "mention",
+      "title": "You were mentioned",
+      "message": "@johan was mentioned in Design Team",
+      "time": "2025-02-02T14:20:00Z",
+      "read": false,
+      "groupId": "1"
+    }
+  ]
+}

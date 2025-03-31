@@ -179,7 +179,7 @@ const [friends, setFriends] = useState([]);
 const [groups, setGroups] = useState([]);
 
 useEffect(() => {
-    fetch("/friends.json") // Adjust the path as needed
+    fetch("/users.json") // Adjust the path as needed
         .then(response => response.json())
         .then(data => setFriends(data));
 }, []);    // Define a set of predefined pastel colors

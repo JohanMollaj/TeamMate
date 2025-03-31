@@ -160,7 +160,7 @@ function Friends({ onSelectChat, allUsers }) {
     });
 
     useEffect(() => {
-        fetch("/friends.json") // Adjust the path as needed
+        fetch("/users.json") // Adjust the path as needed
             .then(response => response.json())
             .then(data => {
                 // Add chatType to distinguish direct messages
@@ -354,7 +354,7 @@ const Social = () => {
     
     useEffect(() => {
         // Load all users for reference (needed for displaying sender names in group chats)
-        fetch("/friends.json")
+        fetch("/users.json")
             .then(response => response.json())
             .then(data => {
                 setAllUsers(data);
