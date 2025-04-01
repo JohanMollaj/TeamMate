@@ -474,6 +474,111 @@
   .settings-section h2 {
     color: var(--text-secondary);
   }
+
+  /* Auth components */
+.auth-container {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.auth-card {
+  background-color: var(--bg-secondary);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.auth-header h1 {
+  color: var(--text-primary);
+}
+
+.auth-error {
+  background-color: rgba(226, 68, 92, 0.15);
+  color: rgb(226, 68, 92);
+}
+
+.form-group label {
+  color: var(--text-primary);
+}
+
+.form-group input {
+  background-color: var(--bg-input);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.form-group input:focus {
+  border-color: var(--button-active);
+}
+
+.toggle-password {
+  color: var(--text-secondary);
+}
+
+.toggle-password:hover {
+  color: var(--text-primary);
+}
+
+.remember-me {
+  color: var(--text-secondary);
+}
+
+.forgot-password {
+  color: var(--button-active);
+}
+
+.forgot-password:hover {
+  color: var(--text-primary);
+}
+
+.auth-button {
+  background-color: var(--button-active);
+  color: white;
+}
+
+.auth-button:hover {
+  background-color: var(--sidebar-button);
+}
+
+.auth-button:disabled {
+  background-color: var(--bg-tertiary);
+}
+
+.auth-footer {
+  color: var(--text-secondary);
+}
+
+.auth-footer a {
+  color: var(--button-active);
+}
+
+.auth-footer a:hover {
+  color: var(--sidebar-button);
+}
+
+/* Friend request items in Social page */
+.friend-request-item {
+  background-color: var(--bg-button);
+}
+
+.friend-request-item:hover {
+  background-color: var(--button-hover);
+}
+
+.friend-username-small {
+  color: var(--text-secondary);
+}
+
+/* Loading spinner */
+.loading-spinner {
+  border-color: rgba(0, 0, 0, 0.1);
+  border-top-color: var(--button-active);
+}
+
+/* Notification Message */
+.notification-message {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 5px 0;
+}
   
   /* Add smooth transitions to all elements */
   * {

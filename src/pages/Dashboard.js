@@ -1,6 +1,6 @@
-
+// Updated Dashboard.js to handle dynamic user data
 import './Dashboard.css';
-import { FaUserCircle, FaUsers, FaBell } from 'react-icons/fa';
+import { FaUserCircle, FaUsers, FaBell, FaSignOutAlt } from 'react-icons/fa';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
@@ -10,6 +10,7 @@ import { FaCog } from 'react-icons/fa';
 const DashboardTasks = () => {
     const [tasks, setTasks] = useState([]);
     const [filter, setFilter] = useState('all'); // 'all', 'today', 'week', 'month'
+    const [currentUser, setCurrentUser] = useState(null);
 
     // Helper function for truncating long names
     const truncateName = (name, maxLength = 50) => {
@@ -30,17 +31,24 @@ const DashboardTasks = () => {
     };
   
     useEffect(() => {
-      const fetchTasks = async () => {
+      const user = JSON.parse(localStorage.getItem('currentUser'));
+      setCurrentUser(user);
+      
+      const fetchTasks = () => {
         try {
-          const response = await fetch('/tasks.json');
-          const data = await response.json();
-          setTasks(data.tasks);
+          // Get tasks from localStorage
+          const allTasks = JSON.parse(localStorage.getItem('tasks') || '{}');
+          const userTasks = allTasks[user.id] || [];
+          setTasks(userTasks);
         } catch (error) {
           console.error('Error fetching tasks:', error);
+          setTasks([]);
         }
       };
       
-      fetchTasks();
+      if (user) {
+        fetchTasks();
+      }
     }, []);
   
     // Filter tasks based on due date
@@ -177,39 +185,90 @@ const [activeTab, setActiveTab] = useState('unread');
 const containerRef = useRef(null);
 const [friends, setFriends] = useState([]);
 const [groups, setGroups] = useState([]);
-
-useEffect(() => {
-    fetch("/users.json") // Adjust the path as needed
-        .then(response => response.json())
-        .then(data => setFriends(data));
-}, []);    // Define a set of predefined pastel colors
-
-// Add user state that would come from authentication/database
-const [user, setUser] = useState({
-    nickname: "Johan Mollaj",
-    username: "m.jxhan",
-    profileImage: null, // Set to image path when available
-    bio: "Frontend developer passionate about UI/UX design",
-    status: "online",
-    joinDate: "November 2024"
+const [notifications, setNotifications] = useState({
+    unread: [],
+    mentions: [],
+    friendRequests: []
 });
 
-// State to control profile dropdown visibility
-const [showProfileDropdown, setShowProfileDropdown] = useState(false);
-const notifications = {
-    unread: [
-        { id: 1, text: "New message in 'Project Team'", time: "30 minutes ago" },
-        { id: 2, text: "Task deadline approaching: Project Report", time: "1 hour ago" }
-    ],
-    mentions: [
-        { id: 1, text: "@you was mentioned in Group1", time: "2 hours ago" },
-        { id: 2, text: "@you was tagged in Group1", time: "5 hours ago" }
-    ],
-    friendRequests: [
-        { id: 1, text: "John sent you a friend request", time: "10 minutes ago" },
-        { id: 2, text: "Sarah accepted your friend request", time: "1 day ago" }
-    ]
-};
+// Add user state that would come from authentication/database
+const [currentUser, setCurrentUser] = useState(null);
+
+useEffect(() => {
+    // Get current user from localStorage
+    const user = JSON.parse(localStorage.getItem('currentUser'));
+    if (user) {
+        setCurrentUser(user);
+    }
+    
+    // Fetch friends
+    const fetchFriends = () => {
+        try {
+            const allUsers = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            if (user && user.id) {
+                // Find the full user object to get friends list
+                const fullUserData = allUsers.find(u => u.id === user.id);
+                
+                if (fullUserData && fullUserData.friends) {
+                    // Filter and map users who are in the friends list
+                    const userFriends = allUsers
+                        .filter(u => fullUserData.friends.includes(u.id))
+                        .map(friend => ({
+                            id: friend.id,
+                            name: friend.name,
+                            username: friend.username,
+                            profileImage: friend.profilePicture,
+                            isOnline: friend.isOnline,
+                            bio: friend.bio,
+                            chatType: 'direct'
+                        }));
+                    
+                    setFriends(userFriends);
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching friends:', error);
+            setFriends([]);
+        }
+    };
+    
+    // Fetch groups
+    const fetchGroups = () => {
+        try {
+            const savedGroups = JSON.parse(localStorage.getItem('groups') || '[]');
+            setGroups(savedGroups);
+        } catch (error) {
+            console.error('Error fetching groups:', error);
+            setGroups([]);
+        }
+    };
+    
+    // Fetch notifications
+    const fetchNotifications = () => {
+        try {
+            const allNotifications = JSON.parse(localStorage.getItem('notifications') || '{}');
+            const userNotifications = allNotifications[user.id] || [];
+            
+            // Categorize notifications
+            const categorized = {
+                unread: userNotifications.filter(n => !n.read),
+                mentions: userNotifications.filter(n => n.type === 'mention'),
+                friendRequests: userNotifications.filter(n => n.type === 'friend_request')
+            };
+            
+            setNotifications(categorized);
+        } catch (error) {
+            console.error('Error fetching notifications:', error);
+        }
+    };
+    
+    if (user) {
+        fetchFriends();
+        fetchGroups();
+        fetchNotifications();
+    }
+}, []);
 
 // Helper function for truncating long names
 const truncateName = (name, maxLength = 10) => {
@@ -272,7 +331,7 @@ const NotificationTab = ({ label, icon: Icon, type }) => (
         <Icon size={18} />
         <span>{label}</span>
         <span className="ml-2 bg-[var(--notification-circle)] px-2 py-1 rounded-full text-xs">
-            {notifications[type].length}
+            {notifications[type]?.length || 0}
         </span>
     </button>
 );
@@ -299,17 +358,38 @@ useEffect(() => {
     };
 }, []);
 
-useEffect(() => {
-    fetch("/groups.json") // Adjust the path as needed
-        .then(response => response.json())
-        .then(data => setGroups(data));
-}, []);
-
 const handleChatRedirect = (user) => {
-    console.log(user);
     localStorage.setItem("activeChat", JSON.stringify(user)); // Save the selected user
-    navigate("/social", { state: { user } }); // Redirect to the Friends page (change this if your route is different)
+    navigate("/social", { state: { user } }); // Redirect to the Friends page
 };
+
+// State to control profile dropdown visibility
+const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+
+// Handle logout
+const handleLogout = () => {
+    // Update user's online status in the users array
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const updatedUsers = users.map(u => {
+        if (u.id === currentUser.id) {
+            return { ...u, isOnline: false };
+        }
+        return u;
+    });
+    
+    localStorage.setItem('users', JSON.stringify(updatedUsers));
+    
+    // Remove current user from localStorage
+    localStorage.removeItem('currentUser');
+    
+    // Redirect to login page
+    navigate('/login');
+};
+
+if (!currentUser) {
+    // Could add a loading state here
+    return <div>Loading...</div>;
+}
 
 return(
     <div className="container-dashboard">
@@ -325,18 +405,18 @@ return(
                     onClick={() => setShowProfileDropdown(!showProfileDropdown)}
                 >
                     <div className="user-info">
-                        <span className="user-nickname">{user.nickname}</span>
-                        <span className="user-username">@{user.username}</span>
+                        <span className="user-nickname">{currentUser.name}</span>
+                        <span className="user-username">@{currentUser.username}</span>
                     </div>
                     {/* Profile picture with fallback to initials */}
-                    {user.profileImage ? (
-                        <img src={user.profileImage} alt="Profile" className="profile-avatar" />
+                    {currentUser.profilePicture ? (
+                        <img src={currentUser.profilePicture} alt="Profile" className="profile-avatar" />
                     ) : (
                         <div 
                             className="profile-avatar initials-avatar"
-                            style={{ backgroundColor: getConsistentColor(user.nickname) }}
+                            style={{ backgroundColor: getConsistentColor(currentUser.name) }}
                         >
-                            {getInitials(user.nickname)}
+                            {getInitials(currentUser.name)}
                         </div>
                     )}
                     
@@ -345,40 +425,40 @@ return(
                         <div className="profile-dropdown" onClick={(e) => e.stopPropagation()}>
                             <div className="profile-dropdown-header">
                                 <div className="profile-dropdown-avatar">
-                                    {user.profileImage ? (
-                                        <img src={user.profileImage} alt="Profile" />
+                                    {currentUser.profilePicture ? (
+                                        <img src={currentUser.profilePicture} alt="Profile" />
                                     ) : (
                                         <div 
                                             className="dropdown-initials-avatar"
-                                            style={{ backgroundColor: getConsistentColor(user.nickname) }}
+                                            style={{ backgroundColor: getConsistentColor(currentUser.name) }}
                                         >
-                                            {getInitials(user.nickname)}
+                                            {getInitials(currentUser.name)}
                                         </div>
                                     )}
                                 </div>
                                 <div className="profile-dropdown-user-info">
-                                    <span className="profile-dropdown-nickname">{user.nickname}</span>
-                                    <span className="profile-dropdown-username">@{user.username}</span>
+                                    <span className="profile-dropdown-nickname">{currentUser.name}</span>
+                                    <span className="profile-dropdown-username">@{currentUser.username}</span>
                                     <div className="profile-dropdown-status">
-                                        <span className={`status-dot status-${user.status}`}></span>
-                                        <span>{user.status}</span>
+                                        <span className="status-dot status-online"></span>
+                                        <span>online</span>
                                     </div>
                                 </div>
                             </div>
                             <div className="profile-dropdown-section">
                                 <h3>Bio</h3>
-                                <p>{user.bio || "No bio set"}</p>
+                                <p>{currentUser.bio || "No bio set"}</p>
                             </div>
                             <div className="profile-dropdown-section">
                                 <h3>Member Since</h3>
-                                <p>{user.joinDate}</p>
+                                <p>{currentUser.joinDate}</p>
                             </div>
                             <div className="profile-dropdown-footer">
                                 <button className="profile-dropdown-button" onClick={() => navigate('/profile')}>
                                     Edit Profile
                                 </button>
-                                <button className="profile-dropdown-button profile-logout" onClick={() => console.log('Logging out...')}>
-                                    Log Out
+                                <button className="profile-dropdown-button profile-logout" onClick={handleLogout}>
+                                    <FaSignOutAlt size={14} className="mr-2" /> Log Out
                                 </button>
                             </div>
                         </div>
@@ -399,21 +479,45 @@ return(
                         </button>
 
                         <div className="dashboard-friends">
-                            {friends.filter(friend => friend.isOnline).map(friend => (
-                                <button key={friend.id} className="dashboard-friend" onClick={() => handleChatRedirect(friend)}>
-                                    {friend.profileImage ? (
-                                        <img src={friend.profileImage} alt={friend.name} className="friend-icon" />
-                                    ) : (
-                                        <div 
-                                            className="friend-icon initials-avatar"
-                                            style={{ backgroundColor: getConsistentColor(friend.name) }}
-                                        >
-                                            {getInitials(friend.name)}
-                                        </div>
-                                    )}
-                                    <span>{truncateName(friend.name)}</span>
-                                </button>
-                            ))}
+                            {friends.length === 0 ? (
+                                <div className="empty-state">
+                                    <div className="empty-state-icon">👋</div>
+                                    <p>You don't have any friends added yet</p>
+                                    <button
+                                        onClick={() => navigate('/social')}
+                                        className="empty-state-action"
+                                    >
+                                        Add Friends
+                                    </button>
+                                </div>
+                            ) : friends.filter(friend => friend.isOnline).length === 0 ? (
+                                <div className="empty-state">
+                                    <div className="empty-state-icon">💤</div>
+                                    <p>None of your friends are online right now</p>
+                                    <button
+                                        onClick={() => navigate('/social')}
+                                        className="empty-state-action"
+                                    >
+                                        View All Friends
+                                    </button>
+                                </div>
+                            ) : (
+                                friends.filter(friend => friend.isOnline).map(friend => (
+                                    <button key={friend.id} className="dashboard-friend" onClick={() => handleChatRedirect(friend)}>
+                                        {friend.profileImage ? (
+                                            <img src={friend.profileImage} alt={friend.name} className="friend-icon" />
+                                        ) : (
+                                            <div
+                                                className="friend-icon initials-avatar"
+                                                style={{ backgroundColor: getConsistentColor(friend.name) }}
+                                            >
+                                                {getInitials(friend.name)}
+                                            </div>
+                                        )}
+                                        <span>{truncateName(friend.name)}</span>
+                                    </button>
+                                ))
+                            )}
                         </div>
                     </div>
 
@@ -422,21 +526,34 @@ return(
                             <h2>Groups</h2>
                         </button>
                         <div className="groups">
-                            {groups.map(group => (
-                                <button key={group.id} className="group">
-                                    {group.groupImage ? (
-                                        <img src={group.groupImage} alt={group.name} className="group-icon" />
-                                    ) : (
-                                        <div 
-                                            className="group-icon initials-avatar"
-                                            style={{ backgroundColor: getConsistentColor(group.name) }}
-                                        >
-                                            {getInitials(group.name)}
-                                        </div>
-                                    )}
-                                    <span>{truncateName(group.name)}</span>
-                                </button>
-                            ))}
+                            {groups.length === 0 ? (
+                                <div className="empty-state">
+                                    <div className="empty-state-icon">👥</div>
+                                    <p>You don't have any groups yet</p>
+                                    <button
+                                        onClick={() => navigate("/social", { state: { tab: "Groups" } })}
+                                        className="empty-state-action"
+                                    >
+                                        Create a Group
+                                    </button>
+                                </div>
+                            ) : (
+                                groups.map(group => (
+                                    <button key={group.id} className="group" onClick={() => handleChatRedirect(group)}>
+                                        {group.groupImage ? (
+                                            <img src={group.groupImage} alt={group.name} className="group-icon" />
+                                        ) : (
+                                            <div
+                                                className="group-icon initials-avatar"
+                                                style={{ backgroundColor: getConsistentColor(group.name) }}
+                                            >
+                                                {getInitials(group.name)}
+                                            </div>
+                                        )}
+                                        <span>{truncateName(group.name)}</span>
+                                    </button>
+                                ))
+                            )}
                         </div>
                     </div>
 
@@ -472,12 +589,21 @@ return(
                     </div>
 
                     <div className="notifications-list">
-                        {notifications[activeTab].map(notification => (
-                            <div key={notification.id} className="notification-item">
-                                <p className="notification-text">{notification.text}</p>
-                                <span className="notification-time">{notification.time}</span>
+                        {notifications[activeTab]?.length > 0 ? (
+                            notifications[activeTab].map(notification => (
+                                <div key={notification.id} className="notification-item">
+                                    <p className="notification-text">{notification.title}</p>
+                                    <p className="notification-message">{notification.message}</p>
+                                    <span className="notification-time">
+                                        {new Date(notification.time).toLocaleString()}
+                                    </span>
+                                </div>
+                            ))
+                        ) : (
+                            <div className="no-notifications">
+                                <p>No {activeTab} notifications</p>
                             </div>
-                        ))}
+                        )}
                     </div>
                 </div>
             </div>
