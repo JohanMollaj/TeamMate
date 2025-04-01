@@ -494,12 +494,6 @@ return(
                                 <div className="empty-state">
                                     <div className="empty-state-icon">💤</div>
                                     <p>None of your friends are online right now</p>
-                                    <button
-                                        onClick={() => navigate('/social')}
-                                        className="empty-state-action"
-                                    >
-                                        View All Friends
-                                    </button>
                                 </div>
                             ) : (
                                 friends.filter(friend => friend.isOnline).map(friend => (
