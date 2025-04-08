@@ -1,72 +1,4 @@
 [
-<<<<<<< Updated upstream
-  {
-    "id": "1",
-    "name": "Johan Mollaj",
-    "username": "johan",
-    "email": "johan@teammate.com",
-    "password": "password1",
-    "bio": "Frontend developer passionate about UI/UX design and creating intuitive user experiences.",
-    "isOnline": true,
-    "profilePicture": null,
-    "joinDate": "December 2024",
-    "friends": ["2", "3", "4", "5"],
-    "friendRequests": []
-  },
-  {
-    "id": "2",
-    "name": "Vian Janku",
-    "username": "vian.janku",
-    "email": "vian@teammate.com",
-    "password": "password1",
-    "bio": "UX researcher with a background in cognitive psychology. Always looking for ways to improve user interactions.",
-    "isOnline": false,
-    "profilePicture": null,
-    "joinDate": "January 2025",
-    "friends": ["1"],
-    "friendRequests": []
-  },
-  {
-    "id": "3",
-    "name": "Rael Oruci",
-    "username": "rael.o",
-    "email": "rael@teammate.com",
-    "password": "password1",
-    "bio": "Backend developer specializing in database optimization and API design.",
-    "isOnline": true,
-    "profilePicture": null,
-    "joinDate": "October 2024",
-    "friends": ["1"],
-    "friendRequests": []
-  },
-  {
-    "id": "4",
-    "name": "Ariel",
-    "username": "ariel",
-    "email": "ariel@teammate.com",
-    "password": "password1",
-    "bio": "Product manager with 5 years of experience in agile development environments.",
-    "isOnline": false,
-    "profilePicture": null,
-    "joinDate": "September 2024",
-    "friends": ["1"],
-    "friendRequests": []
-  },
-  {
-    "id": "5",
-    "name": "Bashkia Tirane",
-    "username": "bashkia.tirane",
-    "email": "bashkia@teammate.com",
-    "password": "password1",
-    "bio": "Official account for city administration projects and announcements.",
-    "isOnline": true,
-    "profilePicture": null,
-    "joinDate": "August 2024",
-    "friends": ["1"],
-    "friendRequests": []
-  }
-]
-=======
     {
       "id": "1",
       "name": "Johan Mollaj",
@@ -118,4 +50,3 @@
       "profilePicture": null
     }
   ]
->>>>>>> Stashed changes

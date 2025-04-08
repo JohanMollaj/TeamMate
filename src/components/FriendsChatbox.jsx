@@ -42,7 +42,7 @@ const generateUniqueId = () => {
     return `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 };
 
-function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
+function FriendsChatbox({ activeChat, allUsers = [] }) {
     const messagesEndRef = useRef(null);
     const [messages, setMessages] = useState([]);
     const [filteredMessages, setFilteredMessages] = useState([]);
@@ -71,28 +71,7 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
         }
     }, [activeChat]); 
 
-    // Load messages from localStorage
     useEffect(() => {
-<<<<<<< Updated upstream:src/components/FriendsChatbox.js
-        if (!currentUser || !activeChat) return;
-
-        const loadMessages = () => {
-            try {
-                // Get all messages from localStorage
-                const allMessagesObj = JSON.parse(localStorage.getItem('messages') || '{}');
-                
-                // Initialize user's message array if not exists
-                if (!allMessagesObj[currentUser.id]) {
-                    allMessagesObj[currentUser.id] = [];
-                    localStorage.setItem('messages', JSON.stringify(allMessagesObj));
-                }
-                
-                // Get user's messages
-                const userMessages = allMessagesObj[currentUser.id];
-                
-                // Add unique IDs to any messages that don't have them
-                const messagesWithIds = userMessages.map((msg) => {
-=======
         const storedMessages = localStorage.getItem('chatMessages');
         localStorage.removeItem('chatMessages'); // DELETE THIS ONLY WHEN YOU NEED TO TEST LOCALSTORAGE
         if (storedMessages) {
@@ -101,7 +80,6 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
                 
                 // Add unique IDs to any messages that don't have them
                 const messagesWithIds = parsedMessages.map((msg, index) => {
->>>>>>> Stashed changes:src/components/FriendsChatbox.jsx
                     if (!msg.id) {
                         return {
                             ...msg,
@@ -115,29 +93,6 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
                 setMessages(messagesWithIds);
                 
                 // Update localStorage with the IDs if needed
-<<<<<<< Updated upstream:src/components/FriendsChatbox.js
-                if (JSON.stringify(messagesWithIds) !== JSON.stringify(userMessages)) {
-                    allMessagesObj[currentUser.id] = messagesWithIds;
-                    localStorage.setItem('messages', JSON.stringify(allMessagesObj));
-                }
-            } catch (error) {
-                console.error("Error loading messages from localStorage:", error);
-                setMessages([]);
-            }
-        };
-        
-        loadMessages();
-        
-        // Set up event listener to reload messages when changed from another component
-        const handleStorageChange = (e) => {
-            if (e.key === 'messages') {
-                loadMessages();
-            }
-        };
-        
-        window.addEventListener('storage', handleStorageChange);
-        
-=======
                 if (JSON.stringify(messagesWithIds) !== storedMessages) {
                     localStorage.setItem('chatMessages', JSON.stringify(messagesWithIds));
                 }
@@ -165,7 +120,6 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
                 });
         }
 
->>>>>>> Stashed changes:src/components/FriendsChatbox.jsx
         // Click handler to close menu when clicking outside
         const handleOutsideClick = (event) => {
             if (messageMenuRef.current && !messageMenuRef.current.contains(event.target)) {
@@ -177,18 +131,11 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
         
         return () => {
             document.removeEventListener('mousedown', handleOutsideClick);
-            window.removeEventListener('storage', handleStorageChange);
         };
-<<<<<<< Updated upstream:src/components/FriendsChatbox.js
-    }, [currentUser, activeChat, allUsers]);
-
-    // Filter messages based on active chat
-=======
     }, []);
 
->>>>>>> Stashed changes:src/components/FriendsChatbox.jsx
     useEffect(() => {
-        if (messages.length > 0 && activeChat && currentUser) {
+        if (messages.length > 0 && activeChat) {
             if (activeChat.chatType === 'group') {
                 // Filter group messages for the active group
                 const groupMessages = messages.filter(msg => 
@@ -198,38 +145,31 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
                 
                 // Set group members
                 if (activeChat.members) {
-                    // Get the full user data for each group member
-                    const members = activeChat.members.map(memberId => 
-                        allUsers.find(user => user.id === memberId) || { id: memberId, name: `User ${memberId}` }
-                    );
-                    setGroupMembers(members);
+                    setGroupMembers(activeChat.members);
                 } else {
                     setGroupMembers([]);
                 }
             } else {
+                // Default to direct messages
                 // Filter direct messages between the two users
                 const directMessages = messages.filter(msg => 
                     (msg.type !== 'group' && !msg.groupID) && 
-                    ((msg.senderID === activeChat.id && msg.receiverID === currentUser.id) || 
-                     (msg.senderID === currentUser.id && msg.receiverID === activeChat.id))
+                    ((msg.senderID === activeChat.id && msg.receiverID === "1") || 
+                     (msg.senderID === "1" && msg.receiverID === activeChat.id))
                 );
                 setFilteredMessages(directMessages);
             }
         } else {
             setFilteredMessages([]);
         }
-    }, [messages, activeChat, allUsers, currentUser]);
+    }, [messages, activeChat, allUsers]);
 
     const handleInputChange = (e) => {
         setNewMessage(e.target.value);
     };
 
     const handleSendMessage = () => {
-<<<<<<< Updated upstream:src/components/FriendsChatbox.js
-        if (newMessage.trim() === '' || !activeChat || !currentUser) return;
-=======
         if (newMessage.trim() === '' || !activeChat) return;
->>>>>>> Stashed changes:src/components/FriendsChatbox.jsx
         
         // Create a new message object based on chat type
         let newMessageObj;
@@ -237,11 +177,7 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
         if (activeChat.chatType === 'group') {
             newMessageObj = {
                 id: generateUniqueId(),
-<<<<<<< Updated upstream:src/components/FriendsChatbox.js
-                senderID: currentUser.id,
-=======
                 senderID: "1", // Current user's ID
->>>>>>> Stashed changes:src/components/FriendsChatbox.jsx
                 groupID: activeChat.id,
                 type: 'group',
                 time: new Date().toISOString(),
@@ -250,11 +186,7 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
         } else {
             newMessageObj = {
                 id: generateUniqueId(),
-<<<<<<< Updated upstream:src/components/FriendsChatbox.js
-                senderID: currentUser.id,
-=======
                 senderID: "1", // Current user's ID
->>>>>>> Stashed changes:src/components/FriendsChatbox.jsx
                 receiverID: activeChat.id,
                 type: 'direct',
                 time: new Date().toISOString(),
@@ -262,97 +194,11 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
             };
         }
 
-<<<<<<< Updated upstream:src/components/FriendsChatbox.js
-        // Add to current user's messages
-        const allMessagesObj = JSON.parse(localStorage.getItem('messages') || '{}');
-        
-        if (!allMessagesObj[currentUser.id]) {
-            allMessagesObj[currentUser.id] = [];
-        }
-        
-        allMessagesObj[currentUser.id].push(newMessageObj);
-        
-        // If direct message, add to receiver's messages too
-        if (activeChat.chatType !== 'group') {
-            if (!allMessagesObj[activeChat.id]) {
-                allMessagesObj[activeChat.id] = [];
-            }
-            
-            allMessagesObj[activeChat.id].push(newMessageObj);
-            
-            // Create notification for the recipient
-            const notifications = JSON.parse(localStorage.getItem('notifications') || '{}');
-            
-            if (!notifications[activeChat.id]) {
-                notifications[activeChat.id] = [];
-            }
-            
-            // Only add notification if the user is offline
-            const isUserOffline = allUsers.find(u => u.id === activeChat.id)?.isOnline === false;
-            
-            if (isUserOffline) {
-                notifications[activeChat.id].unshift({
-                    id: `notif_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-                    type: 'message',
-                    title: `New message from ${currentUser.name}`,
-                    message: newMessage.length > 30 ? newMessage.slice(0, 30) + '...' : newMessage,
-                    time: new Date().toISOString(),
-                    read: false,
-                    senderId: currentUser.id
-                });
-                
-                localStorage.setItem('notifications', JSON.stringify(notifications));
-            }
-        } else {
-            // For group messages, add to all members' message lists
-            activeChat.members.forEach(memberId => {
-                if (memberId !== currentUser.id) {
-                    if (!allMessagesObj[memberId]) {
-                        allMessagesObj[memberId] = [];
-                    }
-                    
-                    allMessagesObj[memberId].push(newMessageObj);
-                    
-                    // Generate notification for group message
-                    const notifications = JSON.parse(localStorage.getItem('notifications') || '{}');
-                    
-                    if (!notifications[memberId]) {
-                        notifications[memberId] = [];
-                    }
-                    
-                    // Only add notification if the user is offline
-                    const isUserOffline = allUsers.find(u => u.id === memberId)?.isOnline === false;
-                    
-                    if (isUserOffline) {
-                        notifications[memberId].unshift({
-                            id: `notif_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-                            type: 'group_message',
-                            title: `New message in ${activeChat.name}`,
-                            message: `${currentUser.name}: ${newMessage.length > 30 ? newMessage.slice(0, 30) + '...' : newMessage}`,
-                            time: new Date().toISOString(),
-                            read: false,
-                            senderId: currentUser.id,
-                            groupId: activeChat.id
-                        });
-                        
-                        localStorage.setItem('notifications', JSON.stringify(notifications));
-                    }
-                }
-            });
-        }
-        
-        // Save all messages
-        localStorage.setItem('messages', JSON.stringify(allMessagesObj));
-        
-        // Update local state
-        setMessages(prevMessages => [...prevMessages, newMessageObj]);
-=======
         const updatedMessages = [...messages, newMessageObj];
         setMessages(updatedMessages);
         
         // Save to localStorage
         localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
->>>>>>> Stashed changes:src/components/FriendsChatbox.jsx
         
         // Clear input field
         setNewMessage('');
@@ -389,63 +235,6 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
     };
 
     const handleEditSave = () => {
-<<<<<<< Updated upstream:src/components/FriendsChatbox.js
-        if (editText.trim() === '' || !currentUser) return;
-
-        // Update in localStorage
-        const allMessagesObj = JSON.parse(localStorage.getItem('messages') || '{}');
-        
-        // Find and update the message
-        if (allMessagesObj[currentUser.id]) {
-            const messageIndex = allMessagesObj[currentUser.id].findIndex(msg => msg.id === editingMessageId);
-            
-            if (messageIndex !== -1) {
-                const updatedMessage = {
-                    ...allMessagesObj[currentUser.id][messageIndex],
-                    message: editText.trim(),
-                    edited: true
-                };
-                
-                allMessagesObj[currentUser.id][messageIndex] = updatedMessage;
-                
-                // If it's a direct message, also update in the recipient's messages
-                if (updatedMessage.type === 'direct') {
-                    const receiverId = updatedMessage.receiverID === currentUser.id ? 
-                        updatedMessage.senderID : updatedMessage.receiverID;
-                    
-                    if (allMessagesObj[receiverId]) {
-                        const recipientMsgIndex = allMessagesObj[receiverId].findIndex(msg => msg.id === editingMessageId);
-                        
-                        if (recipientMsgIndex !== -1) {
-                            allMessagesObj[receiverId][recipientMsgIndex] = updatedMessage;
-                        }
-                    }
-                }
-                // If it's a group message, update for all members
-                else if (updatedMessage.type === 'group' && activeChat.members) {
-                    activeChat.members.forEach(memberId => {
-                        if (memberId !== currentUser.id && allMessagesObj[memberId]) {
-                            const memberMsgIndex = allMessagesObj[memberId].findIndex(msg => msg.id === editingMessageId);
-                            
-                            if (memberMsgIndex !== -1) {
-                                allMessagesObj[memberId][memberMsgIndex] = updatedMessage;
-                            }
-                        }
-                    });
-                }
-                
-                localStorage.setItem('messages', JSON.stringify(allMessagesObj));
-                
-                // Update local state
-                setMessages(prevMessages => 
-                    prevMessages.map(msg => 
-                        msg.id === editingMessageId ? 
-                        { ...msg, message: editText.trim(), edited: true } : 
-                        msg
-                    )
-                );
-            }
-=======
         if (editText.trim() === '') return;
 
         // Safely find and update just the specific message by ID
@@ -461,7 +250,6 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
             
             setMessages(updatedMessages);
             localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
->>>>>>> Stashed changes:src/components/FriendsChatbox.jsx
         }
         
         setEditingMessageId(null);
@@ -486,49 +274,20 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
     };
 
     const handleDeleteMessage = (messageId) => {
-        if (!currentUser) return;
-        
-        // Get the message to check its type
+        // Safely filter out only the specific message by ID
         const messageToDelete = messages.find(msg => msg.id === messageId);
         
-        if (!messageToDelete) return;
-        
-        // Update localStorage
-        const allMessagesObj = JSON.parse(localStorage.getItem('messages') || '{}');
-        
-        // Remove from current user's messages
-        if (allMessagesObj[currentUser.id]) {
-            allMessagesObj[currentUser.id] = allMessagesObj[currentUser.id].filter(msg => msg.id !== messageId);
-            
-            // If direct message, also remove from recipient's messages
-            if (messageToDelete.type === 'direct') {
-                const receiverId = messageToDelete.receiverID === currentUser.id ? 
-                    messageToDelete.senderID : messageToDelete.receiverID;
-                
-                if (allMessagesObj[receiverId]) {
-                    allMessagesObj[receiverId] = allMessagesObj[receiverId].filter(msg => msg.id !== messageId);
-                }
-            }
-            // If group message, delete for all members
-            else if (messageToDelete.type === 'group' && activeChat.members) {
-                activeChat.members.forEach(memberId => {
-                    if (memberId !== currentUser.id && allMessagesObj[memberId]) {
-                        allMessagesObj[memberId] = allMessagesObj[memberId].filter(msg => msg.id !== messageId);
-                    }
-                });
-            }
-            
-            localStorage.setItem('messages', JSON.stringify(allMessagesObj));
-            
-            // Update local state
-            setMessages(prevMessages => prevMessages.filter(msg => msg.id !== messageId));
+        if (messageToDelete) {
+            const updatedMessages = messages.filter(msg => msg.id !== messageId);
+            setMessages(updatedMessages);
+            localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
         }
         
         setActiveMessageMenu(null);
     };
 
     return (
-        <>{ activeChat && currentUser && (
+        <>{ activeChat && (
             <div className='chatboxContainer'>
                 <div className='chatboxHeader'>
                     <div className='userHeader'>
@@ -563,7 +322,7 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
                                 const formattedDate = messageDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                                 const formattedTime = messageDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
-                                const isCurrentUser = msg.senderID === currentUser.id;
+                                const isCurrentUser = msg.senderID === "1";
                                 let senderName;
                                 
                                 if (activeChat.chatType === 'direct') {
