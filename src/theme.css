@@ -216,6 +216,13 @@
     background-color: var(--bg-input);
     color: var(--text-primary);
     border-color: var(--border-color);
+    border-radius: 10px;
+    color: var(--text-primary);
+    padding: 10px;
+    margin-bottom: 10px;
+    line-height: 1.2;
+    outline: none; 
+    border: none; 
   }
   
   input::placeholder, textarea::placeholder {

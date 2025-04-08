@@ -410,6 +410,7 @@ function Groups({ onSelectChat, allUsers, currentUser }) {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const handleCreateGroup = (groupData) => {
+<<<<<<< Updated upstream:src/pages/Social.js
         try {
             // Create a new group with members and add to the state
             const newGroup = {
@@ -457,6 +458,55 @@ function Groups({ onSelectChat, allUsers, currentUser }) {
             fetchGroups();
         }
     }, [currentUser]);
+=======
+        console.log('Creating group:', groupData);
+        // Create a new group with members and add to the state
+        const newGroup = {
+            id: `group_${Date.now()}`, // Generate unique ID
+            name: groupData.name,
+            description: groupData.description,
+            chatType: 'group', // Important: Set the chat type explicitly
+            members: groupData.members || ["1"], // Include current user by default
+            createdBy: "1", // Current user created the group
+            createdAt: new Date().toISOString()
+        };
+        
+        setGroups(prevGroups => [...prevGroups, newGroup]);
+        
+        // Save to localStorage or send to backend
+        const savedGroups = JSON.parse(localStorage.getItem('groups') || '[]');
+        localStorage.setItem('groups', JSON.stringify([...savedGroups, newGroup]));
+    };
+
+    useEffect(() => {
+        // First try to get from localStorage
+        const savedGroups = localStorage.getItem('groups');
+        if (savedGroups) {
+            setGroups(JSON.parse(savedGroups));
+        } else {
+            // Otherwise fetch from JSON file
+            fetch("/groups.json")
+                .then(response => response.json())
+                .then(data => {
+                    // Add chatType and other necessary group fields
+                    const groupsWithChatType = data.map(group => ({
+                        ...group,
+                        chatType: 'group', // Important: Set the chat type explicitly
+                        members: ["1", "2", "3"], // Sample members - would come from backend in real app
+                        createdBy: "1", // Sample creator
+                        createdAt: new Date().toISOString()
+                    }));
+                    setGroups(groupsWithChatType);
+                    localStorage.setItem('groups', JSON.stringify(groupsWithChatType));
+                })
+                .catch(error => {
+                    console.error("Error loading groups:", error);
+                    // Initialize with empty array if fetch fails
+                    setGroups([]);
+                });
+        }
+    }, []);
+>>>>>>> Stashed changes:src/pages/Social.jsx
 
     const filteredGroups = groups.filter((group) => {
         const matchesSearch = group.name.toLowerCase().includes(search.toLowerCase());
@@ -540,6 +590,18 @@ const Social = () => {
         const users = JSON.parse(localStorage.getItem('users') || '[]');
         setAllUsers(users);
     }, []);
+<<<<<<< Updated upstream:src/pages/Social.js
+=======
+    
+    useEffect(() => {
+        // Load all users for reference (needed for displaying sender names in group chats)
+        fetch("/friends.json")
+            .then(response => response.json())
+            .then(data => {
+                setAllUsers(data);
+            });
+    }, []);
+>>>>>>> Stashed changes:src/pages/Social.jsx
 
     useEffect(() => {
         // Handle user passed from dashboard

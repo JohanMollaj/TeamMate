@@ -31,6 +31,7 @@ const DashboardTasks = () => {
     };
   
     useEffect(() => {
+<<<<<<< Updated upstream:src/pages/Dashboard.js
       const user = JSON.parse(localStorage.getItem('currentUser'));
       setCurrentUser(user);
       
@@ -49,6 +50,19 @@ const DashboardTasks = () => {
       if (user) {
         fetchTasks();
       }
+=======
+      const fetchTasks = async () => {
+        try {
+          const response = await fetch('/tasks.json');
+          const data = await response.json();
+          setTasks(data.tasks);
+        } catch (error) {
+          console.error('Error fetching tasks:', error);
+        }
+      };
+      
+      fetchTasks();
+>>>>>>> Stashed changes:src/pages/Dashboard.jsx
     }, []);
   
     // Filter tasks based on due date
@@ -185,10 +199,28 @@ const [activeTab, setActiveTab] = useState('unread');
 const containerRef = useRef(null);
 const [friends, setFriends] = useState([]);
 const [groups, setGroups] = useState([]);
+<<<<<<< Updated upstream:src/pages/Dashboard.js
 const [notifications, setNotifications] = useState({
     unread: [],
     mentions: [],
     friendRequests: []
+=======
+
+useEffect(() => {
+    fetch("/users.json") // Adjust the path as needed
+        .then(response => response.json())
+        .then(data => setFriends(data));
+}, []);    // Define a set of predefined pastel colors
+
+// Add user state that would come from authentication/database
+const [user, setUser] = useState({
+    nickname: "Johan Mollaj",
+    username: "m.jxhan",
+    profileImage: null, // Set to image path when available
+    bio: "Frontend developer passionate about UI/UX design",
+    status: "online",
+    joinDate: "November 2024"
+>>>>>>> Stashed changes:src/pages/Dashboard.jsx
 });
 
 // Add user state that would come from authentication/database

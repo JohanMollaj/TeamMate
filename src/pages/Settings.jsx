@@ -2,11 +2,11 @@ import './settings.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import Sidebar from '../settingsComponents/settingsSidebar.js';
-import MyAccount from '../settingsComponents/MyAccount.js';
-import Profile from '../settingsComponents/Profile.js';
-import Appearance from '../settingsComponents/Appearance.js';
-import Accessibility from '../settingsComponents/Accessibility.js';
+import Sidebar from '../settingsComponents/settingsSidebar.jsx';
+import MyAccount from '../settingsComponents/MyAccount.jsx';
+import Profile from '../settingsComponents/Profile.jsx';
+import Appearance from '../settingsComponents/Appearance.jsx';
+import Accessibility from '../settingsComponents/Accessibility.jsx';
 
 export default function SettingsPage() {
     const navigate = useNavigate();

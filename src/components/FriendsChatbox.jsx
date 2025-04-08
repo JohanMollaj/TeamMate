@@ -73,6 +73,7 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
 
     // Load messages from localStorage
     useEffect(() => {
+<<<<<<< Updated upstream:src/components/FriendsChatbox.js
         if (!currentUser || !activeChat) return;
 
         const loadMessages = () => {
@@ -91,6 +92,16 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
                 
                 // Add unique IDs to any messages that don't have them
                 const messagesWithIds = userMessages.map((msg) => {
+=======
+        const storedMessages = localStorage.getItem('chatMessages');
+        localStorage.removeItem('chatMessages'); // DELETE THIS ONLY WHEN YOU NEED TO TEST LOCALSTORAGE
+        if (storedMessages) {
+            try {
+                const parsedMessages = JSON.parse(storedMessages);
+                
+                // Add unique IDs to any messages that don't have them
+                const messagesWithIds = parsedMessages.map((msg, index) => {
+>>>>>>> Stashed changes:src/components/FriendsChatbox.jsx
                     if (!msg.id) {
                         return {
                             ...msg,
@@ -104,6 +115,7 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
                 setMessages(messagesWithIds);
                 
                 // Update localStorage with the IDs if needed
+<<<<<<< Updated upstream:src/components/FriendsChatbox.js
                 if (JSON.stringify(messagesWithIds) !== JSON.stringify(userMessages)) {
                     allMessagesObj[currentUser.id] = messagesWithIds;
                     localStorage.setItem('messages', JSON.stringify(allMessagesObj));
@@ -125,6 +137,35 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
         
         window.addEventListener('storage', handleStorageChange);
         
+=======
+                if (JSON.stringify(messagesWithIds) !== storedMessages) {
+                    localStorage.setItem('chatMessages', JSON.stringify(messagesWithIds));
+                }
+            } catch (error) {
+                console.error("Error parsing messages from localStorage:", error);
+                setMessages([]);
+                localStorage.removeItem('chatMessages');
+            }
+        } else {
+            fetch("/messages.json")
+                .then(response => response.json())
+                .then(data => {
+                    // Initialize with type field if it doesn't exist
+                    const updatedData = data.map((msg) => ({
+                        ...msg,
+                        id: generateUniqueId(), // Generate a truly unique ID
+                        type: msg.groupID ? 'group' : 'direct'
+                    }));
+                    setMessages(updatedData);
+                    localStorage.setItem('chatMessages', JSON.stringify(updatedData));
+                })
+                .catch(error => {
+                    console.error("Error loading messages:", error);
+                    setMessages([]);
+                });
+        }
+
+>>>>>>> Stashed changes:src/components/FriendsChatbox.jsx
         // Click handler to close menu when clicking outside
         const handleOutsideClick = (event) => {
             if (messageMenuRef.current && !messageMenuRef.current.contains(event.target)) {
@@ -138,9 +179,14 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
             document.removeEventListener('mousedown', handleOutsideClick);
             window.removeEventListener('storage', handleStorageChange);
         };
+<<<<<<< Updated upstream:src/components/FriendsChatbox.js
     }, [currentUser, activeChat, allUsers]);
 
     // Filter messages based on active chat
+=======
+    }, []);
+
+>>>>>>> Stashed changes:src/components/FriendsChatbox.jsx
     useEffect(() => {
         if (messages.length > 0 && activeChat && currentUser) {
             if (activeChat.chatType === 'group') {
@@ -179,7 +225,11 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
     };
 
     const handleSendMessage = () => {
+<<<<<<< Updated upstream:src/components/FriendsChatbox.js
         if (newMessage.trim() === '' || !activeChat || !currentUser) return;
+=======
+        if (newMessage.trim() === '' || !activeChat) return;
+>>>>>>> Stashed changes:src/components/FriendsChatbox.jsx
         
         // Create a new message object based on chat type
         let newMessageObj;
@@ -187,7 +237,11 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
         if (activeChat.chatType === 'group') {
             newMessageObj = {
                 id: generateUniqueId(),
+<<<<<<< Updated upstream:src/components/FriendsChatbox.js
                 senderID: currentUser.id,
+=======
+                senderID: "1", // Current user's ID
+>>>>>>> Stashed changes:src/components/FriendsChatbox.jsx
                 groupID: activeChat.id,
                 type: 'group',
                 time: new Date().toISOString(),
@@ -196,7 +250,11 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
         } else {
             newMessageObj = {
                 id: generateUniqueId(),
+<<<<<<< Updated upstream:src/components/FriendsChatbox.js
                 senderID: currentUser.id,
+=======
+                senderID: "1", // Current user's ID
+>>>>>>> Stashed changes:src/components/FriendsChatbox.jsx
                 receiverID: activeChat.id,
                 type: 'direct',
                 time: new Date().toISOString(),
@@ -204,6 +262,7 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
             };
         }
 
+<<<<<<< Updated upstream:src/components/FriendsChatbox.js
         // Add to current user's messages
         const allMessagesObj = JSON.parse(localStorage.getItem('messages') || '{}');
         
@@ -287,6 +346,13 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
         
         // Update local state
         setMessages(prevMessages => [...prevMessages, newMessageObj]);
+=======
+        const updatedMessages = [...messages, newMessageObj];
+        setMessages(updatedMessages);
+        
+        // Save to localStorage
+        localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
+>>>>>>> Stashed changes:src/components/FriendsChatbox.jsx
         
         // Clear input field
         setNewMessage('');
@@ -323,6 +389,7 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
     };
 
     const handleEditSave = () => {
+<<<<<<< Updated upstream:src/components/FriendsChatbox.js
         if (editText.trim() === '' || !currentUser) return;
 
         // Update in localStorage
@@ -378,6 +445,23 @@ function FriendsChatbox({ activeChat, allUsers = [], currentUser }) {
                     )
                 );
             }
+=======
+        if (editText.trim() === '') return;
+
+        // Safely find and update just the specific message by ID
+        const messageIndex = messages.findIndex(msg => msg.id === editingMessageId);
+        
+        if (messageIndex !== -1) {
+            const updatedMessages = [...messages];
+            updatedMessages[messageIndex] = {
+                ...updatedMessages[messageIndex],
+                message: editText.trim(),
+                edited: true
+            };
+            
+            setMessages(updatedMessages);
+            localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
+>>>>>>> Stashed changes:src/components/FriendsChatbox.jsx
         }
         
         setEditingMessageId(null);

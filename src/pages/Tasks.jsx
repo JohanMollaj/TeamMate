@@ -76,17 +76,17 @@ const TaskModal = ({ task, isOpen, onClose, onSubmit }) => {
 
   return (
     <div 
-      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" 
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" 
       onClick={handleOutsideClick}
     >
-      <div className="bg-[--bg-secondary] rounded-lg max-w-2xl w-full max-h-[90vh] overflow-auto shadow-xl
-      [&::-webkit-scrollbar]:w-2">
+      <div className="bg-[var(--bg-secondary)] rounded-lg max-w-2xl w-full max-h-[90vh] overflow-auto shadow-xl
+      [&::-webkit-scrollbar]:w-2 z-51">
         {/* Header */}
         <div className="flex justify-between items-center p-4 border-b border-gray-700">
-          <h2 className="text-xl font-semibold text-[--text-primary]">{task.title}</h2>
+          <h2 className="text-xl font-semibold text-[var(--text-primary)]">{task.title}</h2>
           <button 
             onClick={onClose}
-            className="text-[--text-secondary] hover:text-[--text-primary]"
+            className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
           >
             <X size={20} />
           </button>
@@ -212,7 +212,7 @@ const GradedTasks = () => {
   useEffect(() => {
     const fetchAssignments = async () => {
       try {
-        const response = await fetch('/GradedTasks.json');
+        const response = await fetch('/gradedTasks.json');
         const data = await response.json();
         setAssignments(data.gradedAssignments);
 

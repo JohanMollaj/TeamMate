@@ -1,213 +1,213 @@
 .container-tasks{
-    flex-direction: row;
-    height: 100vh;
-    width:100%;
-    overflow: hidden;
-  }
-.tasks{
-    margin: 20px 20px 20px 80px;
-  height: calc(100vh - 40px); /* Subtract the margin space to avoid overflow */
-  width: calc(100% - 100px); /* Adjusted dynamically for the sidebar */
-  padding: 30px 40px 40px 40px;
-  background-color: var(--bg-secondary);
-  border-radius: 45px; /* Rounded corners */
-  display: flex;
   flex-direction: row;
-  overflow-y: none; /* Vertical scrolling inside the dashboard */
-  box-sizing: border-box; /* Include padding in dimensions */
-  scrollbar-width: thin;
-  scrollbar-color: #4a4e55 #2A2C32;
-  scrollbar-gutter: stable;
+  height: 100vh;
+  width:100%;
+  overflow: hidden;
+}
+.tasks{
+  margin: 20px 20px 20px 80px;
+height: calc(100vh - 40px); /* Subtract the margin space to avoid overflow */
+width: calc(100% - 100px); /* Adjusted dynamically for the sidebar */
+padding: 30px 40px 40px 40px;
+background-color: var(--bg-secondary);
+border-radius: 45px; /* Rounded corners */
+display: flex;
+flex-direction: row;
+overflow-y: none; /* Vertical scrolling inside the dashboard */
+box-sizing: border-box; /* Include padding in dimensions */
+scrollbar-width: thin;
+scrollbar-color: #4a4e55 #2A2C32;
+scrollbar-gutter: stable;
 
-  &::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    border: 2px solid white;  /* Creates padding effect */
-  }
+&::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  border: 2px solid white;  /* Creates padding effect */
+}
 }
 
 .wrapper .sections{
-    border-radius: 15px;
-    display: flex;
-    flex-direction: row;
-    overflow-y: hidden;
-    flex-grow: 1;
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-    width: 100%;
-    gap: 20px;
-    padding-right: 16px; /* Add padding for content */
-    margin-right: 0;
-  }
-  .tasks .section {
-    margin-top: 80px;
-    margin-bottom: 30px;
-    width: 50%;
-    height: calc(100vh - 200px);
-    padding: 25px 30px;
-    /* background-color: #3f414a; */
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    overflow: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--scrollbar-thumb2) var(--bg-tertiary);
-    scrollbar-gutter: stable;
-  }
-  .section.overview{
-    width: 40%;
-  }
-  .section.assignments{
-    width: 60%;
-  }
-
-.assignments-container {
-  border-radius: 12px;
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
-  padding: 24px;
-  width: 100%;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 15px;
+  display: flex;
+  flex-direction: row;
+  overflow-y: hidden;
+  flex-grow: 1;
   scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-track) var(--scrollbar-thumb);
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  width: 100%;
+  gap: 20px;
+  padding-right: 16px; /* Add padding for content */
+  margin-right: 0;
+}
+.tasks .section {
+  margin-top: 80px;
+  margin-bottom: 30px;
+  width: 50%;
+  height: calc(100vh - 200px);
+  padding: 25px 30px;
+  /* background-color: #3f414a; */
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb2) var(--bg-tertiary);
   scrollbar-gutter: stable;
 }
+.section.overview{
+  width: 40%;
+}
+.section.assignments{
+  width: 60%;
+}
 
-  .donutChartDiv{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+.assignments-container {
+border-radius: 12px;
+background-color: var(--bg-secondary);
+color: var(--text-primary);
+padding: 24px;
+width: 100%;
+margin-bottom: 20px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+scrollbar-width: thin;
+scrollbar-color: var(--scrollbar-track) var(--scrollbar-thumb);
+scrollbar-gutter: stable;
+}
 
-  .TasksHeader {
-    font-size: 42px;
-    margin-bottom: 10px;
-    position: absolute;
-  }
+.donutChartDiv{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  .graded-assignments-header {
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-    color: var(--text-primary);
+.TasksHeader {
+  font-size: 42px;
+  margin-bottom: 10px;
+  position: absolute;
+}
+
+.graded-assignments-header {
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  color: var(--text-primary);
 }
 
 .group-select {
-  background-color: var(--bg-tertiary);
-  padding: 8px 12px;
-  border: 1px solid #4a4e55;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
+background-color: var(--bg-tertiary);
+padding: 8px 12px;
+border: 1px solid #4a4e55;
+border-radius: 6px;
+font-size: 14px;
+cursor: pointer;
 }
 
 .group-select:focus {
-  outline: none;
-  border-color: #4a90e2;
+outline: none;
+border-color: #4a90e2;
 }
 
 .assignment-group {
-  color: #4a90e2;
-  font-size: 14px;
-  margin: 4px 0;
+color: #4a90e2;
+font-size: 14px;
+margin: 4px 0;
 }
 
 .graded-assignments-container {
-  background-color: var(--bg-secondary);
-  border-radius: 12px;
-  padding: 24px;
-  width: 100%;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  color: var(--text-primary);
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
-  scrollbar-gutter: stable;
+background-color: var(--bg-secondary);
+border-radius: 12px;
+padding: 24px;
+width: 100%;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+color: var(--text-primary);
+scrollbar-width: thin;
+scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+scrollbar-gutter: stable;
 }
 
 
 .section .graded-assignments-title {
-  font-size: 24px;
-  margin-bottom: 24px;
+font-size: 24px;
+margin-bottom: 24px;
 }
 
 .assignments-scroll-container {
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding-bottom: 12px; /* Space for scrollbar */
-  scrollbar-width: thin;
-  scrollbar-color: var(--scrollbar-thumb1) var(--bg-secondary);
-  scrollbar-gutter: stable;
-  
-  /* Track */
-  &::-webkit-scrollbar-track {
-    background: #1C1D20;
-    border-radius: 4px;
-  }
-  
-  /* Handle */
-  &::-webkit-scrollbar-thumb {
-    background: #4a4e55;
-    border-radius: 4px;
-  }
-  
-  /* Handle on hover */
-  &::-webkit-scrollbar-thumb:hover {
-    background: #555;
-  }
+overflow-x: auto;
+overflow-y: hidden;
+padding-bottom: 12px; /* Space for scrollbar */
+scrollbar-width: thin;
+scrollbar-color: var(--scrollbar-thumb1) var(--bg-secondary);
+scrollbar-gutter: stable;
+
+/* Track */
+&::-webkit-scrollbar-track {
+  background: #1C1D20;
+  border-radius: 4px;
+}
+
+/* Handle */
+&::-webkit-scrollbar-thumb {
+  background: #4a4e55;
+  border-radius: 4px;
+}
+
+/* Handle on hover */
+&::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
 }
 
 .assignments-row {
-  display: flex;
-  gap: 16px;
-  padding: 4px; /* Prevent shadow cutoff */
+display: flex;
+gap: 16px;
+padding: 4px; /* Prevent shadow cutoff */
 }
 
 .assignment-card {
-  background-color: var(--bg-tertiary);
-  border-radius: 8px;
-  padding: 16px;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  min-width: 300px; /* Fixed width for cards */
-  max-width: 300px;
+background-color: var(--bg-tertiary);
+border-radius: 8px;
+padding: 16px;
+display: flex;
+flex-direction: row;
+align-items: flex-start;
+min-width: 300px; /* Fixed width for cards */
+max-width: 300px;
 }
 
 .assignment-info {
-  flex: 1;
-  margin-right: 16px;
+flex: 1;
+margin-right: 16px;
 }
 
 .assignment-name {
-  color: var(--text-primary);
-  font-size: 18px;
-  font-weight: 500;
-  margin: 0 0 8px 0;
+color: var(--text-primary);
+font-size: 18px;
+font-weight: 500;
+margin: 0 0 8px 0;
 }
 
 .assignment-date {
-  color: var(--text-secondary);
-  font-size: 14px;
-  margin: 0;
+color: var(--text-secondary);
+font-size: 14px;
+margin: 0;
 }
 
 .assignment-feedback {
-  color: var(--text-secondary);
-  margin: 8px 0 0 0;
-  font-size: 14px;
+color: var(--text-secondary);
+margin: 8px 0 0 0;
+font-size: 14px;
 }
 
 .grade-circle {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
+width: 48px;
+height: 48px;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-shrink: 0;
 }
 
 .grade-text {
-  color: white;
-  font-size: 20px;
-  font-weight: bold;
+color: white;
+font-size: 20px;
+font-weight: bold;
 }

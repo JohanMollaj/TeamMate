@@ -10,9 +10,11 @@
     scrollbar-color: #4a4e55 #2A2C32; /* thumb color and track color */
 }
 
-input{
+.input{
+    background-color: var(--bg-input);
     width: 300px;
     border-radius: 10px;
+    color: var(--text-primary);
     border: none;
     padding: 10px;
     margin-bottom: 10px;
@@ -20,7 +22,7 @@ input{
     outline: none; 
     border: none; 
 }
-input::placeholder{
+.input::placeholder{
     text-align: left;
         /* Align placeholder text horizontally */
         display: block;
@@ -35,10 +37,12 @@ input::placeholder{
         /* Enable word wrapping */
 }
 
-textarea{
+.profile-textarea{
+    background-color: var(--bg-input);
     width: 300px;
     height: 100px;
     border-radius: 10px;
+    color: var(--text-primary);
     border: none;
     padding: 10px;
     margin-bottom: 10px;
@@ -47,7 +51,7 @@ textarea{
     outline: none; 
     border: none; 
 }
-textarea::placeholder{
+.profile-textarea::placeholder{
     text-align: left;
         /* Align placeholder text horizontally */
         display: block;

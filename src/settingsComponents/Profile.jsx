@@ -8,19 +8,19 @@ function Profile() {
       <h1>Profile</h1>
       <div className="settings-section">
         <h2>Display Name</h2>
-        <input type="text" placeholder="Enter your display name" />
+        <input className='input' type="text" placeholder="Enter your display name" />
       </div>
       <div className="settings-section">
         <h2>Username</h2>
-        <input type="text" placeholder="Enter your username" />
+        <input className='input' type="text" placeholder="Enter your username" />
       </div>
       <div className="settings-section">
         <h2>About Me</h2>
-        <textarea className="aboutme" type="text" placeholder="Write something about yourself" />
+        <textarea className="profile-textarea" type="text" placeholder="Write something about yourself" />
       </div>
       <div className="settings-section">
         <h2>Qualifications</h2>
-        <textarea type="text" placeholder="Write your qualifications" />
+        <textarea className="profile-textarea" type="text" placeholder="Write your qualifications" />
       </div>
       <button className="change-password-button">Save</button>
       </div>
