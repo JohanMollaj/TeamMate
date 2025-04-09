@@ -7,9 +7,34 @@ import { useEffect, useState, useRef } from 'react';
 import { AtSign, UserPlus } from 'lucide-react';
 import { FaCog } from 'react-icons/fa';
 
+import { auth, db } from '../firebase/config';
+import { signOut } from 'firebase/auth';
+import { doc, updateDoc } from 'firebase/firestore';
+import { useAuth } from '../firebase/AuthContext';
+
 const DashboardTasks = () => {
+    const { currentUser } = useAuth();
     const [tasks, setTasks] = useState([]);
     const [filter, setFilter] = useState('all'); // 'all', 'today', 'week', 'month'
+
+    const handleLogout = async () => {
+        try {
+          // Update online status to false
+          if (currentUser) {
+            await updateDoc(doc(db, 'users', currentUser.uid), {
+              isOnline: false
+            });
+          }
+          
+          // Sign out from Firebase Auth
+          await signOut(auth);
+          
+          // Redirect to login page
+          navigate('/login');
+        } catch (error) {
+          console.error('Error logging out:', error);
+        }
+    };
 
     // Helper function for truncating long names
     const truncateName = (name, maxLength = 50) => {
@@ -377,7 +402,7 @@ return(
                                 <button className="profile-dropdown-button" onClick={() => navigate('/profile')}>
                                     Edit Profile
                                 </button>
-                                <button className="profile-dropdown-button profile-logout" onClick={() => console.log('Logging out...')}>
+                                <button className="profile-dropdown-button profile-logout" onClick={handleLogout}>
                                     Log Out
                                 </button>
                             </div>

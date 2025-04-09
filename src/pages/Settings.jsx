@@ -2,6 +2,7 @@ import './settings.css';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import DataMigration from '../components/DataMigration';
 import Sidebar from '../settingsComponents/settingsSidebar.jsx';
 import MyAccount from '../settingsComponents/MyAccount.jsx';
 import Profile from '../settingsComponents/Profile.jsx';
@@ -33,6 +34,15 @@ export default function SettingsPage() {
                 {/* Pass both setActiveSetting and activeSetting */}
                 <Sidebar setActiveSetting={setActiveSetting} currentSetting={activeSetting} />
                 <div className="settings-content">{renderContent()}</div>
+            </div>
+
+            <div className="settings-content">
+                {renderContent()}
+                
+                {/* Only show in development */}
+                {process.env.NODE_ENV === 'development' && (
+                    <DataMigration />
+                )}
             </div>
         </div>
     );

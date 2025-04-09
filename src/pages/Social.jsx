@@ -8,6 +8,16 @@ import { FaUserGroup, FaPlus } from "react-icons/fa6";
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
+import { useAuth } from '../firebase/AuthContext';
+import { 
+  getFriends, 
+  getPendingFriendRequests,
+  acceptFriendRequest,
+  declineFriendRequest,
+  sendFriendRequest,
+  cancelFriendRequest
+} from '../firebase/friends';
+
 // Helper function for generating initials (same as dashboard)
 const getInitials = (name) => {
     if (!name) return "U";
@@ -135,102 +145,282 @@ function initializeGroupMessages() {
     console.log('Group messages initialized');
 }
 
-function Friends({ onSelectChat, allUsers }) {
+function Friends({ onSelectChat }) {
     const [search, setSearch] = useState("");
     const [filter, setFilter] = useState("all");
     const [friends, setFriends] = useState([]);
+    const [pendingRequests, setPendingRequests] = useState({ sent: [], received: [] });
     const [isAddFriendOpen, setIsAddFriendOpen] = useState(false);
-
-    const handleSendRequest = async (username) => {
-        console.log(`Friend request sent to: ${username}`, {
-          timestamp: new Date().toISOString(),
-          action: 'friend_request_sent',
-          target_user: username,
-          status: 'success'
-        });
-    };
-
-    const filteredFriends = friends.filter((friend) => {
-        const matchesSearch = friend.name.toLowerCase().includes(search.toLowerCase());
-        const matchesFilter =
-            filter === "all" ||
-            (filter === "online" && friend.isOnline) ||
-            (filter === "offline" && !friend.isOnline);
-        return matchesSearch && matchesFilter;
-    });
-
+    const [loading, setLoading] = useState(false);
+    const { currentUser } = useAuth();
+  
+    // Load friends and pending requests
     useEffect(() => {
-        fetch("/users.json") // Adjust the path as needed
-            .then(response => response.json())
-            .then(data => {
-                // Add chatType to distinguish direct messages
-                const friendsWithChatType = data.map(friend => ({
-                    ...friend,
-                    chatType: 'direct'
-                }));
-                setFriends(friendsWithChatType);
-            });
-    }, []);
-
+      if (!currentUser) return;
+      
+      const loadFriendsData = async () => {
+        setLoading(true);
+        try {
+          const [friendsData, requestsData] = await Promise.all([
+            getFriends(currentUser.uid),
+            getPendingFriendRequests(currentUser.uid)
+          ]);
+          
+          // Add chatType to each friend for compatibility with existing code
+          const friendsWithChatType = friendsData.map(friend => ({
+            ...friend,
+            chatType: 'direct'
+          }));
+          
+          setFriends(friendsWithChatType);
+          setPendingRequests(requestsData);
+        } catch (error) {
+          console.error('Error loading friends data:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      
+      loadFriendsData();
+    }, [currentUser]);
+  
+    const handleSendRequest = async (username) => {
+      try {
+        // First find the user by username
+        const usersRef = collection(db, 'users');
+        const q = query(usersRef, where('username', '==', username.toLowerCase()));
+        const snapshot = await getDocs(q);
+        
+        if (snapshot.empty) {
+          throw new Error('User not found');
+        }
+        
+        const targetUser = snapshot.docs[0];
+        
+        // Check if trying to add self
+        if (targetUser.id === currentUser.uid) {
+          throw new Error('You cannot add yourself as a friend');
+        }
+        
+        // Send the friend request
+        await sendFriendRequest(currentUser.uid, targetUser.id);
+        
+        // Refresh pending requests
+        const newRequests = await getPendingFriendRequests(currentUser.uid);
+        setPendingRequests(newRequests);
+        
+        return true;
+      } catch (error) {
+        console.error('Error sending friend request:', error);
+        throw error;
+      }
+    };
+  
+    const handleAcceptRequest = async (friendshipId) => {
+      try {
+        await acceptFriendRequest(friendshipId);
+        
+        // Refresh friends and pending requests
+        const [updatedFriends, updatedRequests] = await Promise.all([
+          getFriends(currentUser.uid),
+          getPendingFriendRequests(currentUser.uid)
+        ]);
+        
+        // Add chatType to each friend
+        const friendsWithChatType = updatedFriends.map(friend => ({
+          ...friend,
+          chatType: 'direct'
+        }));
+        
+        setFriends(friendsWithChatType);
+        setPendingRequests(updatedRequests);
+      } catch (error) {
+        console.error('Error accepting friend request:', error);
+      }
+    };
+  
+    const handleDeclineRequest = async (friendshipId) => {
+      try {
+        await declineFriendRequest(friendshipId);
+        
+        // Refresh pending requests
+        const updatedRequests = await getPendingFriendRequests(currentUser.uid);
+        setPendingRequests(updatedRequests);
+      } catch (error) {
+        console.error('Error declining friend request:', error);
+      }
+    };
+  
+    const handleCancelRequest = async (friendshipId) => {
+      try {
+        await cancelFriendRequest(friendshipId);
+        
+        // Refresh pending requests
+        const updatedRequests = await getPendingFriendRequests(currentUser.uid);
+        setPendingRequests(updatedRequests);
+      } catch (error) {
+        console.error('Error canceling friend request:', error);
+      }
+    };
+  
+    const filteredFriends = friends.filter((friend) => {
+      const matchesSearch = friend.name.toLowerCase().includes(search.toLowerCase());
+      const matchesFilter =
+        filter === "all" ||
+        (filter === "online" && friend.isOnline) ||
+        (filter === "offline" && !friend.isOnline);
+      return matchesSearch && matchesFilter;
+    });
+  
     return (
-        <div className='friends-list-container'>
-            <h3 id="filter-status">Showing: </h3>
-            <div className="filter-group">
-                <button className={`filterOption ${filter === "all" ? "active" : ""}`}
-                    onClick={() => setFilter("all")}>All</button>
-                <button className={`filterOption ${filter === "online" ? "active" : ""}`}
-                    onClick={() => setFilter("online")}>Online</button>
-                <button className={`filterOption ${filter === "offline" ? "active" : ""}`}
-                    onClick={() => setFilter("offline")}>Offline</button>
-            </div>
-            <div className='search-box'>
-                <input
-                    placeholder="Search friends..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    className="textarea"
-                />
-            </div>
-
-                <div className="friends mb-5">
-                    <button 
-                    onClick={() => setIsAddFriendOpen(true)}
-                    className="text-[18px] text-white flex items-center rounded-lg bg-green-700 p-3 w-full min-w-[230px] items-center justify-center
-                    transition duration-200 ease-in-out hover:bg-green-800">
-                        Add Friend
-                    </button>
-
-                    <AddFriendDialog
-                        isOpen={isAddFriendOpen}
-                        onClose={() => setIsAddFriendOpen(false)}
-                        onSendRequest={handleSendRequest}
-                    />
-
-                    {filteredFriends.map((friend) => (
-                        <button
-                            key={friend.id}
-                            className="friend-button"
-                            onClick={() => onSelectChat(friend)}>
-                            <div className="friend">
-                                {friend.profileImage ? (
-                                    <img src={friend.profileImage} alt={friend.name} className="friend-avatar" />
-                                ) : (
-                                    <div 
-                                        className="friend-avatar initials-avatar"
-                                        style={{ backgroundColor: getConsistentColor(friend.name) }}
-                                    >
-                                        {getInitials(friend.name)}
-                                    </div>
-                                )}
-                                <span className={`status-indicator ${friend.isOnline ? "online" : "offline"}`}></span>
-                                <span className="friend-username">{truncateName(friend.name)}</span>
-                            </div>
-                        </button>
-                    ))}
-                </div>
+      <div className='friends-list-container'>
+        <h3 id="filter-status">Showing: </h3>
+        <div className="filter-group">
+          <button className={`filterOption ${filter === "all" ? "active" : ""}`}
+            onClick={() => setFilter("all")}>All</button>
+          <button className={`filterOption ${filter === "online" ? "active" : ""}`}
+            onClick={() => setFilter("online")}>Online</button>
+          <button className={`filterOption ${filter === "offline" ? "active" : ""}`}
+            onClick={() => setFilter("offline")}>Offline</button>
         </div>
+        <div className='search-box'>
+          <input
+            placeholder="Search friends..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="textarea"
+          />
+        </div>
+  
+        {/* Friend Requests Section */}
+        {pendingRequests.received.length > 0 && (
+          <div className="friend-requests-section">
+            <h4>Friend Requests ({pendingRequests.received.length})</h4>
+            {pendingRequests.received.map(request => (
+              <div key={request.friendshipId} className="friend-request-item">
+                <div className="friend-info">
+                  {request.user.profilePicture ? (
+                    <img src={request.user.profilePicture} alt={request.user.name} className="friend-avatar" />
+                  ) : (
+                    <div 
+                      className="friend-avatar initials-avatar"
+                      style={{ backgroundColor: getConsistentColor(request.user.name) }}
+                    >
+                      {getInitials(request.user.name)}
+                    </div>
+                  )}
+                  <div className="friend-details">
+                    <span className="friend-username">{request.user.name}</span>
+                    <span className="friend-username-small">@{request.user.username}</span>
+                  </div>
+                </div>
+                <div className="friend-request-actions">
+                  <button 
+                    className="accept-button"
+                    onClick={() => handleAcceptRequest(request.friendshipId)}
+                    title="Accept"
+                  >
+                    <FaCheck size={16} />
+                  </button>
+                  <button 
+                    className="decline-button"
+                    onClick={() => handleDeclineRequest(request.friendshipId)}
+                    title="Decline"
+                  >
+                    <FaTimes size={16} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+  
+        {/* Pending Sent Requests */}
+        {pendingRequests.sent.length > 0 && (
+          <div className="friend-requests-section">
+            <h4>Sent Requests ({pendingRequests.sent.length})</h4>
+            {pendingRequests.sent.map(request => (
+              <div key={request.friendshipId} className="friend-request-item">
+                <div className="friend-info">
+                  {request.user.profilePicture ? (
+                    <img src={request.user.profilePicture} alt={request.user.name} className="friend-avatar" />
+                  ) : (
+                    <div 
+                      className="friend-avatar initials-avatar"
+                      style={{ backgroundColor: getConsistentColor(request.user.name) }}
+                    >
+                      {getInitials(request.user.name)}
+                    </div>
+                  )}
+                  <div className="friend-details">
+                    <span className="friend-username">{request.user.name}</span>
+                    <span className="friend-username-small">@{request.user.username}</span>
+                  </div>
+                </div>
+                <div className="friend-request-actions">
+                  <button 
+                    className="decline-button"
+                    onClick={() => handleCancelRequest(request.friendshipId)}
+                    title="Cancel Request"
+                  >
+                    <FaTimes size={16} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+  
+        <div className="friends mb-5">
+          <button 
+          onClick={() => setIsAddFriendOpen(true)}
+          className="text-[18px] text-white flex items-center rounded-lg bg-green-700 p-3 w-full min-w-[230px] items-center justify-center
+          transition duration-200 ease-in-out hover:bg-green-800">
+            Add Friend
+          </button>
+  
+          <AddFriendDialog
+            isOpen={isAddFriendOpen}
+            onClose={() => setIsAddFriendOpen(false)}
+            onSendRequest={handleSendRequest}
+          />
+  
+          {loading ? (
+            <div className="loading-container">
+              <div className="loading-spinner"></div>
+            </div>
+          ) : filteredFriends.length > 0 ? (
+            filteredFriends.map((friend) => (
+              <button
+                key={friend.id}
+                className="friend-button"
+                onClick={() => onSelectChat(friend)}>
+                <div className="friend">
+                  {friend.profilePicture ? (
+                    <img src={friend.profilePicture} alt={friend.name} className="friend-avatar" />
+                  ) : (
+                    <div 
+                      className="friend-avatar initials-avatar"
+                      style={{ backgroundColor: getConsistentColor(friend.name) }}
+                    >
+                      {getInitials(friend.name)}
+                    </div>
+                  )}
+                  <span className={`status-indicator ${friend.isOnline ? "online" : "offline"}`}></span>
+                  <span className="friend-username">{truncateName(friend.name)}</span>
+                </div>
+              </button>
+            ))
+          ) : (
+            <div className="mt-4 text-center text-[var(--text-secondary)]">
+              <p>No friends found</p>
+              <p className="mt-2">Add friends to start chatting!</p>
+            </div>
+          )}
+        </div>
+      </div>
     );
-}
+  }
 
 function Groups({ onSelectChat, allUsers }) {
     const [search, setSearch] = useState("");

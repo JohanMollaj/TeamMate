@@ -1,12 +1,13 @@
+// src/components/addFriendDialog.jsx (updated)
 import React, { useState, useEffect } from 'react';
 import { X, Check } from 'lucide-react';
 
 const AddFriendDialog = ({ isOpen, onClose, onSendRequest }) => {
-    const [isAnimating, setIsAnimating] = useState(false);
-    const [username, setUsername] = useState('');
-    const [showConfirmation, setShowConfirmation] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [username, setUsername] = useState('');
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -28,32 +29,39 @@ const AddFriendDialog = ({ isOpen, onClose, onSendRequest }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Show confirmation message
-    setShowConfirmation(true);
-    // Reset form after 2 seconds and close dialog
+    
+    if (!username.trim()) {
+      setError('Please enter a username');
+      return;
+    }
+    
+    setIsLoading(true);
     setError(null);
 
     try {
-      // When you add backend integration, replace this with actual API call
-      await onSendRequest(username);
+      // Call the parent component's onSendRequest function
+      await onSendRequest(username.trim());
       
-      console.log(`Friend request sent to: ${username}`, {
-        timestamp: new Date().toISOString(),
-        action: 'friend_request_sent',
-        target_user: username,
-        status: 'success'
-      });
-
       setShowConfirmation(true);
       
       // Auto close after success
       setTimeout(() => {
         handleClose();
       }, 2000);
-
     } catch (error) {
-      console.error('Failed to send friend request:', error);
-      setError('Failed to send friend request. Please try again.');
+      let errorMessage = 'Failed to send friend request';
+      
+      if (error.message === 'User not found') {
+        errorMessage = 'User not found. Check the username and try again.';
+      } else if (error.message === 'You cannot add yourself as a friend') {
+        errorMessage = 'You cannot add yourself as a friend.';
+      } else if (error.message === 'Already friends') {
+        errorMessage = 'You are already friends with this user.';
+      } else if (error.message === 'Friend request already sent') {
+        errorMessage = 'You already sent a friend request to this user.';
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -110,6 +118,12 @@ const AddFriendDialog = ({ isOpen, onClose, onSendRequest }) => {
               Enter a username to send them a friend request.
             </p>
 
+            {error && (
+              <div className="bg-red-500/10 text-red-500 p-3 rounded-lg mb-4">
+                {error}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit}>
               <div className="transform transition-all duration-200 ease-out hover:translate-x-1">
                 <label className="block text-sm font-medium text-[var(--text-primary)] mb-1 ">
@@ -141,11 +155,13 @@ const AddFriendDialog = ({ isOpen, onClose, onSendRequest }) => {
                 </button>
                 <button
                   type="submit"
+                  disabled={isLoading}
                   className="px-4 py-2 bg-green-700 text-white text-sm font-medium rounded-lg 
                     hover:bg-green-800 transition-all duration-200 ease-out
-                    hover:scale-105 transform hover:shadow-lg"
+                    hover:scale-105 transform hover:shadow-lg
+                    disabled:bg-green-900 disabled:opacity-70"
                 >
-                  Send Request
+                  {isLoading ? "Sending..." : "Send Request"}
                 </button>
               </div>
             </form>
