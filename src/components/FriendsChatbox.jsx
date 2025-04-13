@@ -3,6 +3,20 @@ import { useState, useEffect, useRef } from "react";
 import './friendsChatbox.css';
 import { FaCirclePlus, FaPaperPlane, FaTrash, FaPen, FaCopy } from "react-icons/fa6";
 import { EllipsisVertical } from 'lucide-react';
+import { 
+  collection, 
+  addDoc, 
+  query, 
+  where, 
+  orderBy, 
+  onSnapshot,
+  doc,
+  updateDoc,
+  deleteDoc,
+  serverTimestamp,
+  Timestamp
+} from 'firebase/firestore';
+import { db, auth } from '../firebase';
 
 // Helper functions from dashboard
 const getInitials = (name) => {
@@ -37,90 +51,256 @@ const getConsistentColor = (name) => {
     return pastelColors[index];
 };
 
-// Generate a truly unique ID for messages
-const generateUniqueId = () => {
-    return `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-};
-
 function FriendsChatbox({ activeChat, allUsers = [] }) {
     const messagesEndRef = useRef(null);
     const [messages, setMessages] = useState([]);
-    const [filteredMessages, setFilteredMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
     const [groupMembers, setGroupMembers] = useState([]);
     const [editingMessageId, setEditingMessageId] = useState(null);
     const [editText, setEditText] = useState('');
     const [activeMessageMenu, setActiveMessageMenu] = useState(null);
     const messageMenuRef = useRef(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     // Helper function to get user by ID
     const getUserById = (userId) => {
-        return allUsers.find(user => user.id === userId) || { id: userId, name: `User ${userId}` };
+        const user = allUsers.find(user => user.id === userId);
+        if (user) return user;
+        
+        // Fallback to users from Firebase (future enhancement)
+        return { id: userId, name: `User ${userId}` };
     };
 
+    // Scroll to bottom when messages change
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, [filteredMessages]); // Scroll when filtered messages update    
+    }, [messages]);    
 
+    // Scroll to bottom when active chat changes
     useEffect(() => {
         if (messagesEndRef.current && activeChat) {
-            // Force scroll to bottom when chat changes
             setTimeout(() => {
                 messagesEndRef.current.scrollIntoView({ behavior: "auto" });
             }, 100);
         }
     }, [activeChat]); 
 
+    // Listen for messages from Firebase
     useEffect(() => {
-        const storedMessages = localStorage.getItem('chatMessages');
-        localStorage.removeItem('chatMessages'); // DELETE THIS ONLY WHEN YOU NEED TO TEST LOCALSTORAGE
-        if (storedMessages) {
-            try {
-                const parsedMessages = JSON.parse(storedMessages);
-                
-                // Add unique IDs to any messages that don't have them
-                const messagesWithIds = parsedMessages.map((msg, index) => {
-                    if (!msg.id) {
-                        return {
-                            ...msg,
-                            id: generateUniqueId(),
-                            type: msg.groupID ? 'group' : 'direct'
-                        };
-                    }
-                    return msg;
-                });
-                
-                setMessages(messagesWithIds);
-                
-                // Update localStorage with the IDs if needed
-                if (JSON.stringify(messagesWithIds) !== storedMessages) {
-                    localStorage.setItem('chatMessages', JSON.stringify(messagesWithIds));
-                }
-            } catch (error) {
-                console.error("Error parsing messages from localStorage:", error);
-                setMessages([]);
-                localStorage.removeItem('chatMessages');
-            }
-        } else {
-            fetch("/messages.json")
-                .then(response => response.json())
-                .then(data => {
-                    // Initialize with type field if it doesn't exist
-                    const updatedData = data.map((msg) => ({
-                        ...msg,
-                        id: generateUniqueId(), // Generate a truly unique ID
-                        type: msg.groupID ? 'group' : 'direct'
-                    }));
-                    setMessages(updatedData);
-                    localStorage.setItem('chatMessages', JSON.stringify(updatedData));
-                })
-                .catch(error => {
-                    console.error("Error loading messages:", error);
-                    setMessages([]);
-                });
-        }
+        if (!activeChat || !auth.currentUser) return;
 
-        // Click handler to close menu when clicking outside
+        setLoading(true);
+        setError(null);
+        
+        // Reference to unsubscribe from listener
+        let unsubscribe = () => {};
+        
+        try {
+            if (activeChat.chatType === 'group') {
+                // For group messages
+                const q = query(
+                    collection(db, "messages"),
+                    where("groupId", "==", activeChat.id),
+                    where("type", "==", "group"),
+                    orderBy("timestamp", "asc")
+                );
+                
+                unsubscribe = onSnapshot(q, (querySnapshot) => {
+                    const fetchedMessages = querySnapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data(),
+                    }));
+                    setMessages(fetchedMessages);
+                    setLoading(false);
+                }, (err) => {
+                    console.error("Error fetching messages:", err);
+                    setError("Error loading messages. Please try again.");
+                    setLoading(false);
+                });
+                
+                // Set group members (would ideally come from Firestore)
+                if (activeChat.members) {
+                    setGroupMembers(activeChat.members);
+                } else {
+                    setGroupMembers([auth.currentUser.uid]); // Default to just current user
+                }
+                
+            } else {
+                // For direct messages between two users
+                const q = query(
+                    collection(db, "messages"),
+                    where("type", "==", "direct"),
+                    where("participants", "array-contains", auth.currentUser.uid),
+                    orderBy("timestamp", "asc")
+                );
+                
+                unsubscribe = onSnapshot(q, (querySnapshot) => {
+                    const fetchedMessages = querySnapshot.docs
+                        .map(doc => ({
+                            id: doc.id,
+                            ...doc.data()
+                        }))
+                        .filter(message => 
+                            message.participants && 
+                            message.participants.includes(activeChat.id)
+                        );
+                    
+                    setMessages(fetchedMessages);
+                    setLoading(false);
+                }, (err) => {
+                    console.error("Error fetching messages:", err);
+                    setError("Error loading messages. Please try again.");
+                    setLoading(false);
+                });
+            }
+        } catch (err) {
+            console.error("Error setting up message listener:", err);
+            setError("Error connecting to chat service.");
+            setLoading(false);
+        }
+        
+        // Clean up listener on unmount or when activeChat changes
+        return () => unsubscribe();
+    }, [activeChat]);
+
+    // Handle message input changes
+    const handleInputChange = (e) => {
+        setNewMessage(e.target.value);
+    };
+
+    // Send a new message
+    const handleSendMessage = async () => {
+        if (newMessage.trim() === '' || !activeChat || !auth.currentUser) return;
+        
+        try {
+            const currentUser = auth.currentUser;
+            
+            if (activeChat.chatType === 'group') {
+                // Send a group message
+                await addDoc(collection(db, "messages"), {
+                    senderId: currentUser.uid,
+                    senderName: currentUser.displayName,
+                    groupId: activeChat.id,
+                    type: "group",
+                    // For now, just include current user in participants
+                    // In a real app, fetch all group members from the group document
+                    participants: groupMembers.length > 0 ? 
+                        groupMembers : [currentUser.uid],
+                    message: newMessage.trim(),
+                    timestamp: serverTimestamp(),
+                    edited: false
+                });
+            } else {
+                // Send a direct message
+                await addDoc(collection(db, "messages"), {
+                    senderId: currentUser.uid,
+                    senderName: currentUser.displayName,
+                    receiverId: activeChat.id,
+                    type: "direct",
+                    participants: [currentUser.uid, activeChat.id],
+                    message: newMessage.trim(),
+                    timestamp: serverTimestamp(),
+                    edited: false
+                });
+            }
+            
+            // Clear input field
+            setNewMessage('');
+        } catch (error) {
+            console.error("Error sending message:", error);
+            // You could add an error toast here
+        }
+    };
+
+    // Handle keyboard input
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            if (editingMessageId) {
+                handleEditSave();
+            } else {
+                handleSendMessage();
+            }
+        }
+    };
+
+    // Toggle message options menu
+    const handleToggleMessageMenu = (messageId, event) => {
+        event.stopPropagation();
+        if (activeMessageMenu === messageId) {
+            setActiveMessageMenu(null);
+        } else {
+            setActiveMessageMenu(messageId);
+        }
+    };
+
+    // Start editing a message
+    const handleEditStart = (message) => {
+        setEditingMessageId(message.id);
+        setEditText(message.message);
+        setActiveMessageMenu(null);
+    };
+
+    // Handle edit text changes
+    const handleEditChange = (e) => {
+        setEditText(e.target.value);
+    };
+
+    // Save edited message
+    const handleEditSave = async () => {
+        if (editText.trim() === '') return;
+
+        try {
+            const messageRef = doc(db, "messages", editingMessageId);
+            
+            await updateDoc(messageRef, {
+                message: editText.trim(),
+                edited: true,
+                editedTimestamp: serverTimestamp()
+            });
+            
+            setEditingMessageId(null);
+            setEditText('');
+        } catch (error) {
+            console.error("Error editing message:", error);
+            // You could add an error toast here
+        }
+    };
+
+    // Cancel editing
+    const handleEditCancel = () => {
+        setEditingMessageId(null);
+        setEditText('');
+    };
+
+    // Copy message text
+    const handleCopyMessage = (message) => {
+        navigator.clipboard.writeText(message.message)
+            .then(() => {
+                // You could add a success toast here
+                console.log('Message copied to clipboard');
+            })
+            .catch(err => {
+                console.error('Could not copy text: ', err);
+            });
+        setActiveMessageMenu(null);
+    };
+
+    // Delete a message
+    const handleDeleteMessage = async (messageId) => {
+        try {
+            const messageRef = doc(db, "messages", messageId);
+            await deleteDoc(messageRef);
+            setActiveMessageMenu(null);
+        } catch (error) {
+            console.error("Error deleting message:", error);
+            // You could add an error toast here
+        }
+    };
+
+    // Close menu when clicking outside
+    useEffect(() => {
         const handleOutsideClick = (event) => {
             if (messageMenuRef.current && !messageMenuRef.current.contains(event.target)) {
                 setActiveMessageMenu(null);
@@ -133,158 +313,6 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
             document.removeEventListener('mousedown', handleOutsideClick);
         };
     }, []);
-
-    useEffect(() => {
-        if (messages.length > 0 && activeChat) {
-            if (activeChat.chatType === 'group') {
-                // Filter group messages for the active group
-                const groupMessages = messages.filter(msg => 
-                    (msg.type === 'group' || msg.groupID) && msg.groupID === activeChat.id
-                );
-                setFilteredMessages(groupMessages);
-                
-                // Set group members
-                if (activeChat.members) {
-                    setGroupMembers(activeChat.members);
-                } else {
-                    setGroupMembers([]);
-                }
-            } else {
-                // Default to direct messages
-                // Filter direct messages between the two users
-                const directMessages = messages.filter(msg => 
-                    (msg.type !== 'group' && !msg.groupID) && 
-                    ((msg.senderID === activeChat.id && msg.receiverID === "1") || 
-                     (msg.senderID === "1" && msg.receiverID === activeChat.id))
-                );
-                setFilteredMessages(directMessages);
-            }
-        } else {
-            setFilteredMessages([]);
-        }
-    }, [messages, activeChat, allUsers]);
-
-    const handleInputChange = (e) => {
-        setNewMessage(e.target.value);
-    };
-
-    const handleSendMessage = () => {
-        if (newMessage.trim() === '' || !activeChat) return;
-        
-        // Create a new message object based on chat type
-        let newMessageObj;
-        
-        if (activeChat.chatType === 'group') {
-            newMessageObj = {
-                id: generateUniqueId(),
-                senderID: "1", // Current user's ID
-                groupID: activeChat.id,
-                type: 'group',
-                time: new Date().toISOString(),
-                message: newMessage.trim()
-            };
-        } else {
-            newMessageObj = {
-                id: generateUniqueId(),
-                senderID: "1", // Current user's ID
-                receiverID: activeChat.id,
-                type: 'direct',
-                time: new Date().toISOString(),
-                message: newMessage.trim()
-            };
-        }
-
-        const updatedMessages = [...messages, newMessageObj];
-        setMessages(updatedMessages);
-        
-        // Save to localStorage
-        localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
-        
-        // Clear input field
-        setNewMessage('');
-    };
-
-    const handleKeyDown = (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            if (editingMessageId) {
-                handleEditSave();
-            } else {
-                handleSendMessage();
-            }
-        }
-    };
-
-    const handleToggleMessageMenu = (messageId, event) => {
-        event.stopPropagation();
-        if (activeMessageMenu === messageId) {
-            setActiveMessageMenu(null);
-        } else {
-            setActiveMessageMenu(messageId);
-        }
-    };
-
-    const handleEditStart = (message) => {
-        setEditingMessageId(message.id);
-        setEditText(message.message);
-        setActiveMessageMenu(null);
-    };
-
-    const handleEditChange = (e) => {
-        setEditText(e.target.value);
-    };
-
-    const handleEditSave = () => {
-        if (editText.trim() === '') return;
-
-        // Safely find and update just the specific message by ID
-        const messageIndex = messages.findIndex(msg => msg.id === editingMessageId);
-        
-        if (messageIndex !== -1) {
-            const updatedMessages = [...messages];
-            updatedMessages[messageIndex] = {
-                ...updatedMessages[messageIndex],
-                message: editText.trim(),
-                edited: true
-            };
-            
-            setMessages(updatedMessages);
-            localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
-        }
-        
-        setEditingMessageId(null);
-        setEditText('');
-    };
-
-    const handleEditCancel = () => {
-        setEditingMessageId(null);
-        setEditText('');
-    };
-
-    const handleCopyMessage = (message) => {
-        navigator.clipboard.writeText(message.message)
-            .then(() => {
-                // Maybe show a toast notification here
-                console.log('Message copied to clipboard');
-            })
-            .catch(err => {
-                console.error('Could not copy text: ', err);
-            });
-        setActiveMessageMenu(null);
-    };
-
-    const handleDeleteMessage = (messageId) => {
-        // Safely filter out only the specific message by ID
-        const messageToDelete = messages.find(msg => msg.id === messageId);
-        
-        if (messageToDelete) {
-            const updatedMessages = messages.filter(msg => msg.id !== messageId);
-            setMessages(updatedMessages);
-            localStorage.setItem('chatMessages', JSON.stringify(updatedMessages));
-        }
-        
-        setActiveMessageMenu(null);
-    };
 
     return (
         <>{ activeChat && (
@@ -316,20 +344,32 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
                 </div>
                 <div className='chatboxMain'>
                     <div className="chatboxMessages">
-                        {filteredMessages.length > 0 ? (
-                            filteredMessages.map((msg) => {
-                                const messageDate = new Date(msg.time);
+                        {loading ? (
+                            <div className="loading-message">
+                                <p className='text-[var(--text-secondary)]'>Loading messages...</p>
+                            </div>
+                        ) : error ? (
+                            <div className="error-message">
+                                <p className='text-red-500'>{error}</p>
+                            </div>
+                        ) : messages.length > 0 ? (
+                            messages.map((msg) => {
+                                // Format the timestamp (handle both server timestamp and client-side timestamp)
+                                const messageDate = msg.timestamp instanceof Timestamp ? 
+                                    msg.timestamp.toDate() : 
+                                    new Date(msg.timestamp);
+                                
                                 const formattedDate = messageDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                                 const formattedTime = messageDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 
-                                const isCurrentUser = msg.senderID === "1";
+                                const isCurrentUser = msg.senderId === auth.currentUser?.uid;
                                 let senderName;
                                 
                                 if (activeChat.chatType === 'direct') {
                                     senderName = isCurrentUser ? "You" : activeChat.name;
                                 } else {
-                                    // For group chats, we need to show the sender's name
-                                    senderName = isCurrentUser ? "You" : getUserById(msg.senderID).name;
+                                    // For group chats, show the sender's name
+                                    senderName = isCurrentUser ? "You" : (msg.senderName || getUserById(msg.senderId)?.name || "Unknown User");
                                 }
 
                                 return (
@@ -422,11 +462,14 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
                                 value={newMessage}
                                 onChange={handleInputChange}
                                 onKeyDown={handleKeyDown}
+                                disabled={loading}
                             />
                         </div>
                         <button 
                             className='chatboxButton send'
-                            onClick={handleSendMessage}>
+                            onClick={handleSendMessage}
+                            disabled={loading || newMessage.trim() === ''}
+                        >
                             <FaPaperPlane />
                         </button>
                     </div>
