@@ -36,6 +36,7 @@ export function AuthProvider({ children }) {
         displayName: displayName,
         email: email,
         username: email.split('@')[0], // Default username based on email
+        password: password,
         createdAt: serverTimestamp(),
         isOnline: true,
         bio: "",
