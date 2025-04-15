@@ -32,12 +32,6 @@ function Sidebar({ setActiveSetting, currentSetting }) {
         >
           My Account
         </button>
-        <button
-          onClick={() => setActiveSetting('Profile')}
-          className={`sidebar-button ${currentSetting === 'Profile' ? 'active' : ''}`}
-        >
-          Profile
-        </button>
       </div>
       <div className="settings-section">
         <h2>App Settings</h2>

@@ -11,7 +11,7 @@
 }
 
 .input{
-    background-color: var(--bg-input);
+    background-color: var(--bg-button);
     width: 300px;
     border-radius: 10px;
     color: var(--text-primary);
@@ -38,7 +38,7 @@
 }
 
 .profile-textarea{
-    background-color: var(--bg-input);
+    background-color: var(--bg-button);
     width: 300px;
     height: 100px;
     border-radius: 10px;

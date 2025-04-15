@@ -10,7 +10,7 @@
     --bg-primary: #1C1D20;
     --bg-secondary: #2A2C32;
     --bg-tertiary: #3f414a;
-    --bg-input: #434751;
+    --bg-input: #383b44;
     --bg-dark: #18191d;
     --bg-button: #3f414a;
     --bg-dropdown: #2A2C32;
@@ -218,7 +218,7 @@
     border-color: var(--border-color);
     border-radius: 10px;
     color: var(--text-primary);
-    padding: 10px;
+    /* padding: 10px; */
     margin-bottom: 10px;
     line-height: 1.2;
     outline: none; 
