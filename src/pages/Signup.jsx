@@ -4,7 +4,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Eye, EyeOff } from 'lucide-react';
 
 function Signup() {
-  const [displayName, setDisplayName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -24,7 +24,7 @@ function Signup() {
     try {
       setError('');
       setLoading(true);
-      await signup(email, password, displayName);
+      await signup(email, password, username);
       navigate('/dashboard');
     } catch (error) {
       console.error(error);
@@ -50,14 +50,15 @@ function Signup() {
         
         <form onSubmit={handleSubmit}>
           <div className="form-group mb-4">
-            <label htmlFor="displayName" className="block text-sm font-medium text-[var(--text-primary)] mb-1">
-              Full Name
+            <label htmlFor="username" className="block text-sm font-medium text-[var(--text-primary)] mb-1">
+              Username
             </label>
             <input
-              id="displayName"
+              id="username"
               type="text"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
+              placeholder='Enter your username'
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="w-full px-3 py-2 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg focus:outline-none focus:border-blue-500"
               required
             />
@@ -70,6 +71,7 @@ function Signup() {
             <input
               id="email"
               type="email"
+              placeholder='Enter your email'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg focus:outline-none focus:border-blue-500"
@@ -81,10 +83,11 @@ function Signup() {
             <label htmlFor="password" className="block text-sm font-medium text-[var(--text-primary)] mb-1">
               Password
             </label>
-            <div className="relative">
+            <div className="relative flex justify-center items-center">
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
+                placeholder='Enter your password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-3 py-2 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg pr-10 focus:outline-none focus:border-blue-500"
@@ -92,7 +95,7 @@ function Signup() {
               />
               <button
                 type="button"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                className="absolute inset-y-0 right-0 up-2 pr-3 flex items-center"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -107,6 +110,7 @@ function Signup() {
             <input
               id="confirmPassword"
               type={showPassword ? "text" : "password"}
+              placeholder='Confirm your password'
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full px-3 py-2 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg focus:outline-none focus:border-blue-500"
