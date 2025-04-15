@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { AtSign, UserPlus } from 'lucide-react';
 import { FaCog } from 'react-icons/fa';
+import { signOut } from 'firebase/auth';
+import { auth } from '../firebase';
 
 const DashboardTasks = () => {
     const [tasks, setTasks] = useState([]);
@@ -211,6 +213,18 @@ const notifications = {
     ]
 };
 
+const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      // After successful logout, redirect to login page
+      navigate('/login');
+      // Optional: Clear any local storage data
+      localStorage.removeItem('lastActiveChat');
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
 // Helper function for truncating long names
 const truncateName = (name, maxLength = 10) => {
     if (!name) return '';
@@ -377,7 +391,7 @@ return(
                                 <button className="profile-dropdown-button" onClick={() => navigate('/profile')}>
                                     Edit Profile
                                 </button>
-                                <button className="profile-dropdown-button profile-logout" onClick={() => console.log('Logging out...')}>
+                                <button className="profile-dropdown-button profile-logout" onClick={handleLogout}>
                                     Log Out
                                 </button>
                             </div>

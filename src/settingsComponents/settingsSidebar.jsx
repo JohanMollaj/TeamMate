@@ -1,9 +1,27 @@
 import './settingsSidebar.css';
 import React, { useState } from 'react';
+import { signOut } from 'firebase/auth';
+import { auth } from '../firebase';
+import { useNavigate } from 'react-router-dom';
+
 
 function Sidebar({ setActiveSetting, currentSetting }) {
   
+  const navigate = useNavigate();
+  
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate('/login');
+      localStorage.removeItem('lastActiveChat');
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+
+
   return (
+    
     <div className="settings-sidebar">
       <h1>Settings</h1>
       <div className="settings-section">
@@ -38,6 +56,7 @@ function Sidebar({ setActiveSetting, currentSetting }) {
       </div>
       <button
         className="sidebar-button logout-button"
+        onClick={handleLogout}
       >
         Logout
       </button>
