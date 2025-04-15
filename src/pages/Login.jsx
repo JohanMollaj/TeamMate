@@ -82,14 +82,14 @@ function Login() {
             </div>
           </div>
           
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex align-center justify-between mb-4">
             <div className="flex items-center">
               <input
                 id="remember-me"
                 type="checkbox"
-                className="h-4 w-4 bg-[var(--bg-input)] border-[var(--border-color)] rounded"
+                className="h-4 w-4 mb-0 bg-[var(--bg-input)] border-[var(--border-color)] rounded"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-[var(--text-secondary)]">
+              <label htmlFor="remember-me" className="ml-2 mb-2 block text-sm text-[var(--text-secondary)]">
                 Remember me
               </label>
             </div>
