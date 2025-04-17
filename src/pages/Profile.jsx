@@ -221,7 +221,7 @@ const Profile = ({ isOpen, onClose }) => {
                 Username
               </label>
               <div className="relative">
-                <span className="absolute left-3 top-1 transform -translate-y-1/2 text-[var(--text-secondary)]">
+                <span className="absolute left-3 top-1 transform text-[var(--text-secondary)]">
                   @
                 </span>
                 <input
