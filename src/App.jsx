@@ -9,21 +9,32 @@ import Profile from './pages/Profile.jsx';
 import Settings from './pages/Settings.jsx';
 import Tasks from './pages/Tasks.jsx';
 import NoPage from './pages/NoPage.jsx';
-import Login from './pages/Login.jsx'; // Create this page
-import Signup from './pages/Signup.jsx'; // Create this page
+import Login from './pages/Login.jsx'; 
+import Signup from './pages/Signup.jsx';
 
 import Sidebar from './components/Sidebar.jsx';
 import { ThemeProvider } from './ThemeContext.jsx';
 import { AuthProvider, useAuth } from './contexts/AuthContext.jsx';
 
-// Protected route component
+// Updated Protected route component
 function PrivateRoute({ children }) {
-  const { currentUser } = useAuth();
+  const { currentUser, loading } = useAuth();
   
+  // Show a loading indicator while checking authentication
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-[var(--bg-primary)]">
+        <div className="loading-spinner"></div>
+      </div>
+    );
+  }
+  
+  // Redirect to login if not authenticated
   if (!currentUser) {
     return <Navigate to="/login" />;
   }
   
+  // Render the protected content if authenticated
   return children;
 }
 
