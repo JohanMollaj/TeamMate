@@ -167,7 +167,8 @@ const Profile = ({ isOpen, onClose }) => {
       className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center z-50"
       onClick={closeModal}
     >
-      <div className="w-full max-w-md bg-[var(--bg-secondary)] rounded-xl shadow-lg overflow-hidden">
+      <div className="w-full h-[85%] max-w-md bg-[var(--bg-secondary)] pl-2 rounded-xl shadow-lg overflow-auto 
+                      [&::-webkit-scrollbar]:w-2">
         <div className="flex items-center justify-between p-4 border-b border-[var(--border-color)]">
           <h2 className="text-xl font-bold text-[var(--text-primary)]">Edit Profile</h2>
           <button 
