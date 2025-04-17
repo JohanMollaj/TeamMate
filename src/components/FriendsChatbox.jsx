@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import './friendsChatbox.css';
 import { FaCirclePlus, FaPaperPlane, FaTrash, FaPen, FaCopy } from "react-icons/fa6";
 import { EllipsisVertical } from 'lucide-react';
+import ProfileCardPopup from './ProfileCardPopup';
 import { 
   collection, 
   addDoc, 
@@ -62,6 +63,7 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
     const messageMenuRef = useRef(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isProfileCardOpen, setIsProfileCardOpen] = useState(false);
 
     // Helper function to get user by ID
     const getUserById = (userId) => {
@@ -314,11 +316,54 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
         };
     }, []);
 
+    // Profile card handlers
+    const handleProfileCardOpen = () => {
+        setIsProfileCardOpen(true);
+    };
+
+    const handleProfileCardClose = () => {
+        setIsProfileCardOpen(false);
+    };
+
+    const handleRemoveFriend = (friend) => {
+        console.log(`Removing friend: ${friend.name}`);
+        // Here you would implement the actual friend removal logic
+        // For example, update Firestore or localStorage
+        alert(`Friend ${friend.name} would be removed. (Demo only)`);
+        setIsProfileCardOpen(false);
+    };
+
+    const handleLeaveGroup = (group) => {
+        console.log(`Leaving group: ${group.name}`);
+        // Here you would implement the actual group leaving logic
+        alert(`You would leave the group ${group.name}. (Demo only)`);
+        setIsProfileCardOpen(false);
+    };
+
+    const handleAddToGroup = (entity) => {
+        console.log(`Adding ${entity.chatType === 'direct' ? 'friend' : 'members'} to a group`);
+        // Here you would implement the logic to open a group selection dialog
+        alert(`You would add ${entity.name} to a group. (Demo only)`);
+        setIsProfileCardOpen(false);
+    };
+
+    const handleManageGroup = (group) => {
+        console.log(`Managing group: ${group.name}`);
+        // Here you would implement the group management logic
+        alert(`You would manage the group ${group.name}. (Demo only)`);
+        setIsProfileCardOpen(false);
+    };
+
     return (
         <>{ activeChat && (
             <div className='chatboxContainer'>
                 <div className='chatboxHeader'>
-                    <div className='userHeader'>
+                    <div 
+                        className='userHeader'
+                        onClick={handleProfileCardOpen}
+                        style={{ cursor: 'pointer' }}
+                        title="Click for more options"
+                    >
                         {activeChat.profileImage || activeChat.groupImage ? (
                             <img 
                                 src={activeChat.profileImage || activeChat.groupImage} 
@@ -474,6 +519,17 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
                         </button>
                     </div>
                 </div>
+
+                {/* Profile Card Popup */}
+                <ProfileCardPopup
+                    chat={activeChat}
+                    isOpen={isProfileCardOpen}
+                    onClose={handleProfileCardClose}
+                    onRemoveFriend={handleRemoveFriend}
+                    onLeaveGroup={handleLeaveGroup}
+                    onAddToGroup={handleAddToGroup}
+                    onManageGroup={handleManageGroup}
+                />
             </div>
         )}
         </>

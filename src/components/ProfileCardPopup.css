@@ -43,7 +43,7 @@
     border-bottom: 1px solid var(--border-color);
 }
 
-.profile-avatar {
+.profile-popup-avatar {
     width: 80px;
     height: 80px;
     border-radius: 50%;
@@ -51,11 +51,11 @@
     border: 3px solid var(--bg-secondary);
 }
 
-.initials-avatar {
+.popup-initials-avatar {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 32px;
+    font-size: 30px;
     font-weight: 600;
 }
 
@@ -66,12 +66,21 @@
     word-break: break-word;
 }
 
-.profile-card-header .status-indicator {
-    width: 12px;
-    height: 12px;
+.profile-card-header .popup-status-indicator {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 138px;
+    top: 70px;
     border-radius: 50%;
     margin-top: 8px;
-    border: 2px solid var(--bg-tertiary);
+    border: 3px solid var(--bg-tertiary);
+}
+.popup-status-indicator.online {
+    background-color: #3ba55c;
+}
+.popup-status-indicator.offline {
+    background-color: #747f8d;
 }
 
 .profile-card-details {

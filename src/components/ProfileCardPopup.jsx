@@ -53,11 +53,11 @@ const ProfileCardPopup = ({ chat, isOpen, onClose, onRemoveFriend, onLeaveGroup,
                         <img 
                             src={chat.profileImage || chat.groupImage} 
                             alt={chat.name} 
-                            className="profile-avatar" 
+                            className="profile-popup-avatar" 
                         />
                     ) : (
                         <div 
-                            className="profile-avatar initials-avatar"
+                            className="profile-popup-avatar popup-initials-avatar"
                             style={{ backgroundColor: getConsistentColor(chat.name) }}
                         >
                             {getInitials(chat.name)}
@@ -65,7 +65,7 @@ const ProfileCardPopup = ({ chat, isOpen, onClose, onRemoveFriend, onLeaveGroup,
                     )}
                     <h2>{chat.name}</h2>
                     {!isGroup && (
-                        <span className={`status-indicator ${chat.isOnline ? "online" : "offline"}`}></span>
+                        <span className={`popup-status-indicator ${chat.isOnline ? "online" : "offline"}`}></span>
                     )}
                 </div>
                 

@@ -199,3 +199,28 @@
     justify-content: center;
     margin-top: auto; /* Push to the bottom when there are no messages */
 }
+
+.userHeader {
+    position: relative;
+    transition: background-color 0.2s ease;
+    border-radius: 10px;
+    padding: 8px 12px;
+}
+
+.userHeader:hover {
+    background-color: var(--bg-tertiary);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 0.9; }
+}
+
+/* Enhance the cursor area of the header to make it more obvious it's clickable */
+.userHeader h1, .userHeader .friend-avatar, .userHeader .status-indicator, .userHeader .member-count {
+    cursor: pointer;
+}
+
+.userHeader:hover::before {
+    opacity: 1;
+}
