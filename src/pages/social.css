@@ -52,6 +52,7 @@ html, body {
 
 .filterOption {
   display: flex;
+  width: 33%;
   padding: 8px 12px;
   margin-right: 10px;
   border-radius: 15px;
@@ -59,6 +60,7 @@ html, body {
   border: none;
   cursor: pointer;
   align-items: center;
+  justify-content: center;
   transition: background-color 0.2s ease-in-out;
 }
 .filterOption.active {
@@ -70,6 +72,7 @@ html, body {
 
 #filter-status{
   font-size: 20px;
+  margin-bottom: 10px;
 }
 
 .textarea {
