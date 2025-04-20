@@ -67,6 +67,46 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
     const [isProfileCardOpen, setIsProfileCardOpen] = useState(false);
     const [isMediaGalleryOpen, setIsMediaGalleryOpen] = useState(false);
 
+    // Add this function to your FriendsChatbox component
+
+    const handleEditDescription = async (group, newDescription) => {
+        console.log(`Updating description for group "${group.name}"`);
+        
+        try {
+            // In a real app, update the group description in Firestore
+            // For example:
+            // const groupRef = doc(db, "groups", group.id);
+            // await updateDoc(groupRef, { description: newDescription });
+            
+            // For this demo, we'll just update localStorage
+            const savedGroups = JSON.parse(localStorage.getItem('groups') || '[]');
+            const updatedGroups = savedGroups.map(g => {
+                if (g.id === group.id) {
+                    return { ...g, description: newDescription };
+                }
+                return g;
+            });
+            
+            localStorage.setItem('groups', JSON.stringify(updatedGroups));
+            
+            // Update the active chat with the new description
+            if (activeChat.id === group.id) {
+                const updatedChat = { ...activeChat, description: newDescription };
+                localStorage.setItem("lastActiveChat", JSON.stringify(updatedChat));
+                
+                // In a real app with Firebase, this would happen automatically through listeners
+                setActiveChat(updatedChat);
+            }
+            
+            // Show success message
+            alert(`Group description updated successfully!`);
+            
+        } catch (error) {
+            console.error("Error updating group description:", error);
+            alert("Failed to update group description. Please try again.");
+        }
+    };
+
     const handleViewMedia = (chat) => {
         console.log(`Viewing media for ${chat.chatType === 'group' ? 'group' : 'user'}: ${chat.name}`);
         setIsMediaGalleryOpen(true);
@@ -578,6 +618,7 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
                     onManageGroup={handleManageGroup}
                     onRenameGroup={handleRenameGroup}
                     onViewMedia={handleViewMedia}
+                    onEditDescription={handleEditDescription}
                 />
                 <MediaGallery 
                     isOpen={isMediaGalleryOpen}

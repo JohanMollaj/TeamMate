@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './ProfileCardPopup.css';
-import { FaUserMinus, FaRightFromBracket, FaUsers, FaUserPlus, FaGear, FaPen, FaImage } from "react-icons/fa6";
+import { FaUserMinus, FaRightFromBracket, FaUsers, FaUserPlus, FaGear, FaPen, FaImage, FaPlus } from "react-icons/fa6";
 
 const getInitials = (name) => {
     if (!name) return "U";
@@ -34,13 +34,38 @@ const getConsistentColor = (name) => {
     return pastelColors[index];
 };
 
-const ProfileCardPopup = ({ chat, isOpen, onClose, onRemoveFriend, onLeaveGroup, onAddToGroup, onManageGroup, onRenameGroup, onViewMedia }) => {
+const ProfileCardPopup = ({ 
+    chat, 
+    isOpen, 
+    onClose, 
+    onRemoveFriend, 
+    onLeaveGroup, 
+    onAddToGroup, 
+    onManageGroup, 
+    onRenameGroup,
+    onViewMedia,
+    onEditDescription
+}) => {
     if (!isOpen || !chat) return null;
     
     const [isRenaming, setIsRenaming] = useState(false);
     const [newGroupName, setNewGroupName] = useState('');
     const renameInputRef = useRef(null);
     
+    // Description editing state
+    const [isEditingDescription, setIsEditingDescription] = useState(false);
+    const [description, setDescription] = useState('');
+    const descriptionInputRef = useRef(null);
+    
+    // Initialize input values when chat changes
+    useEffect(() => {
+        if (chat) {
+            setNewGroupName(chat.name || '');
+            setDescription(chat.description || '');
+        }
+    }, [chat, isOpen]);
+    
+    // Focus input fields when editing starts
     useEffect(() => {
         if (isRenaming && renameInputRef.current) {
             renameInputRef.current.focus();
@@ -48,13 +73,21 @@ const ProfileCardPopup = ({ chat, isOpen, onClose, onRemoveFriend, onLeaveGroup,
         }
     }, [isRenaming]);
     
-    // Initialize new group name when the chat changes or modal opens
     useEffect(() => {
-        if (chat) {
-            setNewGroupName(chat.name || '');
+        if (isEditingDescription && descriptionInputRef.current) {
+            descriptionInputRef.current.focus();
         }
-    }, [chat, isOpen]);
+    }, [isEditingDescription]);
+
+    const handleClickOutside = (e) => {
+        if (e.target.className === 'profile-card-overlay') {
+            setIsRenaming(false);
+            setIsEditingDescription(false);
+            onClose();
+        }
+    };
     
+    // Renaming handlers
     const handleStartRenaming = () => {
         setIsRenaming(true);
     };
@@ -79,11 +112,32 @@ const ProfileCardPopup = ({ chat, isOpen, onClose, onRemoveFriend, onLeaveGroup,
             handleCancelRenaming();
         }
     };
-
-    const handleClickOutside = (e) => {
-        if (e.target.className === 'profile-card-overlay') {
-            setIsRenaming(false);
-            onClose();
+    
+    // Description editing handlers
+    const handleStartEditingDescription = (e) => {
+        if (e) e.stopPropagation();
+        setIsEditingDescription(true);
+    };
+    
+    const handleCancelEditingDescription = () => {
+        setIsEditingDescription(false);
+        setDescription(chat.description || '');
+    };
+    
+    const handleSaveDescription = () => {
+        const trimmedDescription = description.trim();
+        if (trimmedDescription !== chat.description && onEditDescription) {
+            onEditDescription(chat, trimmedDescription);
+        }
+        setIsEditingDescription(false);
+    };
+    
+    const handleDescriptionKeyDown = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            handleSaveDescription();
+        } else if (e.key === 'Escape') {
+            handleCancelEditingDescription();
         }
     };
 
@@ -107,6 +161,7 @@ const ProfileCardPopup = ({ chat, isOpen, onClose, onRemoveFriend, onLeaveGroup,
                             {getInitials(chat.name)}
                         </div>
                     )}
+                    
                     {isGroup && isRenaming ? (
                         <div className="rename-container">
                             <input
@@ -146,12 +201,41 @@ const ProfileCardPopup = ({ chat, isOpen, onClose, onRemoveFriend, onLeaveGroup,
                                 <span className="detail-label">Members:</span>
                                 <span className="detail-value">{chat.members?.length || 0}</span>
                             </div>
-                            {chat.description && (
-                                <div className="detail-item">
-                                    <span className="detail-label">Description:</span>
-                                    <span className="detail-value">{chat.description}</span>
-                                </div>
-                            )}
+                            <div className="detail-item">
+                                <span className="detail-label">Description:</span>
+                                {isEditingDescription ? (
+                                    <div className="description-edit-container">
+                                        <textarea
+                                            ref={descriptionInputRef}
+                                            value={description}
+                                            onChange={(e) => setDescription(e.target.value)}
+                                            onKeyDown={handleDescriptionKeyDown}
+                                            className="description-input"
+                                            placeholder="Add a group description..."
+                                            maxLength={100}
+                                        />
+                                        <div className="description-edit-actions">
+                                            <button onClick={handleSaveDescription} className="description-save">Save</button>
+                                            <button onClick={handleCancelEditingDescription} className="description-cancel">Cancel</button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="detail-value description-value">
+                                        {chat.description ? (
+                                            <span>{chat.description}</span>
+                                        ) : (
+                                            <span className="no-description">No description</span>
+                                        )}
+                                        <button 
+                                            className="edit-description-button" 
+                                            onClick={handleStartEditingDescription}
+                                            title={chat.description ? "Edit description" : "Add description"}
+                                        >
+                                            {chat.description ? <FaPen size={12} /> : <FaPlus size={12} />}
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                             <div className="detail-item">
                                 <span className="detail-label">Created:</span>
                                 <span className="detail-value">
@@ -185,10 +269,6 @@ const ProfileCardPopup = ({ chat, isOpen, onClose, onRemoveFriend, onLeaveGroup,
                             <button className="action-button" onClick={() => onViewMedia && onViewMedia(chat)}>
                                 <FaImage />
                                 <span>View Media</span>
-                            </button>
-                            <button className="action-button" onClick={handleStartRenaming}>
-                                <FaPen />
-                                <span>Rename Group</span>
                             </button>
                             <button className="action-button" onClick={() => onAddToGroup(chat)}>
                                 <FaUserPlus />
