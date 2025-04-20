@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './ProfileCardPopup.css';
-import { FaUserMinus, FaRightFromBracket, FaUsers, FaUserPlus, FaGear } from "react-icons/fa6";
+import { FaUserMinus, FaRightFromBracket, FaUsers, FaUserPlus, FaGear, FaPen } from "react-icons/fa6";
 
 const getInitials = (name) => {
     if (!name) return "U";
@@ -34,11 +34,55 @@ const getConsistentColor = (name) => {
     return pastelColors[index];
 };
 
-const ProfileCardPopup = ({ chat, isOpen, onClose, onRemoveFriend, onLeaveGroup, onAddToGroup, onManageGroup }) => {
+const ProfileCardPopup = ({ chat, isOpen, onClose, onRemoveFriend, onLeaveGroup, onAddToGroup, onManageGroup, onRenameGroup }) => {
     if (!isOpen || !chat) return null;
+    
+    const [isRenaming, setIsRenaming] = useState(false);
+    const [newGroupName, setNewGroupName] = useState('');
+    const renameInputRef = useRef(null);
+    
+    useEffect(() => {
+        if (isRenaming && renameInputRef.current) {
+            renameInputRef.current.focus();
+            renameInputRef.current.select();
+        }
+    }, [isRenaming]);
+    
+    // Initialize new group name when the chat changes or modal opens
+    useEffect(() => {
+        if (chat) {
+            setNewGroupName(chat.name || '');
+        }
+    }, [chat, isOpen]);
+    
+    const handleStartRenaming = () => {
+        setIsRenaming(true);
+    };
+    
+    const handleCancelRenaming = () => {
+        setIsRenaming(false);
+        setNewGroupName(chat.name || '');
+    };
+    
+    const handleRenameSubmit = () => {
+        if (newGroupName.trim() && newGroupName !== chat.name) {
+            onRenameGroup(chat, newGroupName.trim());
+        }
+        setIsRenaming(false);
+    };
+    
+    const handleRenameKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleRenameSubmit();
+        } else if (e.key === 'Escape') {
+            handleCancelRenaming();
+        }
+    };
 
     const handleClickOutside = (e) => {
         if (e.target.className === 'profile-card-overlay') {
+            setIsRenaming(false);
             onClose();
         }
     };
@@ -63,7 +107,33 @@ const ProfileCardPopup = ({ chat, isOpen, onClose, onRemoveFriend, onLeaveGroup,
                             {getInitials(chat.name)}
                         </div>
                     )}
-                    <h2>{chat.name}</h2>
+                    {isGroup && isRenaming ? (
+                        <div className="rename-container">
+                            <input
+                                type="text"
+                                ref={renameInputRef}
+                                value={newGroupName}
+                                onChange={(e) => setNewGroupName(e.target.value)}
+                                onKeyDown={handleRenameKeyDown}
+                                className="rename-input"
+                                maxLength={30}
+                            />
+                            <div className="rename-actions">
+                                <button onClick={handleRenameSubmit} className="rename-save">Save</button>
+                                <button onClick={handleCancelRenaming} className="rename-cancel">Cancel</button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="name-container">
+                            <h2>{chat.name}</h2>
+                            {isGroup && (
+                                <button onClick={handleStartRenaming} className="rename-button" title="Rename Group">
+                                    <FaPen size={12} />
+                                </button>
+                            )}
+                        </div>
+                    )}
+                    
                     {!isGroup && (
                         <span className={`popup-status-indicator ${chat.isOnline ? "online" : "offline"}`}></span>
                     )}
@@ -72,10 +142,6 @@ const ProfileCardPopup = ({ chat, isOpen, onClose, onRemoveFriend, onLeaveGroup,
                 <div className="profile-card-details">
                     {isGroup ? (
                         <>
-                            <div className="detail-item">
-                                <span className="detail-label">Type:</span>
-                                <span className="detail-value">Group</span>
-                            </div>
                             <div className="detail-item">
                                 <span className="detail-label">Members:</span>
                                 <span className="detail-value">{chat.members?.length || 0}</span>
@@ -89,7 +155,7 @@ const ProfileCardPopup = ({ chat, isOpen, onClose, onRemoveFriend, onLeaveGroup,
                             <div className="detail-item">
                                 <span className="detail-label">Created:</span>
                                 <span className="detail-value">
-                                    {new Date(chat.createdAt).toLocaleDateString()}
+                                    {chat.createdAt ? new Date(chat.createdAt).toLocaleDateString() : 'Unknown'}
                                 </span>
                             </div>
                         </>
@@ -116,6 +182,10 @@ const ProfileCardPopup = ({ chat, isOpen, onClose, onRemoveFriend, onLeaveGroup,
                 <div className="profile-card-actions">
                     {isGroup ? (
                         <>
+                            <button className="action-button" onClick={handleStartRenaming}>
+                                <FaPen />
+                                <span>Rename Group</span>
+                            </button>
                             <button className="action-button" onClick={() => onAddToGroup(chat)}>
                                 <FaUserPlus />
                                 <span>Add Members</span>

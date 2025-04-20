@@ -353,6 +353,45 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
         alert(`You would manage the group ${group.name}. (Demo only)`);
         setIsProfileCardOpen(false);
     };
+    
+    const handleRenameGroup = async (group, newName) => {
+        console.log(`Renaming group from "${group.name}" to "${newName}"`);
+        
+        try {
+            // In a real app, you would update the group name in Firestore
+            // For example:
+            // const groupRef = doc(db, "groups", group.id);
+            // await updateDoc(groupRef, { name: newName });
+            
+            // For this demo, we'll just update localStorage
+            const savedGroups = JSON.parse(localStorage.getItem('groups') || '[]');
+            const updatedGroups = savedGroups.map(g => {
+                if (g.id === group.id) {
+                    return { ...g, name: newName };
+                }
+                return g;
+            });
+            
+            localStorage.setItem('groups', JSON.stringify(updatedGroups));
+            
+            // Update the active chat with the new name
+            const updatedChat = { ...activeChat, name: newName };
+            localStorage.setItem("lastActiveChat", JSON.stringify(updatedChat));
+            
+            // Show success message
+            alert(`Group renamed to "${newName}" successfully!`);
+            
+            // Update UI - in a real app, this would happen automatically via Firebase listeners
+            // For demo purposes, we'll reload the page to see the changes
+            window.location.reload();
+            
+        } catch (error) {
+            console.error("Error renaming group:", error);
+            alert("Failed to rename group. Please try again.");
+        }
+        
+        setIsProfileCardOpen(false);
+    };
 
     return (
         <>{ activeChat && (
@@ -529,6 +568,7 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
                     onLeaveGroup={handleLeaveGroup}
                     onAddToGroup={handleAddToGroup}
                     onManageGroup={handleManageGroup}
+                    onRenameGroup={handleRenameGroup}
                 />
             </div>
         )}
