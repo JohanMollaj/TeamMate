@@ -4,6 +4,7 @@ import './friendsChatbox.css';
 import { FaCirclePlus, FaPaperPlane, FaTrash, FaPen, FaCopy } from "react-icons/fa6";
 import { EllipsisVertical } from 'lucide-react';
 import ProfileCardPopup from './ProfileCardPopup';
+import MediaGallery from './MediaGallery';
 import { 
   collection, 
   addDoc, 
@@ -64,6 +65,13 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [isProfileCardOpen, setIsProfileCardOpen] = useState(false);
+    const [isMediaGalleryOpen, setIsMediaGalleryOpen] = useState(false);
+
+    const handleViewMedia = (chat) => {
+        console.log(`Viewing media for ${chat.chatType === 'group' ? 'group' : 'user'}: ${chat.name}`);
+        setIsMediaGalleryOpen(true);
+        setIsProfileCardOpen(false); // Close the profile card when opening media gallery
+    };
 
     // Helper function to get user by ID
     const getUserById = (userId) => {
@@ -569,6 +577,13 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
                     onAddToGroup={handleAddToGroup}
                     onManageGroup={handleManageGroup}
                     onRenameGroup={handleRenameGroup}
+                    onViewMedia={handleViewMedia}
+                />
+                <MediaGallery 
+                    isOpen={isMediaGalleryOpen}
+                    onClose={() => setIsMediaGalleryOpen(false)}
+                    chat={activeChat}
+                    messages={messages}
                 />
             </div>
         )}

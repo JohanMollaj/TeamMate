@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './ProfileCardPopup.css';
-import { FaUserMinus, FaRightFromBracket, FaUsers, FaUserPlus, FaGear, FaPen } from "react-icons/fa6";
+import { FaUserMinus, FaRightFromBracket, FaUsers, FaUserPlus, FaGear, FaPen, FaImage } from "react-icons/fa6";
 
 const getInitials = (name) => {
     if (!name) return "U";
@@ -34,7 +34,7 @@ const getConsistentColor = (name) => {
     return pastelColors[index];
 };
 
-const ProfileCardPopup = ({ chat, isOpen, onClose, onRemoveFriend, onLeaveGroup, onAddToGroup, onManageGroup, onRenameGroup }) => {
+const ProfileCardPopup = ({ chat, isOpen, onClose, onRemoveFriend, onLeaveGroup, onAddToGroup, onManageGroup, onRenameGroup, onViewMedia }) => {
     if (!isOpen || !chat) return null;
     
     const [isRenaming, setIsRenaming] = useState(false);
@@ -182,6 +182,10 @@ const ProfileCardPopup = ({ chat, isOpen, onClose, onRemoveFriend, onLeaveGroup,
                 <div className="profile-card-actions">
                     {isGroup ? (
                         <>
+                            <button className="action-button" onClick={() => onViewMedia && onViewMedia(chat)}>
+                                <FaImage />
+                                <span>View Media</span>
+                            </button>
                             <button className="action-button" onClick={handleStartRenaming}>
                                 <FaPen />
                                 <span>Rename Group</span>
@@ -201,6 +205,10 @@ const ProfileCardPopup = ({ chat, isOpen, onClose, onRemoveFriend, onLeaveGroup,
                         </>
                     ) : (
                         <>
+                            <button className="action-button" onClick={() => onViewMedia && onViewMedia(chat)}>
+                                <FaImage />
+                                <span>View Media</span>
+                            </button>
                             <button className="action-button" onClick={() => onAddToGroup(chat)}>
                                 <FaUsers />
                                 <span>Add to Group</span>
