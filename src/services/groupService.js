@@ -20,13 +20,16 @@ import { db, auth } from '../firebase';
 // Get all groups for the current user
 export function getUserGroups(callback) {
   if (!auth.currentUser) {
-    throw new Error("No authenticated user found");
+    console.error("getUserGroups: No authenticated user!"); // Add check
+    callback([]); // Return empty if no user
+    return () => {}; 
   }
   
+  console.log("Fetching groups for user:", auth.currentUser.uid); // Add for debugging
   const q = query(
     collection(db, "groups"),
-    where("members", "array-contains", auth.currentUser.uid),
-    orderBy("name", "asc")
+    where("members", "array-contains", auth.currentUser.uid), // Ensure this ID is correct
+    orderBy("name", "asc") 
   );
   
   return onSnapshot(q, (querySnapshot) => {
@@ -75,6 +78,7 @@ export async function createGroup(groupData) {
     admins: [auth.currentUser.uid]
   };
   
+  console.log("Saving group with members:", newGroup.members); // Add for debugging
   return addDoc(collection(db, "groups"), newGroup);
 }
 
