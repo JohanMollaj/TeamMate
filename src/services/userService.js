@@ -225,47 +225,87 @@ export async function searchUsers(searchTerm) {
 }
 
 // Get current user's friends
-export function getUserFriends(callback) {
-  if (!auth.currentUser) {
-      console.warn("getUserFriends called without authenticated user.");
-      callback([]); // Return empty array if not logged in
-      return () => {}; // Return an empty unsubscribe function
+export function getUserFriends(userId, callback) {
+    if (!userId || typeof callback !== 'function') {
+      console.error("getUserFriends: Invalid parameters", { userId, callbackType: typeof callback });
+      return () => {}; // Return no-op unsubscribe function
+    }
+  
+    try {
+      // For development or demo purposes, fetch from JSON file instead of Firestore
+      const fetchFriendsFromJson = async () => {
+        try {
+          const response = await fetch('/users.json');
+          const allUsers = await response.json();
+          
+          // Simulate friends by taking first few users
+          const mockFriends = allUsers.slice(0, 4).map(user => ({
+            ...user,
+            chatType: 'direct',
+            isOnline: Math.random() > 0.5 // Random online status
+          }));
+          
+          callback(mockFriends);
+        } catch (error) {
+          console.error("Error fetching mock friends:", error);
+          callback([]);
+        }
+      };
+      
+      fetchFriendsFromJson();
+      
+      // Return an empty unsubscribe function
+      return () => {};
+    } catch (error) {
+      console.error("Error in getUserFriends:", error);
+      callback([]);
+      return () => {};
+    }
   }
-
-  const userRef = doc(db, "users", auth.currentUser.uid);
-
-  return onSnapshot(userRef, async (userDoc) => {
-      if (!userDoc.exists()) {
-          console.log("Current user document not found.");
+  
+  // groupService.js modifications
+  // Replace the getUserGroups function with this version
+  
+  export function getUserGroups(callback) {
+    if (typeof callback !== 'function') {
+      console.error("getUserGroups: Callback is not a function", { callbackType: typeof callback });
+      return () => {}; // Return no-op unsubscribe function
+    }
+  
+    try {
+      // For development or demo purposes, fetch from JSON file instead of Firestore
+      const fetchGroupsFromJson = async () => {
+        try {
+          const response = await fetch('/groups.json');
+          const data = await response.json();
+          
+          // Add additional properties to match what components expect
+          const enhancedGroups = data.map(group => ({
+            ...group,
+            chatType: 'group',
+            name: group.name || `Group ${group.id}`,
+            members: ['1', '2', '3'], // Mock member IDs
+            description: `Description for ${group.name || 'group'}`,
+            createdAt: new Date().toISOString()
+          }));
+          
+          callback(enhancedGroups);
+        } catch (error) {
+          console.error("Error fetching mock groups:", error);
           callback([]);
-          return;
-      }
-
-      const userData = userDoc.data();
-      const friendIds = userData.friends || []; // Assuming 'friends' array holds IDs
-
-      if (friendIds.length === 0) {
-          callback([]);
-          return;
-      }
-
-      // Fetch friend details
-      // Consider fetching in batches if the friend list can be very large
-      const friendPromises = friendIds.map(id => getUserProfile(id));
-      const friendResults = await Promise.all(friendPromises);
-
-      // Filter out null results (if a friend's profile was deleted)
-      // Add chatType for consistency
-      const friends = friendResults
-          .filter(Boolean)
-          .map(friend => ({ ...friend, chatType: 'direct'}));
-
-      callback(friends);
-  }, (error) => {
-      console.error("Error listening to user friends:", error);
-      callback([]); // Send empty array on error
-  });
-}
+        }
+      };
+      
+      fetchGroupsFromJson();
+      
+      // Return an empty unsubscribe function
+      return () => {};
+    } catch (error) {
+      console.error("Error in getUserGroups:", error);
+      callback([]);
+      return () => {};
+    }
+  }
 
 // Send friend request
 export async function sendFriendRequest(currentUserId, targetUserId) {
