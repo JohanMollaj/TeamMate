@@ -4,20 +4,18 @@ import { useNavigate } from 'react-router-dom';
 
 import Sidebar from '../settingsComponents/settingsSidebar.jsx';
 import MyAccount from '../settingsComponents/MyAccount.jsx';
-import Profile from '../settingsComponents/Profile.jsx';
+
 import Appearance from '../settingsComponents/Appearance.jsx';
 import Accessibility from '../settingsComponents/Accessibility.jsx';
 
 export default function SettingsPage() {
     const navigate = useNavigate();
-    const [activeSetting, setActiveSetting] = useState('Profile');
+    const [activeSetting, setActiveSetting] = useState('MyAccount');
 
     const renderContent = () => {
         switch (activeSetting) {
             case 'MyAccount':
                 return <MyAccount />;
-            case 'Profile':
-                return <Profile />;
             case 'Appearance':
                 return <Appearance />;
             case 'Accessibility':

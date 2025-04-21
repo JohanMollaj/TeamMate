@@ -61,6 +61,7 @@ function Login() {
             <input
               id="email"
               type="email"
+              placeholder='Enter your email'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg focus:outline-none focus:border-blue-500"
@@ -77,6 +78,7 @@ function Login() {
               <input
                 id="password"
                 type={showPassword ? "text" : "password"}
+                placeholder='Enter your password'
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-3 py-2 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg pr-10 focus:outline-none focus:border-blue-500"
@@ -94,7 +96,7 @@ function Login() {
             </div>
           </div>
           
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex align-center justify-between mb-4">
             <div className="flex items-center">
               <input
                 id="remember-me"
@@ -102,7 +104,7 @@ function Login() {
                 className="h-4 w-4 bg-[var(--bg-input)] border-[var(--border-color)] rounded"
                 disabled={loading}
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-[var(--text-secondary)]">
+              <label htmlFor="remember-me" className="ml-2 mb-2 block text-sm text-[var(--text-secondary)]">
                 Remember me
               </label>
             </div>

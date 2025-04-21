@@ -1,5 +1,7 @@
 
 import './Dashboard.css';
+import Profile from './Profile';
+
 import { FaUserCircle, FaUsers, FaBell } from 'react-icons/fa';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -179,6 +181,7 @@ const [activeTab, setActiveTab] = useState('unread');
 const containerRef = useRef(null);
 const [friends, setFriends] = useState([]);
 const [groups, setGroups] = useState([]);
+const [isProfileCardOpen, setIsProfileCardOpen] = useState(false);
 
 useEffect(() => {
     fetch("/users.json") // Adjust the path as needed
@@ -195,6 +198,11 @@ const [user, setUser] = useState({
     status: "online",
     joinDate: "November 2024"
 });
+
+const handleEditProfile = () => {
+  setIsProfileCardOpen(true);
+  setShowProfileDropdown(false);
+};
 
 // State to control profile dropdown visibility
 const [showProfileDropdown, setShowProfileDropdown] = useState(false);
@@ -388,7 +396,7 @@ return(
                                 <p>{user.joinDate}</p>
                             </div>
                             <div className="profile-dropdown-footer">
-                                <button className="profile-dropdown-button" onClick={() => navigate('/profile')}>
+                                <button className="profile-dropdown-button" onClick={handleEditProfile}>
                                     Edit Profile
                                 </button>
                                 <button className="profile-dropdown-button profile-logout" onClick={handleLogout}>
@@ -397,6 +405,7 @@ return(
                             </div>
                         </div>
                     )}
+                    
                 </div>
             </div>
         </div>
@@ -496,7 +505,12 @@ return(
                 </div>
             </div>
         </div>
+        <Profile
+          isOpen={isProfileCardOpen} 
+          onClose={() => setIsProfileCardOpen(false)} 
+        />
     </div>
+    
 );
 }
 

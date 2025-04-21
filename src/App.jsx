@@ -54,7 +54,7 @@ function App() {
                 <div className='App'>
                   <Sidebar />
                   <div className='Routes'>
-                    <Social />
+                    <Dashboard />
                   </div>
                 </div>
               </PrivateRoute>

@@ -21,23 +21,23 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [authError, setAuthError] = useState(null);
 
-  async function signup(email, password, displayName) {
+  async function signup(email, password, username) {
     try {
       setAuthError(null);
       // Create user with email and password
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       
-      // Update profile with display name
+      // Update profile with username as displayName
       await updateProfile(userCredential.user, {
-        displayName: displayName
+        displayName: username
       });
       
       // Create user document in Firestore
       await setDoc(doc(db, "users", userCredential.user.uid), {
         uid: userCredential.user.uid,
-        displayName: displayName,
+        displayName: username,
         email: email,
-        username: email.split('@')[0], // Default username based on email
+        username: username,
         password: password,
         createdAt: serverTimestamp(),
         isOnline: true,

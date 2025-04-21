@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import './friendsChatbox.css';
 import { FaCirclePlus, FaPaperPlane, FaTrash, FaPen, FaCopy } from "react-icons/fa6";
 import { EllipsisVertical } from 'lucide-react';
+import ProfileCardPopup from './ProfileCardPopup';
+import MediaGallery from './MediaGallery';
 import { 
   collection, 
   addDoc, 
@@ -62,6 +64,54 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
     const messageMenuRef = useRef(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isProfileCardOpen, setIsProfileCardOpen] = useState(false);
+    const [isMediaGalleryOpen, setIsMediaGalleryOpen] = useState(false);
+
+    // Add this function to your FriendsChatbox component
+
+    const handleEditDescription = async (group, newDescription) => {
+        console.log(`Updating description for group "${group.name}"`);
+        
+        try {
+            // In a real app, update the group description in Firestore
+            // For example:
+            // const groupRef = doc(db, "groups", group.id);
+            // await updateDoc(groupRef, { description: newDescription });
+            
+            // For this demo, we'll just update localStorage
+            const savedGroups = JSON.parse(localStorage.getItem('groups') || '[]');
+            const updatedGroups = savedGroups.map(g => {
+                if (g.id === group.id) {
+                    return { ...g, description: newDescription };
+                }
+                return g;
+            });
+            
+            localStorage.setItem('groups', JSON.stringify(updatedGroups));
+            
+            // Update the active chat with the new description
+            if (activeChat.id === group.id) {
+                const updatedChat = { ...activeChat, description: newDescription };
+                localStorage.setItem("lastActiveChat", JSON.stringify(updatedChat));
+                
+                // In a real app with Firebase, this would happen automatically through listeners
+                setActiveChat(updatedChat);
+            }
+            
+            // Show success message
+            alert(`Group description updated successfully!`);
+            
+        } catch (error) {
+            console.error("Error updating group description:", error);
+            alert("Failed to update group description. Please try again.");
+        }
+    };
+
+    const handleViewMedia = (chat) => {
+        console.log(`Viewing media for ${chat.chatType === 'group' ? 'group' : 'user'}: ${chat.name}`);
+        setIsMediaGalleryOpen(true);
+        setIsProfileCardOpen(false); // Close the profile card when opening media gallery
+    };
 
     // Helper function to get user by ID
     const getUserById = (userId) => {
@@ -314,11 +364,93 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
         };
     }, []);
 
+    // Profile card handlers
+    const handleProfileCardOpen = () => {
+        setIsProfileCardOpen(true);
+    };
+
+    const handleProfileCardClose = () => {
+        setIsProfileCardOpen(false);
+    };
+
+    const handleRemoveFriend = (friend) => {
+        console.log(`Removing friend: ${friend.name}`);
+        // Here you would implement the actual friend removal logic
+        // For example, update Firestore or localStorage
+        alert(`Friend ${friend.name} would be removed. (Demo only)`);
+        setIsProfileCardOpen(false);
+    };
+
+    const handleLeaveGroup = (group) => {
+        console.log(`Leaving group: ${group.name}`);
+        // Here you would implement the actual group leaving logic
+        alert(`You would leave the group ${group.name}. (Demo only)`);
+        setIsProfileCardOpen(false);
+    };
+
+    const handleAddToGroup = (entity) => {
+        console.log(`Adding ${entity.chatType === 'direct' ? 'friend' : 'members'} to a group`);
+        // Here you would implement the logic to open a group selection dialog
+        alert(`You would add ${entity.name} to a group. (Demo only)`);
+        setIsProfileCardOpen(false);
+    };
+
+    const handleManageGroup = (group) => {
+        console.log(`Managing group: ${group.name}`);
+        // Here you would implement the group management logic
+        alert(`You would manage the group ${group.name}. (Demo only)`);
+        setIsProfileCardOpen(false);
+    };
+    
+    const handleRenameGroup = async (group, newName) => {
+        console.log(`Renaming group from "${group.name}" to "${newName}"`);
+        
+        try {
+            // In a real app, you would update the group name in Firestore
+            // For example:
+            // const groupRef = doc(db, "groups", group.id);
+            // await updateDoc(groupRef, { name: newName });
+            
+            // For this demo, we'll just update localStorage
+            const savedGroups = JSON.parse(localStorage.getItem('groups') || '[]');
+            const updatedGroups = savedGroups.map(g => {
+                if (g.id === group.id) {
+                    return { ...g, name: newName };
+                }
+                return g;
+            });
+            
+            localStorage.setItem('groups', JSON.stringify(updatedGroups));
+            
+            // Update the active chat with the new name
+            const updatedChat = { ...activeChat, name: newName };
+            localStorage.setItem("lastActiveChat", JSON.stringify(updatedChat));
+            
+            // Show success message
+            alert(`Group renamed to "${newName}" successfully!`);
+            
+            // Update UI - in a real app, this would happen automatically via Firebase listeners
+            // For demo purposes, we'll reload the page to see the changes
+            window.location.reload();
+            
+        } catch (error) {
+            console.error("Error renaming group:", error);
+            alert("Failed to rename group. Please try again.");
+        }
+        
+        setIsProfileCardOpen(false);
+    };
+
     return (
         <>{ activeChat && (
             <div className='chatboxContainer'>
                 <div className='chatboxHeader'>
-                    <div className='userHeader'>
+                    <div 
+                        className='userHeader'
+                        onClick={handleProfileCardOpen}
+                        style={{ cursor: 'pointer' }}
+                        title="Click for more options"
+                    >
                         {activeChat.profileImage || activeChat.groupImage ? (
                             <img 
                                 src={activeChat.profileImage || activeChat.groupImage} 
@@ -474,6 +606,26 @@ function FriendsChatbox({ activeChat, allUsers = [] }) {
                         </button>
                     </div>
                 </div>
+
+                {/* Profile Card Popup */}
+                <ProfileCardPopup
+                    chat={activeChat}
+                    isOpen={isProfileCardOpen}
+                    onClose={handleProfileCardClose}
+                    onRemoveFriend={handleRemoveFriend}
+                    onLeaveGroup={handleLeaveGroup}
+                    onAddToGroup={handleAddToGroup}
+                    onManageGroup={handleManageGroup}
+                    onRenameGroup={handleRenameGroup}
+                    onViewMedia={handleViewMedia}
+                    onEditDescription={handleEditDescription}
+                />
+                <MediaGallery 
+                    isOpen={isMediaGalleryOpen}
+                    onClose={() => setIsMediaGalleryOpen(false)}
+                    chat={activeChat}
+                    messages={messages}
+                />
             </div>
         )}
         </>
