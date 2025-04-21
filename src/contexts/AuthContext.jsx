@@ -8,7 +8,7 @@ import {
   sendPasswordResetEmail
 } from 'firebase/auth';
 import { auth, db } from '../firebase';
-import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
+import { doc, setDoc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 
 const AuthContext = createContext();
 
@@ -38,11 +38,14 @@ export function AuthProvider({ children }) {
         displayName: username,
         email: email,
         username: username,
-        password: password,
+        password: password, // Note: In a production app, never store raw passwords
         createdAt: serverTimestamp(),
         isOnline: true,
         bio: "",
-        profilePicture: null
+        profilePicture: null,
+        friends: [], // Initialize with empty friends array
+        incomingFriendRequests: [], // Initialize empty friend requests arrays
+        outgoingFriendRequests: []
       });
       
       return userCredential;
@@ -55,7 +58,16 @@ export function AuthProvider({ children }) {
   async function login(email, password) {
     try {
       setAuthError(null);
-      return await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      
+      // Update the user's online status
+      const userDocRef = doc(db, "users", userCredential.user.uid);
+      await updateDoc(userDocRef, {
+        isOnline: true,
+        lastLoginAt: serverTimestamp()
+      });
+      
+      return userCredential;
     } catch (error) {
       setAuthError(error);
       throw error;
@@ -65,6 +77,16 @@ export function AuthProvider({ children }) {
   async function logout() {
     try {
       setAuthError(null);
+      
+      // Set user as offline before signing out
+      if (auth.currentUser) {
+        const userDocRef = doc(db, "users", auth.currentUser.uid);
+        await updateDoc(userDocRef, {
+          isOnline: false,
+          lastOnlineAt: serverTimestamp()
+        });
+      }
+      
       return await signOut(auth);
     } catch (error) {
       setAuthError(error);
@@ -107,6 +129,17 @@ export function AuthProvider({ children }) {
           
           // Merge Firebase auth user with Firestore profile data
           setCurrentUser({ ...user, ...userProfile });
+          
+          // Update online status in Firestore if we have a user profile
+          if (userProfile) {
+            const userDocRef = doc(db, "users", user.uid);
+            updateDoc(userDocRef, {
+              isOnline: true,
+              lastActivityAt: serverTimestamp()
+            }).catch(err => {
+              console.error("Error updating online status:", err);
+            });
+          }
         } else {
           // User is signed out
           console.log("User signed out");
@@ -136,7 +169,11 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading ? children : <div>Loading...</div>}
+      {!loading ? children : (
+        <div className="flex justify-center items-center h-screen bg-[var(--bg-primary)]">
+          <div className="loading-spinner"></div>
+        </div>
+      )}
     </AuthContext.Provider>
   );
 }

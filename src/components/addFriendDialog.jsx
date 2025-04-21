@@ -129,7 +129,7 @@ const AddFriendDialog = ({ isOpen, onClose, onSendRequest, initialError }) => {
                             <div className="transform transition-all duration-200 ease-out hover:translate-x-1">
                                 <label className="block text-sm font-medium text-[var(--text-primary)] mb-1">Username</label>
                                 <div className="relative">
-                                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--text-secondary)] text-sm">@</span>
+                                    <span className="absolute left-3 top-2 transform -translate-y-1/2 text-[var(--text-secondary)] text-sm">@</span>
                                     <input
                                         type="text"
                                         value={username}
