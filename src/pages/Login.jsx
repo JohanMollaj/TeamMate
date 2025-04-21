@@ -9,8 +9,15 @@ function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { login } = useAuth();
+  const { login, currentUser } = useAuth();
   const navigate = useNavigate();
+
+  // If user is already logged in, redirect to dashboard
+  React.useEffect(() => {
+    if (currentUser) {
+      navigate('/dashboard');
+    }
+  }, [currentUser, navigate]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -18,13 +25,17 @@ function Login() {
     try {
       setError('');
       setLoading(true);
+      
+      // Just call login without navigating
+      // The useEffect above will handle navigation once currentUser is set
       await login(email, password);
-      navigate('/dashboard');
+      
+      // Don't navigate here - wait for the auth state to update
+      // The useEffect will handle navigation
     } catch (error) {
       console.error(error);
       setError('Failed to log in. Please check your credentials.');
-    } finally {
-      setLoading(false);
+      setLoading(false); // Only reset loading on error
     }
   }
 
@@ -55,6 +66,7 @@ function Login() {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg focus:outline-none focus:border-blue-500"
               required
+              disabled={loading}
             />
           </div>
           
@@ -71,11 +83,13 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-3 py-2 bg-[var(--bg-input)] border border-[var(--border-color)] rounded-lg pr-10 focus:outline-none focus:border-blue-500"
                 required
+                disabled={loading}
               />
               <button
                 type="button"
                 className="absolute inset-y-0 right-0 pr-3 flex items-center"
                 onClick={() => setShowPassword(!showPassword)}
+                disabled={loading}
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
@@ -87,7 +101,8 @@ function Login() {
               <input
                 id="remember-me"
                 type="checkbox"
-                className="h-4 w-4 mb-0 bg-[var(--bg-input)] border-[var(--border-color)] rounded"
+                className="h-4 w-4 bg-[var(--bg-input)] border-[var(--border-color)] rounded"
+                disabled={loading}
               />
               <label htmlFor="remember-me" className="ml-2 mb-2 block text-sm text-[var(--text-secondary)]">
                 Remember me
